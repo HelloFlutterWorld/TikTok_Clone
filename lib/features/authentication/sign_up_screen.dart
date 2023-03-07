@@ -4,7 +4,7 @@ import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/login_screen.dart';
 import 'package:tiktok_clone/features/authentication/widgets/auth_button.dart';
-import 'package:tiktok_clone/features/authentication/widgets/email_screen.dart';
+import 'package:tiktok_clone/features/authentication/widgets/usernamel_screen.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -19,7 +19,7 @@ class SignUpScreen extends StatelessWidget {
 
   void _onEmailTap(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const EmailScreen(),
+      builder: (context) => const UsernameScreen(),
     ));
   }
 
@@ -51,26 +51,21 @@ class SignUpScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               Gaps.v40,
-              // GestureDetector(
-              //   onTap: () => _onEmailTap(context),
-              //   child: const AuthButton(
-              //       icon: FaIcon(FontAwesomeIcons.user),
-              //       text: "Use email & password"),
-              // ),
+              GestureDetector(
+                onTap: () => _onEmailTap(context),
+                child: const AuthButton(
+                    icon: FaIcon(FontAwesomeIcons.user),
+                    text: "Use email & password"),
+              ),
               Gaps.v16,
               //  const AuthButton(
               //     icon: FaIcon(FontAwesomeIcons.apple),
               //     text: "Continue with Apple",
               //     ),
-              // const AuthButton(
-              //   text: "Continue with Apple",
-              //   icon: FaIcon(FontAwesomeIcons.apple),
-              // ),
-              AuthButton(
-                text: "11",
-                icon: const FaIcon(FontAwesomeIcons.apple),
-                onGesture: _onEmailTap,
-              )
+              const AuthButton(
+                text: "Continue with Apple",
+                icon: FaIcon(FontAwesomeIcons.apple),
+              ),
             ],
           ),
         ),
