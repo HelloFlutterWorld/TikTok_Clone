@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/authentication/widgets/email_screen.dart';
 import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
 
-class UsernameScreen extends StatefulWidget {
-  const UsernameScreen({super.key});
+class EmailScreen extends StatefulWidget {
+  const EmailScreen({super.key});
 
   @override
-  State<UsernameScreen> createState() => _UsernameScreenState();
+  State<EmailScreen> createState() => _EmailScreenState();
 }
 
-class _UsernameScreenState extends State<UsernameScreen> {
+class _EmailScreenState extends State<EmailScreen> {
   //controller는 코드, 메드 등으로 textfield와 같은 위젯을 컨트롤 할 수 있도록 해줌
   //생성된 컨트롤러를 텍스트필드에 넘겨준다.
   final TextEditingController _usernameController = TextEditingController();
@@ -36,16 +35,6 @@ class _UsernameScreenState extends State<UsernameScreen> {
     super.dispose();
   }
 
-  //state 안에 있다면, 어디서든 context를 사용할 수 있으므로, context를 전달받을 필요없다.
-  void _onNextTap() {
-    if (_username.isEmpty) return;
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const EmailScreen(),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,18 +53,10 @@ class _UsernameScreenState extends State<UsernameScreen> {
           children: [
             Gaps.v40,
             const Text(
-              "Create username",
+              "Waht is your email?",
               style: TextStyle(
                 fontSize: Sizes.size24,
                 fontWeight: FontWeight.w700,
-              ),
-            ),
-            Gaps.v8,
-            const Text(
-              "You can always change this later.",
-              style: TextStyle(
-                fontSize: Sizes.size16,
-                color: Colors.black54,
               ),
             ),
             Gaps.v16,
@@ -84,7 +65,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
               //텍스트필드는 컨트롤러 프로퍼티를 가지고 있다.
               controller: _usernameController,
               decoration: InputDecoration(
-                hintText: "Username",
+                hintText: "Email",
                 //처음 볼 때 밑 줄
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
@@ -101,9 +82,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
               cursorColor: Theme.of(context).primaryColor,
             ),
             Gaps.v28,
-            GestureDetector(
-                onTap: _onNextTap,
-                child: FormButton(disabled: _username.isEmpty))
+            FormButton(disabled: _username.isEmpty)
           ],
         ),
       ),
