@@ -17,7 +17,11 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
   //생성된 컨트롤러를 텍스트필드에 넘겨준다.
   final TextEditingController _birthdayController = TextEditingController();
 
-  DateTime initialDate = DateTime.now();
+  DateTime initialDate = DateTime(
+    int.parse(DateTime.now().toString().split(" ").first.split("-").first) - 12,
+    DateTime.now().month,
+    DateTime.now().day,
+  );
 
   @override
   void initState() {
@@ -115,17 +119,18 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-          child: SizedBox(
-        height: 300,
-        child: CupertinoDatePicker(
-          maximumDate: initialDate,
-          initialDateTime: initialDate,
-          //날짜만 표시하기
-          mode: CupertinoDatePickerMode.date,
-          //유저가 날짜나 시간을 바꿀 때마다 호출됨
-          onDateTimeChanged: _setTextFieldDate,
+        child: SizedBox(
+          height: 300,
+          child: CupertinoDatePicker(
+            maximumDate: initialDate,
+            initialDateTime: initialDate,
+            //날짜만 표시하기
+            mode: CupertinoDatePickerMode.date,
+            //유저가 날짜나 시간을 바꿀 때마다 호출됨
+            onDateTimeChanged: _setTextFieldDate,
+          ),
         ),
-      )),
+      ),
     );
   }
 }
