@@ -12,7 +12,7 @@ class EmailScreen extends StatefulWidget {
 }
 
 class _EmailScreenState extends State<EmailScreen> {
-  //controller는 코드, 메드 등으로 textfield와 같은 위젯을 컨트롤 할 수 있도록 해줌
+  //controller는 코드, 메소드 등으로 textfield와 같은 위젯을 컨트롤 할 수 있도록 해줌
   //생성된 컨트롤러를 텍스트필드에 넘겨준다.
   final TextEditingController _emailController = TextEditingController();
 
@@ -21,7 +21,7 @@ class _EmailScreenState extends State<EmailScreen> {
   @override
   void initState() {
     super.initState();
-    //사용자의 입력텍스트를 스테이트에 저장
+    //사용자의 입력텍스트를 스테이트에 저장
     _emailController.addListener(() {
       setState(() {
         _email = _emailController.text;
@@ -94,7 +94,7 @@ class _EmailScreenState extends State<EmailScreen> {
                 keyboardType: TextInputType.emailAddress,
                 //done 버튼을 누를 때  _onSubmit를 호출하는 두 가지 방법
                 //onSubmitted
-                onEditingComplete: () => _onSubmit(),
+                onEditingComplete: _onSubmit,
                 autocorrect: false,
                 decoration: InputDecoration(
                   hintText: "Email",
