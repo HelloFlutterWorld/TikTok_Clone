@@ -11,6 +11,11 @@ class FormButton extends StatelessWidget {
     this.text,
   });
 
+  bool _isTextTrue() {
+    if (text == null) return false;
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
@@ -35,8 +40,8 @@ class FormButton extends StatelessWidget {
             color: disabled ? Colors.grey.shade400 : Colors.white,
             fontWeight: FontWeight.w600,
           ),
-          child: const Text(
-            "Next",
+          child: Text(
+            _isTextTrue() ? text! : "Next",
             textAlign: TextAlign.center,
           ),
         ),
