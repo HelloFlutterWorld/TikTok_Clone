@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 
 class FormButton extends StatelessWidget {
+  final bool disabled;
+  final String? text;
+
   const FormButton({
     super.key,
     required this.disabled,
+    this.text,
   });
-
-  final bool disabled;
 
   @override
   Widget build(BuildContext context) {

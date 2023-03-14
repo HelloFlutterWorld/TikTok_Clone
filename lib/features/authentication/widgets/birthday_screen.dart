@@ -18,7 +18,8 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
   final TextEditingController _birthdayController = TextEditingController();
 
   DateTime initialDate = DateTime(
-    int.parse(DateTime.now().toString().split(" ").first.split("-").first) - 12,
+    DateTime.now().year - 12,
+    //int.parse(DateTime.now().toString().split(" ").first.split("-").first) - 12,
     DateTime.now().month,
     DateTime.now().day,
   );

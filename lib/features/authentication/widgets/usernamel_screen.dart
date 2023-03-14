@@ -80,6 +80,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
             ),
             Gaps.v16,
             TextField(
+              onEditingComplete: _onNextTap,
               //사용자의 입력텍스트를 스테이트에 저장
               //텍스트필드는 컨트롤러 프로퍼티를 가지고 있다.
               controller: _usernameController,
@@ -102,8 +103,11 @@ class _UsernameScreenState extends State<UsernameScreen> {
             ),
             Gaps.v28,
             GestureDetector(
-                onTap: _onNextTap,
-                child: FormButton(disabled: _username.isEmpty))
+              onTap: _onNextTap,
+              child: FormButton(
+                disabled: _username.isEmpty,
+              ),
+            )
           ],
         ),
       ),
