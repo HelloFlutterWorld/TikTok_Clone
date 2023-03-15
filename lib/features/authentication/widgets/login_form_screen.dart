@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
+import 'package:tiktok_clone/features/onboarding/interests_screen.dart';
 
 //TextFormField 는 컨트롤러, 리스터, setState가 필요없다.
 
@@ -21,15 +22,18 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
   Map<String, String> formData = {};
 
   void _onSubmitTap() {
-    if (_formKey.currentState != null)
-    //[Form]의 하위 항목인 모든 [FormField]의 유효성을 검사하고 오류가 없으면 true를 반환
-    {
+    if (_formKey.currentState != null) {
+      //[Form]의 하위 항목인 모든 [textFormField]의 유효성을 검사하고 오류가 없으면 true를 반환
+      //유효성 검사를 잘 통과하면 textformfield의 onsaved 함수를 콜백한다.
       if (_formKey.currentState!.validate()) {
-        //유효성 검사를 잘 통과하면 textformfield의 onsaved 함수를 콜백한다.
-        _formKey.currentState!.save();
-        //Form을 세이브하면
-        //모든 텍스트 입력에 onSaved 콜백함수를 실행하게 된다.
+        //Form을 세이브하면 모든 텍스트 입력에 대해 onSaved 콜백함수를 실행하게 된다.
       }
+      _formKey.currentState!.save();
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const InterestsScreen(),
+        ),
+      );
     }
     //_formKey.currentState?.validate()
     //1. 단순한 유효성 검사를 한 후
