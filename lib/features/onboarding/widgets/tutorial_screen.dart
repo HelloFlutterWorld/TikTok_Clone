@@ -1,6 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+
+enum Direction { right, left }
+
+enum Page { first, second }
 
 class TutorialScreen extends StatefulWidget {
   const TutorialScreen({super.key});
@@ -10,111 +15,113 @@ class TutorialScreen extends StatefulWidget {
 }
 
 class _TutorialScreenState extends State<TutorialScreen> {
+  Direction _direction = Direction.right;
+  Page _shoWingPage = Page.first;
+
+  void _onPanUpdate(DragUpdateDetails details) {
+    // dx는 x축의 값을 나타낸다. 양수가 넘어가면 오른쪽으로 충분히 스와이프가 된 상태다
+    if (details.delta.dx > 0) {
+      setState(() {
+        _direction = Direction.right;
+      });
+    } else {
+      setState(() {
+        _direction = Direction.left;
+      });
+    }
+  }
+
+  void _onPanEnd(DragEndDetails details) {
+    if (_direction == Direction.left) {
+      setState(() {
+        _shoWingPage = Page.second;
+      });
+    } else {
+      setState(() {
+        _shoWingPage = Page.first;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      //DefaultTabController를 설정하고 page가 몇개인지만 알려주면된다.
-      //TabPageSelector를 DefaultTabController 안에 적었고
-      //DefaultTabController는 TabBarView의 father이기도 하다.
-      length: 3,
+    return GestureDetector(
+      //swipe 반응하는 함수호출
+      onPanUpdate: _onPanUpdate,
+      //사용자가 드래그를 끝내고 손을 떼거나
+      //마우스를 떼면,  onPanEnd가 자동으로 콜백되어 실행된다.
+      onPanEnd: _onPanEnd,
       child: Scaffold(
-        body: SafeArea(
-          child: TabBarView(
-            // DefaultTabController 을 쓰든지 아래처럼 controller을 쓰든지
-            // controller: ,
-            children: [
-              // TabBarView의 children이 페이지가 된다.
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Sizes.size24,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Gaps.v52,
-                    Text(
-                      "Watch cool videos!",
-                      style: TextStyle(
-                        fontSize: Sizes.size40,
-                        fontWeight: FontWeight.bold,
-                      ),
+        body: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: Sizes.size24,
+          ),
+          child: SafeArea(
+            child: AnimatedCrossFade(
+              firstChild: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Gaps.v80,
+                  Text(
+                    "Watch cool videos!",
+                    style: TextStyle(
+                      fontSize: Sizes.size40,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Gaps.v16,
-                    Text(
-                      "Videos are personalized for you based on what you watch, like, and share.",
-                      style: TextStyle(
-                        fontSize: Sizes.size20,
-                      ),
+                  ),
+                  Gaps.v16,
+                  Text(
+                    "Videos are personalized for you based on what you watch, like, and ",
+                    style: TextStyle(
+                      fontSize: Sizes.size20,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Sizes.size24,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Gaps.v52,
-                    Text(
-                      "Follow the rules!",
-                      style: TextStyle(
-                        fontSize: Sizes.size40,
-                        fontWeight: FontWeight.bold,
-                      ),
+              secondChild: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Gaps.v80,
+                  Text(
+                    "Follow the rules ",
+                    style: TextStyle(
+                      fontSize: Sizes.size40,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Gaps.v16,
-                    Text(
-                      "Videos are personalized for you based on what you watch, like, and share.",
-                      style: TextStyle(
-                        fontSize: Sizes.size20,
-                      ),
+                  ),
+                  Gaps.v16,
+                  Text(
+                    "Videos are personalized for you based on what you watch, like, and ",
+                    style: TextStyle(
+                      fontSize: Sizes.size20,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Sizes.size24,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Gaps.v52,
-                    Text(
-                      "Enjoy the ride",
-                      style: TextStyle(
-                        fontSize: Sizes.size40,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Gaps.v16,
-                    Text(
-                      "Videos are personalized for you based on what you watch, like, and share.",
-                      style: TextStyle(
-                        fontSize: Sizes.size20,
-                      ),
-                    ),
-                  ],
-                ),
+              //crossFadeState는 first와 second에세 무엇을 보여줄지 결정해준다.
+              crossFadeState: _shoWingPage == Page.first
+                  ? CrossFadeState.showFirst
+                  : CrossFadeState.showSecond,
+              duration: const Duration(
+                milliseconds: 300,
               ),
-            ],
+            ),
           ),
         ),
         bottomNavigationBar: BottomAppBar(
-          child: Container(
+          child: Padding(
             padding: const EdgeInsets.symmetric(
-              vertical: Sizes.size48,
+              vertical: Sizes.size24,
+              horizontal: Sizes.size24,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                TabPageSelector(
-                  color: Colors.white,
-                  selectedColor: Colors.black38,
-                ),
-              ],
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 300),
+              opacity: _shoWingPage == Page.first ? 0 : 1,
+              child: CupertinoButton(
+                onPressed: () {},
+                color: Theme.of(context).primaryColor,
+                child: const Text("Enter the app!"),
+              ),
             ),
           ),
         ),
