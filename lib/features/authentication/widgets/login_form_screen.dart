@@ -29,10 +29,15 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
         //Form을 세이브하면 모든 텍스트 입력에 대해 onSaved 콜백함수를 실행하게 된다.
       }
       _formKey.currentState!.save();
-      Navigator.of(context).push(
+      //push는 다른화면의 위에 올려놓는 것을 말한다.
+      Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => const InterestsScreen(),
         ),
+        // bool Function(Route<dynamic>) predicate
+        // predicate가 true를 리턴하면 이전화면을 돌아갈 수 있다.
+        // false면 못돌아간다.
+        (route) => false,
       );
     }
     //_formKey.currentState?.validate()
