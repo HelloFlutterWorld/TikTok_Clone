@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/cupertino.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -37,36 +36,26 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: screens[_selectedIndex],
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: _onTap,
-        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-        destinations: const [
-          NavigationDestination(
-            icon: FaIcon(
-              FontAwesomeIcons.house,
-              color: Colors.white,
-            ),
-            label: "Home",
-          ),
-          NavigationDestination(
-            icon: FaIcon(
-              FontAwesomeIcons.magnifyingGlass,
-              color: Colors.white,
-            ),
-            label: "Search ",
-          ),
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+        items: const [
+          BottomNavigationBarItem(
+              icon: Icon(
+                CupertinoIcons.house,
+              ),
+              label: "Home"),
+          BottomNavigationBarItem(
+              icon: Icon(
+                CupertinoIcons.search,
+              ),
+              label: "Home"),
         ],
       ),
+      tabBuilder: (context, index) => screens[index],
     );
   }
-}
 
-
-
-// Material Design 2 
+// Material Design 2
 // BottomNavigationBar(
 //         아이템이 4개이상이면 자동으로 shifting,
 //         type: BottomNavigationBarType.shifting,
@@ -88,3 +77,4 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 //           ),
 //         ],
 //       )
+}
