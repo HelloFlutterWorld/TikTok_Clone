@@ -39,27 +39,52 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        //아이템이 4개이상이면 자동으로 shifting,
-        type: BottomNavigationBarType.shifting,
-        onTap: _onTap,
-        currentIndex: _selectedIndex,
-        //selectedItemColor: Theme.of(context).primaryColor,
-        items: const [
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.house),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _onTap,
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        destinations: const [
+          NavigationDestination(
+            icon: FaIcon(
+              FontAwesomeIcons.house,
+              color: Colors.white,
+            ),
             label: "Home",
-            tooltip: "What are you? ",
-            backgroundColor: Colors.amber,
           ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.magnifyingGlass),
+          NavigationDestination(
+            icon: FaIcon(
+              FontAwesomeIcons.magnifyingGlass,
+              color: Colors.white,
+            ),
             label: "Search ",
-            tooltip: "What are you? ",
-            backgroundColor: Colors.blue,
           ),
         ],
       ),
     );
   }
 }
+
+
+
+// Material Design 2 
+// BottomNavigationBar(
+//         아이템이 4개이상이면 자동으로 shifting,
+//         type: BottomNavigationBarType.shifting,
+//         onTap: _onTap,
+//         currentIndex: _selectedIndex,
+//         //selectedItemColor: Theme.of(context).primaryColor,
+//         items: const [
+//           BottomNavigationBarItem(
+//             icon: FaIcon(FontAwesomeIcons.house),
+//             label: "Home",
+//             tooltip: "What are you? ",
+//             backgroundColor: Colors.amber,
+//           ),
+//           BottomNavigationBarItem(
+//             icon: FaIcon(FontAwesomeIcons.magnifyingGlass),
+//             label: "Search ",
+//             tooltip: "What are you? ",
+//             backgroundColor: Colors.blue,
+//           ),
+//         ],
+//       )

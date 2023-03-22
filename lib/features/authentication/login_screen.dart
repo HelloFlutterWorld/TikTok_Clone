@@ -15,7 +15,7 @@ class LoginScreen extends StatelessWidget {
   void _onEmailLoginTap(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        //builder 위젯을 반환하고 컨텍스트를 파라미터로 넘겨주는 함수다.
+        //builder는 위젯을 반환하고 컨텍스트를 파라미터로 넘겨주는 함수다.
         builder: (context) => const LoginFormScreen(),
       ),
     );
