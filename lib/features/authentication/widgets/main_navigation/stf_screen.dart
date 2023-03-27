@@ -16,6 +16,12 @@ class _StfScreenState extends State<StfScreen> {
     });
   }
 
+  void _decrease() {
+    setState(() {
+      _clicks = _clicks - 1;
+    });
+  }
+
   @override
   void dispose() {
     print(_clicks);
@@ -34,10 +40,19 @@ class _StfScreenState extends State<StfScreen> {
               fontSize: 48,
             ),
           ),
-          TextButton(
-            onPressed: _increase,
-            child: const Text("+"),
-          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: _increase,
+                child: const Text("+"),
+              ),
+              TextButton(
+                onPressed: _decrease,
+                child: const Text("-"),
+              ),
+            ],
+          )
         ],
       ),
     );
