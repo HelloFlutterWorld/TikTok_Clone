@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/widgets/main_navigation/stf_screen.dart';
 import 'package:tiktok_clone/features/authentication/widgets/main_navigation/widgets/nav_tab.dart';
 import 'package:tiktok_clone/features/authentication/widgets/main_navigation/widgets/post_video_button.dart';
-
-import '../../../../constants/gaps.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -16,10 +15,23 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
+  bool _isLongPressed = false;
 
   void _onTap(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+
+  void _onLongPress() {
+    setState(() {
+      _isLongPressed = true;
+    });
+  }
+
+  void _onLongPressEnd() {
+    setState(() {
+      _isLongPressed = false;
     });
   }
 
@@ -85,8 +97,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               ),
               Gaps.h24,
               GestureDetector(
+                //6.8 Post Video Button code_challenge
+                onLongPress: _onLongPress,
+                onLongPressEnd: (details) => _onLongPressEnd(),
                 onTap: _onPostVideoButtonTap,
-                child: const PostVideoButton(),
+                child: AnimatedOpacity(
+                    opacity: _isLongPressed ? 0.6 : 1,
+                    duration: const Duration(
+                      milliseconds: 300,
+                    ),
+                    child: const PostVideoButton()),
               ),
               Gaps.h24,
               NavTab(
