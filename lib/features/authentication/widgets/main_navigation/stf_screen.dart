@@ -24,7 +24,6 @@ class _StfScreenState extends State<StfScreen> {
 
   @override
   void dispose() {
-    print(_clicks);
     super.dispose();
   }
 
@@ -45,11 +44,21 @@ class _StfScreenState extends State<StfScreen> {
             children: [
               TextButton(
                 onPressed: _increase,
-                child: const Text("+"),
+                child: const Text(
+                  "+",
+                  style: TextStyle(
+                    fontSize: 36,
+                  ),
+                ),
               ),
               TextButton(
                 onPressed: _decrease,
-                child: const Text("-"),
+                child: const Text(
+                  "-",
+                  style: TextStyle(
+                    fontSize: 36,
+                  ),
+                ),
               ),
             ],
           )
