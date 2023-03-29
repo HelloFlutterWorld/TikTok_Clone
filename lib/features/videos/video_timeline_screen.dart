@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tiktok_clone/features/videos/widgets/video_post.dart';
 
 class VideoTimelineScreen extends StatefulWidget {
   const VideoTimelineScreen({super.key});
@@ -11,35 +12,32 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
   int _itemCount = 4;
 
   final PageController _pageController = PageController();
-
-  List<Color> colors = [
-    Colors.blue,
-    Colors.red,
-    Colors.yellow,
-    Colors.teal,
-  ];
+  final Duration _scrollDuration = const Duration(milliseconds: 250);
+  final Curve _scrollCurve = Curves.linear;
 
   void _onPageChanged(int page) {
     //원하는 페이지로 애니메이션을 보낸다.
     _pageController.animateToPage(
       //원하는 페이지
       page,
-      duration: const Duration(microseconds: 150),
+      duration: _scrollDuration,
       //curve는 보여주려는 애니메이션의 종류를 뜻함
-      curve: Curves.linear,
+      curve: _scrollCurve,
     );
     if (page == _itemCount - 1) {
       _itemCount = _itemCount + 4;
-      colors.addAll(
-        [
-          Colors.blue,
-          Colors.red,
-          Colors.yellow,
-          Colors.teal,
-        ],
-      );
       setState(() {});
     }
+  }
+
+  void _onVideoFinished() {
+    _pageController.nextPage(duration: _scrollDuration, curve: _scrollCurve);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -52,16 +50,8 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
       onPageChanged: _onPageChanged,
       scrollDirection: Axis.vertical,
       itemCount: _itemCount,
-      itemBuilder: (context, index) => Container(
-        color: colors[index],
-        child: Center(
-          child: Text(
-            "Screen $index",
-            style: const TextStyle(
-              fontSize: 68,
-            ),
-          ),
-        ),
+      itemBuilder: (context, index) => VideoPost(
+        onVideoFinished: _onVideoFinished,
       ),
     );
   }
