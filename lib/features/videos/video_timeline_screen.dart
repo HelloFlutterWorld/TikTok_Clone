@@ -10,6 +10,8 @@ class VideoTimelineScreen extends StatefulWidget {
 class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
   int _itemCount = 4;
 
+  final PageController _pageController = PageController();
+
   List<Color> colors = [
     Colors.blue,
     Colors.red,
@@ -18,6 +20,14 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
   ];
 
   void _onPageChanged(int page) {
+    //원하는 페이지로 애니메이션을 보낸다.
+    _pageController.animateToPage(
+      //원하는 페이지
+      page,
+      duration: const Duration(microseconds: 150),
+      //curve는 보여주려는 애니메이션의 종류를 뜻함
+      curve: Curves.linear,
+    );
     if (page == _itemCount - 1) {
       _itemCount = _itemCount + 4;
       colors.addAll(
@@ -38,6 +48,7 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
       //자동넘김
       //pageSnapping: false,
       //유저가 이동할 때 도착하는 페이지에 대한 정보를 제공하는 메쏘드
+      controller: _pageController,
       onPageChanged: _onPageChanged,
       scrollDirection: Axis.vertical,
       itemCount: _itemCount,
