@@ -69,9 +69,10 @@ class _VideoPostState extends State<VideoPost>
       value: 1.5,
       duration: _animationDuratrion,
     );
-    _animationController.addListener(() {
-      setState(() {});
-    });
+    // 방법 1
+    // _animationController.addListener(() {
+    //   setState(() {});
+    // });
   }
 
   @override
@@ -92,9 +93,12 @@ class _VideoPostState extends State<VideoPost>
     if (_videoPlayerController.value.isPlaying) {
       _videoPlayerController.pause();
       _animationController.reverse();
+      //reverse:  value(1.5) => lowerBound(1.0)
+      // or upperBound(1.5) => upperBound(1.0)
     } else {
       _videoPlayerController.play();
       _animationController.forward();
+      //forward: lowerBound(1.0)  => upperBound(1.5)
     }
     setState(() {
       _isPaused = !_isPaused;
@@ -128,8 +132,22 @@ class _VideoPostState extends State<VideoPost>
             //클릭무시하는 위젯
             child: IgnorePointer(
               child: Center(
-                child: Transform.scale(
-                  scale: _animationController.value,
+                child: AnimatedBuilder(
+                  //_animationController를 감지한다.
+                  animation: _animationController,
+                  //builder는 애니메이션 컨트롤러거 변할 때마다 실행됨
+                  //_animationController가 변할 때마다 setState가
+                  // build를 실행하고 build 메서드가 가장 최신값으로 rebuild하는
+                  // 일을 대신해줌
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _animationController.value,
+                      //animated를 하고 싶은 child인
+                      //AnimatedOpacity를 넘겨준다.
+                      //child는 옵셔널 파라미터다. return 값은 widget
+                      child: child,
+                    );
+                  },
                   child: AnimatedOpacity(
                     //lowBound = 0
                     //upperBound = 1
