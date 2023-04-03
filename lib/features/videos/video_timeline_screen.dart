@@ -16,6 +16,7 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
   final Curve _scrollCurve = Curves.linear;
 
   void _onPageChanged(int page) {
+    //사용자가 직접 패이지를 스크롤 할 때
     //원하는 페이지로 애니메이션을 보낸다.
     _pageController.animateToPage(
       //원하는 페이지
@@ -31,6 +32,8 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
   }
 
   void _onVideoFinished() {
+    //영상이 종료될 때 실행하여
+    //_onPageChanged를 호출
     _pageController.nextPage(duration: _scrollDuration, curve: _scrollCurve);
   }
 
@@ -47,6 +50,7 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
       //pageSnapping: false,
       //유저가 이동할 때 도착하는 페이지에 대한 정보를 제공하는 메쏘드
       controller: _pageController,
+      //사용자가 직접 패이지를 스크롤 할 때
       onPageChanged: _onPageChanged,
       scrollDirection: Axis.vertical,
       itemCount: _itemCount,
