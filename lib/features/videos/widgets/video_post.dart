@@ -20,6 +20,12 @@ class VideoPost extends StatefulWidget {
 
 class _VideoPostState extends State<VideoPost>
     with SingleTickerProviderStateMixin {
+  //애니메이션이 필요할 때 매 프레임마다
+  //SingleTickerProviderStateMixin는 current tree가 활성화된 동안만
+  //즉 위젯이 화면이 보일 때만, tick하는 단일 ticker를 제공(즉 Ticker가 tick)한다.
+  //7.7 SingleTickerProviderStateMixin 참조
+  // 1. 애니메이션은 Ticker가 필요하다 왜냐면 매 프레임마다 재생되어야 하니까
+  // 2. 하지만 Ticker가 항상 활성화 상태면 안되고 controller도 하나이므로 Single을 사용한다.
   final VideoPlayerController _videoPlayerController =
       VideoPlayerController.asset("assets/videos/video.mp4");
 
@@ -61,8 +67,14 @@ class _VideoPostState extends State<VideoPost>
   void initState() {
     super.initState();
     _initVideoPlayer();
+    //이 시계는 매 애니메이션의 프레임마다 fucntion을 제공한다.
+    //에니메이션에 callback을 제공해주는 게 바로 Ticker이다
     _animationController = AnimationController(
+      //vsync는 offscreen 애니메이션의 불필요한 리소스를 막아줌
+      // 즉 위젯이 안 보일 때는 애니메이션이 작동하지 않도록 해줌
       vsync: this,
+      //vsync는 애니메이션 재생을 도와주고
+      //위젯이 위젯 tree에 있을 때만 Ticker를 유지해준다.
       lowerBound: 1.0,
       upperBound: 1.5,
       //value 는 기본값이다.
@@ -70,7 +82,7 @@ class _VideoPostState extends State<VideoPost>
       duration: _animationDuratrion,
     );
     // 방법 1
-    // _animationController.addListener(() {
+    //_animationController.addListener(() {
     //   setState(() {});
     // });
   }
@@ -133,6 +145,8 @@ class _VideoPostState extends State<VideoPost>
             child: IgnorePointer(
               child: Center(
                 child: AnimatedBuilder(
+                  //방법2
+                  //animation은 Listenable 타입이다.
                   //_animationController를 감지한다.
                   animation: _animationController,
                   //builder는 애니메이션 컨트롤러거 변할 때마다 실행됨
