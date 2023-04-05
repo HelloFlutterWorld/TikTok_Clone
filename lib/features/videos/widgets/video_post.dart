@@ -31,6 +31,18 @@ class _VideoPostState extends State<VideoPost>
   final VideoPlayerController _videoPlayerController =
       VideoPlayerController.asset("assets/videos/video.mp4");
 
+  final hashtags = [
+    '#korea',
+    '#siheung',
+    '#ducks',
+    '#offspring',
+    '#river',
+    '#hometown',
+    '#summer'
+  ];
+
+  bool _isFullHashtag = false;
+
   bool _isPaused = false;
 
   final Duration _animationDuratrion = const Duration(milliseconds: 200);
@@ -125,6 +137,12 @@ class _VideoPostState extends State<VideoPost>
     });
   }
 
+  void _seeMoreTap() {
+    setState(() {
+      _isFullHashtag = !_isFullHashtag;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return VisibilityDetector(
@@ -190,8 +208,8 @@ class _VideoPostState extends State<VideoPost>
             left: 10,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
+              children: [
+                const Text(
                   "@Yoon",
                   style: TextStyle(
                     color: Colors.white,
@@ -200,12 +218,41 @@ class _VideoPostState extends State<VideoPost>
                   ),
                 ),
                 Gaps.v10,
-                Text(
+                const Text(
                   "These are ducks in the river in my hometown!!!",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: Sizes.size16,
                   ),
+                ),
+                Gaps.v10,
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 300,
+                      child: Text(
+                        hashtags.join(' '),
+                        maxLines: _isFullHashtag ? hashtags.length : 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: Sizes.size16,
+                        ),
+                      ),
+                    ),
+                    Gaps.h5,
+                    GestureDetector(
+                      onTap: _seeMoreTap,
+                      child: Text(
+                        _isFullHashtag ? "   닫기" : "더 보기",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: Sizes.size16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
