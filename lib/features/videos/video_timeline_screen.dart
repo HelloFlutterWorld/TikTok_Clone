@@ -44,20 +44,37 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
     super.dispose();
   }
 
+  Future<void> _onRefresh() {
+    return Future.delayed(
+      const Duration(
+        seconds: 5,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return PageView.builder(
-      //자동넘김
-      //pageSnapping: false,
-      //유저가 이동할 때 도착하는 페이지에 대한 정보를 제공하는 메쏘드
-      controller: _pageController,
-      //사용자가 직접 패이지를 스크롤 할 때
-      onPageChanged: _onPageChanged,
-      scrollDirection: Axis.vertical,
-      itemCount: _itemCount,
-      itemBuilder: (context, index) => VideoPost(
-        onVideoFinished: _onVideoFinished,
-        index: index,
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      //화면을 당기기 시작할 때 처음 나타나는
+      //edgeoffset으로부터 아래로의 indicator의 위치를 정하는 값
+      displacement: 50,
+      //화면을 당길 때 indicator가 처음 나타나는 위치를 정함
+      edgeOffset: 20,
+      color: Theme.of(context).primaryColor,
+      child: PageView.builder(
+        //자동넘김
+        //pageSnapping: false,
+        //유저가 이동할 때 도착하는 페이지에 대한 정보를 제공하는 메쏘드
+        controller: _pageController,
+        //사용자가 직접 패이지를 스크롤 할 때
+        onPageChanged: _onPageChanged,
+        scrollDirection: Axis.vertical,
+        itemCount: _itemCount,
+        itemBuilder: (context, index) => VideoPost(
+          onVideoFinished: _onVideoFinished,
+          index: index,
+        ),
       ),
     );
   }
