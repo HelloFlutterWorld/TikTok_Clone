@@ -32,9 +32,10 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
   }
 
   void _onVideoFinished() {
+    return;
     //영상이 종료될 때 실행하여
     //_onPageChanged를 호출
-    _pageController.nextPage(duration: _scrollDuration, curve: _scrollCurve);
+    //_pageController.nextPage(duration: _scrollDuration, curve: _scrollCurve);
   }
 
   @override

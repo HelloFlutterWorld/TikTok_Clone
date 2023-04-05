@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/videos/widgets/video_button.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -54,12 +56,18 @@ class _VideoPostState extends State<VideoPost>
 
     //VisibilityDetetor를 사용하면서 아래의 오토플레이를 지웠음
     //_videoPlayerController.play();
-    //build메소드로 하여금 controller가 초기화 되었고
-    //모든것이 잘 작동한다는 것을 알도록 아래와 같이 setState
+
+    // 영상이 끝나면 화면 넘김 없이 제자리에서 계속 반복
+    // _onVideoChanged를 호출해도 아무것도 반환 받지 않음으로 수정
+    await _videoPlayerController.setLooping(true);
 
     //객체가 변경될 때 호출할 클로저를 등록함.
     //리스너가 영상이 바뀌는 시간, 길이, 끝나는 시간 등을 모두 알려줄 수 있다.
+
     _videoPlayerController.addListener(_onVideoChange);
+
+    //build메소드로 하여금 controller가 초기화 되었고
+    //모든것이 잘 작동한다는 것을 알도록 아래와 같이 setState
     setState(() {});
   }
 
@@ -177,6 +185,65 @@ class _VideoPostState extends State<VideoPost>
               ),
             ),
           ),
+          Positioned(
+            bottom: 20,
+            left: 10,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  "@Yoon",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: Sizes.size20,
+                  ),
+                ),
+                Gaps.v10,
+                Text(
+                  "These are ducks in the river in my hometown!!!",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: Sizes.size16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            right: 10,
+            child: Column(
+              children: const [
+                //이미지가 있는 원을 제공해 줌
+                CircleAvatar(
+                  //아바타의 크기
+                  radius: 25,
+                  //이미지가 로드되지 않을 경우를 대비해서
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  foregroundImage: NetworkImage(
+                      "https://d1telmomo28umc.cloudfront.net/media/public/avatars/customs0529-1679985124.jpg"),
+                  child: Text("Yoon"),
+                ),
+                Gaps.v24,
+                VideoButton(
+                  icon: FontAwesomeIcons.solidHeart,
+                  text: "2.9M",
+                ),
+                Gaps.v24,
+                VideoButton(
+                  icon: FontAwesomeIcons.solidComment,
+                  text: "33K",
+                ),
+                Gaps.v24,
+                VideoButton(
+                  icon: FontAwesomeIcons.share,
+                  text: "Share",
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );
