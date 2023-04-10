@@ -6,6 +6,8 @@ import 'package:tiktok_clone/features/videos/widgets/video_button.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+import 'vidoe_comments.dart';
+
 class VideoPost extends StatefulWidget {
   final Function onVideoFinished;
 
@@ -116,7 +118,10 @@ class _VideoPostState extends State<VideoPost>
   void _onVisibilityChanged(VisibilityInfo info) {
     //다음 영상이 완전히 빌드된 후에만 재생되도록
     //visibleFraction는 위젯이 얼마나 보이는 지를 나타내는 0이상 1이하 범위의 수
-    if (info.visibleFraction == 1 && !_videoPlayerController.value.isPlaying) {
+    if (info.visibleFraction == 1 &&
+        //멈춘 상태에서 새로고침을 해도 바로 재생되것을 막기 위하여
+        !_isPaused &&
+        !_videoPlayerController.value.isPlaying) {
       _videoPlayerController.play();
     }
   }
@@ -141,6 +146,21 @@ class _VideoPostState extends State<VideoPost>
     setState(() {
       _isFullHashtag = !_isFullHashtag;
     });
+  }
+
+  void _onCommentsTap(BuildContext context) async {
+    if (_videoPlayerController.value.isPlaying) {
+      _onTogglePause();
+    }
+    await showModalBottomSheet(
+      context: context,
+      //vidoeComments의 scaffold의 색이 보이도록 해줌
+      //따라서 스카폴드의 부모위젯인 Contanier의 모서리를 둥글게 적용하고
+      //hardEdge기능을 사용하여 Scaffold의 모서리를 둥글게 만들 수 있음
+      backgroundColor: Colors.transparent,
+      builder: (context) => const VideoComments(),
+    );
+    _onTogglePause();
   }
 
   @override
@@ -261,9 +281,9 @@ class _VideoPostState extends State<VideoPost>
             bottom: 20,
             right: 10,
             child: Column(
-              children: const [
+              children: [
                 //이미지가 있는 원을 제공해 줌
-                CircleAvatar(
+                const CircleAvatar(
                   //아바타의 크기
                   radius: 25,
                   //이미지가 로드되지 않을 경우를 대비해서
@@ -274,17 +294,20 @@ class _VideoPostState extends State<VideoPost>
                   child: Text("Yoon"),
                 ),
                 Gaps.v24,
-                VideoButton(
+                const VideoButton(
                   icon: FontAwesomeIcons.solidHeart,
                   text: "2.9M",
                 ),
                 Gaps.v24,
-                VideoButton(
-                  icon: FontAwesomeIcons.solidComment,
-                  text: "33K",
+                GestureDetector(
+                  onTap: () => _onCommentsTap(context),
+                  child: const VideoButton(
+                    icon: FontAwesomeIcons.solidComment,
+                    text: "33K",
+                  ),
                 ),
                 Gaps.v24,
-                VideoButton(
+                const VideoButton(
                   icon: FontAwesomeIcons.share,
                   text: "Share",
                 ),

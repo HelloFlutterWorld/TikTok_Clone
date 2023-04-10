@@ -96,69 +96,66 @@ class _PasswordScreenState extends State<PasswordScreen> {
                 ),
               ),
               Gaps.v16,
-              GestureDetector(
-                onTap: _toggleObscureText,
-                child: TextField(
-                  //사용자의 입력텍스트를 스테이트에 저장
-                  //텍스트필드는 컨트롤러 프로퍼티를 가지고 있다.
-                  controller: _passwordController,
-                  //비빌번호처럼 보이게 해주는 변수 bool형식
-                  obscureText: _obscureText,
-                  //done 버튼을 누를 때  _onSubmit를 호출하는 두 가지 방법
-                  //onSubmitted
-                  onEditingComplete: _onSubmit,
-                  autocorrect: false,
-                  decoration: InputDecoration(
-                    // 아이콘 대신에 위젯을 넣고 싶으면 prefix나 suffix를 사용
-                    suffix: Row(
-                      //Row는 최대한의 너비를 가지려한다. 따라서 최소한의 공간만 차지하도록
-                      //아래와 같이 입력하여 Row의 가로의 길이를 최소로 설정하여
-                      //아이콘들을 오른쪽 끝으로 정렬.
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        GestureDetector(
-                          onTap: _onClearTap,
-                          child: FaIcon(
-                            FontAwesomeIcons.solidCircleXmark,
-                            color: Colors.grey.shade500,
-                            size: Sizes.size20,
-                          ),
+              TextField(
+                //사용자의 입력텍스트를 스테이트에 저장
+                //텍스트필드는 컨트롤러 프로퍼티를 가지고 있다.
+                controller: _passwordController,
+                //비빌번호처럼 보이게 해주는 변수 bool형식
+                obscureText: _obscureText,
+                //done 버튼을 누를 때  _onSubmit를 호출하는 두 가지 방법
+                //onSubmitted
+                onEditingComplete: _onSubmit,
+                autocorrect: false,
+                decoration: InputDecoration(
+                  // 아이콘 대신에 위젯을 넣고 싶으면 prefix나 suffix를 사용
+                  suffix: Row(
+                    //Row는 최대한의 너비를 가지려한다. 따라서 최소한의 공간만 차지하도록
+                    //아래와 같이 입력하여 Row의 가로의 길이를 최소로 설정하여
+                    //아이콘들을 오른쪽 끝으로 정렬.
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      GestureDetector(
+                        onTap: _onClearTap,
+                        child: FaIcon(
+                          FontAwesomeIcons.solidCircleXmark,
+                          color: Colors.grey.shade500,
+                          size: Sizes.size20,
                         ),
-                        Gaps.h16,
-                        GestureDetector(
-                          onTap: _toggleObscureText,
-                          child: FaIcon(
-                            _obscureText
-                                ? FontAwesomeIcons.eye
-                                : FontAwesomeIcons.eyeSlash,
-                            color: Colors.grey.shade500,
-                            size: Sizes.size20,
-                          ),
+                      ),
+                      Gaps.h16,
+                      GestureDetector(
+                        onTap: _toggleObscureText,
+                        child: FaIcon(
+                          _obscureText
+                              ? FontAwesomeIcons.eye
+                              : FontAwesomeIcons.eyeSlash,
+                          color: Colors.grey.shade500,
+                          size: Sizes.size20,
                         ),
-                      ],
-                    ),
-                    // prefixIcon: const Icon(
-                    //   Icons.ac_unit,
-                    // ),
-                    // suffixIcon: const Icon(
-                    //   Icons.access_alarm,
-                    // ),
-                    hintText: "Make it strong",
-                    //처음 볼 때 밑 줄
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey.shade400,
                       ),
-                    ),
-                    //탭 했을 때 밑 줄
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey.shade400,
-                      ),
+                    ],
+                  ),
+                  // prefixIcon: const Icon(
+                  //   Icons.ac_unit,
+                  // ),
+                  // suffixIcon: const Icon(
+                  //   Icons.access_alarm,
+                  // ),
+                  hintText: "Make it strong",
+                  //처음 볼 때 밑 줄
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade400,
                     ),
                   ),
-                  cursorColor: Theme.of(context).primaryColor,
+                  //탭 했을 때 밑 줄
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
                 ),
+                cursorColor: Theme.of(context).primaryColor,
               ),
               Gaps.v10,
               const Text(
