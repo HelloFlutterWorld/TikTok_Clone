@@ -13,6 +13,8 @@ class VideoComments extends StatefulWidget {
 class _VideoCommentsState extends State<VideoComments> {
   bool _isWriting = false;
 
+  final ScrollController _scrollCotroller = ScrollController();
+
   void _onClosePressed() {
     Navigator.of(context).pop();
   }
@@ -65,56 +67,63 @@ class _VideoCommentsState extends State<VideoComments> {
           onTap: _onStopWriting,
           child: Stack(
             children: [
-              ListView.separated(
-                separatorBuilder: (context, index) => Gaps.v20,
-                itemCount: 10,
-                padding: const EdgeInsets.symmetric(
-                  vertical: Sizes.size10,
-                  horizontal: Sizes.size16,
-                ),
-                itemBuilder: (context, index) => Row(
-                  //아바타틀 Row의 위로 오도록
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const CircleAvatar(
-                      radius: 18,
-                      child: Text("니꼬"),
-                    ),
-                    Gaps.h10,
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Nico",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: Sizes.size14,
-                              color: Colors.grey.shade500,
+              Scrollbar(
+                controller: _scrollCotroller,
+                child: ListView.separated(
+                  controller: _scrollCotroller,
+                  separatorBuilder: (context, index) => Gaps.v20,
+                  itemCount: 10,
+                  padding: const EdgeInsets.only(
+                    left: Sizes.size16,
+                    right: Sizes.size16,
+                    top: Sizes.size10,
+                    //positioned 가 코멘트들을 가리지 않도록
+                    bottom: Sizes.size96 + Sizes.size20,
+                  ),
+                  itemBuilder: (context, index) => Row(
+                    //아바타틀 Row의 위로 오도록
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const CircleAvatar(
+                        radius: 18,
+                        child: Text("니꼬"),
+                      ),
+                      Gaps.h10,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Nico",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: Sizes.size14,
+                                color: Colors.grey.shade500,
+                              ),
                             ),
+                            Gaps.v3,
+                            const Text(
+                                "That's not it l've seen the same thing but also in a cave,")
+                          ],
+                        ),
+                      ),
+                      Gaps.h10,
+                      Column(
+                        children: [
+                          FaIcon(
+                            FontAwesomeIcons.heart,
+                            size: Sizes.size20,
+                            color: Colors.grey.shade500,
                           ),
-                          Gaps.v3,
-                          const Text(
-                              "That's not it l've seen the same thing but also in a cave,")
+                          Gaps.v2,
+                          Text(
+                            "52.2K",
+                            style: TextStyle(color: Colors.grey.shade500),
+                          ),
                         ],
                       ),
-                    ),
-                    Gaps.h10,
-                    Column(
-                      children: [
-                        FaIcon(
-                          FontAwesomeIcons.heart,
-                          size: Sizes.size20,
-                          color: Colors.grey.shade500,
-                        ),
-                        Gaps.v2,
-                        Text(
-                          "52.2K",
-                          style: TextStyle(color: Colors.grey.shade500),
-                        ),
-                      ],
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               //bottomNavigationBar는 기본적으로 키보드가 나오면
