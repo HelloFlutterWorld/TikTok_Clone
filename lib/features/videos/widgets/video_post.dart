@@ -157,6 +157,7 @@ class _VideoPostState extends State<VideoPost>
       //vidoeComments의 scaffold의 색이 보이도록 해줌
       //따라서 스카폴드의 부모위젯인 Contanier의 모서리를 둥글게 적용하고
       //hardEdge기능을 사용하여 Scaffold의 모서리를 둥글게 만들 수 있음
+      isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => const VideoComments(),
     );
