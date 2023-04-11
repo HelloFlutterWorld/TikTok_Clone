@@ -11,8 +11,23 @@ class VideoComments extends StatefulWidget {
 }
 
 class _VideoCommentsState extends State<VideoComments> {
+  bool _isWriting = false;
+
   void _onClosePressed() {
     Navigator.of(context).pop();
+  }
+
+  void _onStopWriting() {
+    FocusScope.of(context).unfocus();
+    setState(() {
+      _isWriting = false;
+    });
+  }
+
+  void _onStartWriting() {
+    setState(() {
+      _isWriting = true;
+    });
   }
 
   @override
@@ -46,107 +61,156 @@ class _VideoCommentsState extends State<VideoComments> {
             ),
           ],
         ),
-        body: Stack(
-          children: [
-            ListView.separated(
-              separatorBuilder: (context, index) => Gaps.v20,
-              itemCount: 10,
-              padding: const EdgeInsets.symmetric(
-                vertical: Sizes.size10,
-                horizontal: Sizes.size16,
-              ),
-              itemBuilder: (context, index) => Row(
-                //아바타틀 Row의 위로 오도록
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const CircleAvatar(
-                    radius: 18,
-                    child: Text("니꼬"),
-                  ),
-                  Gaps.h10,
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+        body: GestureDetector(
+          onTap: _onStopWriting,
+          child: Stack(
+            children: [
+              ListView.separated(
+                separatorBuilder: (context, index) => Gaps.v20,
+                itemCount: 10,
+                padding: const EdgeInsets.symmetric(
+                  vertical: Sizes.size10,
+                  horizontal: Sizes.size16,
+                ),
+                itemBuilder: (context, index) => Row(
+                  //아바타틀 Row의 위로 오도록
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const CircleAvatar(
+                      radius: 18,
+                      child: Text("니꼬"),
+                    ),
+                    Gaps.h10,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Nico",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: Sizes.size14,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                          Gaps.v3,
+                          const Text(
+                              "That's not it l've seen the same thing but also in a cave,")
+                        ],
+                      ),
+                    ),
+                    Gaps.h10,
+                    Column(
                       children: [
+                        FaIcon(
+                          FontAwesomeIcons.heart,
+                          size: Sizes.size20,
+                          color: Colors.grey.shade500,
+                        ),
+                        Gaps.v2,
                         Text(
-                          "Nico",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: Sizes.size14,
-                            color: Colors.grey.shade500,
+                          "52.2K",
+                          style: TextStyle(color: Colors.grey.shade500),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              //bottomNavigationBar는 기본적으로 키보드가 나오면
+              //밑에 숨겨지기 때문에 Positioned를 사용한다.
+              Positioned(
+                bottom: 0,
+                width: size.width,
+                child: BottomAppBar(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Sizes.size16,
+                      vertical: Sizes.size10,
+                    ),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 18,
+                          backgroundColor: Colors.grey.shade500,
+                          foregroundColor: Colors.white,
+                          child: const Text("니꼬"),
+                        ),
+                        Gaps.h10,
+                        Expanded(
+                          child: SizedBox(
+                            height: Sizes.size44,
+                            child: TextField(
+                              onTap: _onStartWriting,
+                              expands: true,
+                              minLines: null,
+                              maxLines: null,
+                              //return을 누르면 다음 줄이 생겨서
+                              //여러줄을 입력할 수 있게해붐
+                              textInputAction: TextInputAction.newline,
+                              cursorColor: Theme.of(context).primaryColor,
+                              decoration: InputDecoration(
+                                hintText: "Add comment...",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    Sizes.size12,
+                                  ),
+                                  borderSide: BorderSide.none,
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey.shade200,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  //작은 값을 입력하면 영향을 안 줌
+                                  //따라서 SizedBox로 크기를 따로 지정함
+                                  vertical: Sizes.size10,
+                                  horizontal: Sizes.size12,
+                                ),
+                                suffixIcon: Padding(
+                                  padding: const EdgeInsets.only(
+                                    right: Sizes.size14,
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      FaIcon(
+                                        FontAwesomeIcons.at,
+                                        color: Colors.grey.shade900,
+                                      ),
+                                      Gaps.h14,
+                                      FaIcon(
+                                        FontAwesomeIcons.gift,
+                                        color: Colors.grey.shade900,
+                                      ),
+                                      Gaps.h14,
+                                      FaIcon(
+                                        FontAwesomeIcons.faceSmile,
+                                        color: Colors.grey.shade900,
+                                      ),
+                                      if (_isWriting) Gaps.h14,
+                                      if (_isWriting)
+                                        GestureDetector(
+                                          onTap: _onStartWriting,
+                                          child: FaIcon(
+                                            FontAwesomeIcons.circleArrowUp,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                        Gaps.v3,
-                        const Text(
-                            "That's not it l've seen the same thing but also in a cave,")
                       ],
                     ),
                   ),
-                  Gaps.h10,
-                  Column(
-                    children: [
-                      FaIcon(
-                        FontAwesomeIcons.heart,
-                        size: Sizes.size20,
-                        color: Colors.grey.shade500,
-                      ),
-                      Gaps.v2,
-                      Text(
-                        "52.2K",
-                        style: TextStyle(color: Colors.grey.shade500),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            //bottomNavigationBar는 기본적으로 키보드가 나오면
-            //밑에 숨겨지기 때문에 Positioned를 사용한다.
-            Positioned(
-              bottom: 0,
-              width: size.width,
-              child: BottomAppBar(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Sizes.size16,
-                    vertical: Sizes.size10,
-                  ),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 18,
-                        backgroundColor: Colors.grey.shade500,
-                        foregroundColor: Colors.white,
-                        child: const Text("니꼬"),
-                      ),
-                      Gaps.h10,
-                      Expanded(
-                        child: TextField(
-                          cursorColor: Theme.of(context).primaryColor,
-                          decoration: InputDecoration(
-                            hintText: "Add comment...",
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                Sizes.size12,
-                              ),
-                              borderSide: BorderSide.none,
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey.shade200,
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: Sizes.size10,
-                              horizontal: Sizes.size12,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
