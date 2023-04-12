@@ -68,6 +68,7 @@ class _VideoCommentsState extends State<VideoComments> {
           child: Stack(
             children: [
               Scrollbar(
+                //스크롤바를 사용할 포지션도 같이 선언
                 controller: _scrollCotroller,
                 child: ListView.separated(
                   controller: _scrollCotroller,
