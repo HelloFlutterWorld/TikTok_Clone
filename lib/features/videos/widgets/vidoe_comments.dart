@@ -32,6 +32,13 @@ class _VideoCommentsState extends State<VideoComments> {
     });
   }
 
+  //내가 추가한 코드
+  @override
+  void dispose() {
+    _scrollCotroller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     //현재 사용자의 스마트폰의 크기를 반환받은
