@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
@@ -13,8 +14,31 @@ final tabs = [
   "Brands",
 ];
 
-class DiscoverScreen extends StatelessWidget {
+class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key});
+
+  @override
+  State<DiscoverScreen> createState() => _DiscoverScreenState();
+}
+
+class _DiscoverScreenState extends State<DiscoverScreen> {
+  final TextEditingController _textEditingController = TextEditingController(
+    text: "Initial Text",
+  );
+
+  void _onSearchChanged(String value) {
+    print("Searching form $value");
+  }
+
+  void _onSearchSumnitted(String value) {
+    print("Submitted $value");
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,40 +48,49 @@ class DiscoverScreen extends StatelessWidget {
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
+        //키보드가 올라와도 화면이 찌그러지지 않도록
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           elevation: 1,
-          title: const Text('Discover'),
+          title: CupertinoSearchTextField(
+            controller: _textEditingController,
+            onChanged: _onSearchChanged,
+            onSubmitted: _onSearchSumnitted,
+          ),
           //PreferredSizeWidget: 특정한 크기를 가지려고 하지만
           //자식요소의 크기를 제한하지 않는 위젯
           //즉 자식요소가 부모요소의 제한을 받지 않는다.
           //bottom: PreferredSize(child: Container()),
           bottom: TabBar(
-              //스플래쉬효과 없애기
-              splashFactory: NoSplash.splashFactory,
-              padding: const EdgeInsets.symmetric(
-                horizontal: Sizes.size16,
-              ),
-              isScrollable: true,
-              labelStyle: const TextStyle(
-                fontSize: Sizes.size16,
-                fontWeight: FontWeight.w600,
-              ),
-              //밑줄색
-              indicatorColor: Colors.black,
-              //선택된 탭의 글자색
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.grey.shade500,
-              tabs: [
-                for (var tab in tabs)
-                  Tab(
-                    text: tab,
-                  )
-              ]),
+            //스플래쉬효과 없애기
+            splashFactory: NoSplash.splashFactory,
+            padding: const EdgeInsets.symmetric(
+              horizontal: Sizes.size16,
+            ),
+            isScrollable: true,
+            labelStyle: const TextStyle(
+              fontSize: Sizes.size16,
+              fontWeight: FontWeight.w600,
+            ),
+            //밑줄색
+            indicatorColor: Colors.black,
+            //선택된 탭의 글자색
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.grey.shade500,
+            tabs: [
+              for (var tab in tabs)
+                Tab(
+                  text: tab,
+                )
+            ],
+          ),
         ),
         body: TabBarView(
           children: [
             //gridDelegate는 컨트롤러와는 약간 다른, 도우미같은 느낌이다.
             GridView.builder(
+              //스크롤할때는 키보드가 사라지도록
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               itemCount: 20,
               padding: const EdgeInsets.all(
                 Sizes.size6,
@@ -74,13 +107,22 @@ class DiscoverScreen extends StatelessWidget {
               ),
               itemBuilder: (context, index) => Column(
                 children: [
-                  AspectRatio(
-                    aspectRatio: 9 / 16,
-                    child: FadeInImage.assetNetwork(
-                      fit: BoxFit.cover,
-                      placeholder: "assets/images/image.jpg",
-                      image:
-                          "https://images.unsplash.com/photo-1673844969019-c99b0c933e90?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
+                  //종행비율 조절위젯
+                  Container(
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        Sizes.size4,
+                      ),
+                    ),
+                    child: AspectRatio(
+                      aspectRatio: 9 / 16,
+                      child: FadeInImage.assetNetwork(
+                        fit: BoxFit.cover,
+                        placeholder: "assets/images/image.jpg",
+                        image:
+                            "https://images.unsplash.com/photo-1673844969019-c99b0c933e90?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
+                      ),
                     ),
                   ),
                   Gaps.v10,
@@ -140,7 +182,7 @@ class DiscoverScreen extends StatelessWidget {
                     fontSize: 28,
                   ),
                 ),
-              )
+              ),
           ],
         ),
       ),
