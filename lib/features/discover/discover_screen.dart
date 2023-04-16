@@ -53,8 +53,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           elevation: 1,
           title: Row(
             children: [
-              const Icon(
-                Icons.arrow_back_ios,
+              const FaIcon(
+                FontAwesomeIcons.chevronLeft,
                 size: Sizes.size28,
                 color: Colors.black,
               ),
