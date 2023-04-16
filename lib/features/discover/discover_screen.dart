@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
@@ -23,15 +22,15 @@ class DiscoverScreen extends StatefulWidget {
 
 class _DiscoverScreenState extends State<DiscoverScreen> {
   final TextEditingController _textEditingController = TextEditingController(
-    text: "Initial Text",
+    text: "food tiktok",
   );
 
-  void _onSearchChanged(String value) {
-    print("Searching form $value");
+  void _hidingKeyboard() {
+    FocusScope.of(context).unfocus();
   }
 
-  void _onSearchSumnitted(String value) {
-    print("Submitted $value");
+  void _onClearTap() {
+    _textEditingController.clear();
   }
 
   @override
@@ -52,16 +51,74 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           elevation: 1,
-          title: CupertinoSearchTextField(
-            controller: _textEditingController,
-            onChanged: _onSearchChanged,
-            onSubmitted: _onSearchSumnitted,
+          title: Row(
+            children: [
+              const Icon(
+                Icons.arrow_back_ios,
+                size: Sizes.size28,
+                color: Colors.black,
+              ),
+              Gaps.h12,
+              Expanded(
+                child: SizedBox(
+                  height: Sizes.size44,
+                  child: TextField(
+                    controller: _textEditingController,
+                    cursorColor: Theme.of(context).primaryColor,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          Sizes.size4,
+                        ),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey.shade100,
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: Sizes.size10,
+                        horizontal: Sizes.size12,
+                      ),
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: Sizes.size10,
+                          horizontal: Sizes.size12,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            FaIcon(
+                              FontAwesomeIcons.magnifyingGlass,
+                              size: Sizes.size16 + Sizes.size2,
+                              color: Colors.black,
+                            ),
+                          ],
+                        ),
+                      ),
+                      suffix: GestureDetector(
+                        onTap: _onClearTap,
+                        child: FaIcon(
+                          FontAwesomeIcons.solidCircleXmark,
+                          color: Colors.grey.shade500,
+                          size: Sizes.size16 + Sizes.size2,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Gaps.h12,
+              const Icon(
+                Icons.format_align_center,
+                size: Sizes.size28,
+              ),
+            ],
           ),
           //PreferredSizeWidget: 특정한 크기를 가지려고 하지만
           //자식요소의 크기를 제한하지 않는 위젯
           //즉 자식요소가 부모요소의 제한을 받지 않는다.
           //bottom: PreferredSize(child: Container()),
           bottom: TabBar(
+            onTap: (value) => _hidingKeyboard(),
             //스플래쉬효과 없애기
             splashFactory: NoSplash.splashFactory,
             padding: const EdgeInsets.symmetric(
