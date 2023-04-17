@@ -15,6 +15,10 @@ class TikTokApp extends StatelessWidget {
     return MaterialApp(
         title: 'TikTok Clone',
         theme: ThemeData(
+          //앱 전체의 스플래쉬 효과 제거하기
+          splashColor: Colors.transparent,
+          //앱 전체의 롱프레스 스플래쉬 효과 제저하기
+          //highlightColor: Colors.transparent,
           textSelectionTheme: const TextSelectionThemeData(
             cursorColor: Color(0XFFE9435A),
           ),
