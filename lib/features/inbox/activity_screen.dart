@@ -20,10 +20,45 @@ class _ActivityScreenState extends State<ActivityScreen>
   //this나 다른 인스턴트 멤버를 참조하려면 late를 사용해주어야 한다. 이럴경우 initstate는 필요없다.
 
   //이렇게 하면 Animation Builder나 build 메소드를 트리거하거나 setState를 설정하지 않아도 된다.
-  late final Animation<double> _animation =
+  late final Animation<double> _arrowAnimation =
       Tween(begin: 0.0, end: 0.5).animate(_animationController);
 
+  late final Animation<Offset> _panelAnimation = Tween(
+    //시작위치 가로축과 세로축
+    begin: const Offset(0, -1),
+    //종류위치 가로축과 세로축
+    end: Offset.zero,
+    //arrowAnimation과 동일한 콘트롤러를 사용함
+  ).animate(_animationController);
+
   final List<String> _notifications = List.generate(20, (index) => "${index}h");
+
+  final List<Map<String, dynamic>> _tabs = [
+    {
+      "title": "All activity",
+      "icon": FontAwesomeIcons.solidMessage,
+    },
+    {
+      "title": "Likes",
+      "icon": FontAwesomeIcons.solidHeart,
+    },
+    {
+      "title": "Comments",
+      "icon": FontAwesomeIcons.solidComments,
+    },
+    {
+      "title": "Mentions",
+      "icon": FontAwesomeIcons.at,
+    },
+    {
+      "title": "Followers",
+      "icon": FontAwesomeIcons.solidUser,
+    },
+    {
+      "title": "From TikTok",
+      "icon": FontAwesomeIcons.tiktok,
+    }
+  ];
 
   @override
   void initState() {
@@ -52,6 +87,12 @@ class _ActivityScreenState extends State<ActivityScreen>
   }
 
   @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //print(_notifications);
     return Scaffold(
@@ -66,7 +107,7 @@ class _ActivityScreenState extends State<ActivityScreen>
               ),
               Gaps.h2,
               RotationTransition(
-                turns: _animation,
+                turns: _arrowAnimation,
                 child: const FaIcon(
                   FontAwesomeIcons.chevronDown,
                   size: Sizes.size14,
@@ -76,110 +117,152 @@ class _ActivityScreenState extends State<ActivityScreen>
           ),
         ),
       ),
-      body: ListView(
+      body: Stack(
         children: [
-          Gaps.v14,
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: Sizes.size12,
-            ),
-            child: Text(
-              "New",
-              style: TextStyle(
-                fontSize: Sizes.size14,
-                color: Colors.grey.shade500,
-              ),
-            ),
-          ),
-          Gaps.v14,
-          for (var notification in _notifications)
-            Dismissible(
-              key: Key(notification),
-              //왼쪽 색상 등
-              onDismissed: (direction) => _onDismissed(notification),
-              background: Container(
-                alignment: Alignment.centerLeft,
-                color: Colors.green,
-                child: const Padding(
-                  padding: EdgeInsets.only(
-                    left: Sizes.size10,
-                  ),
-                  child: FaIcon(
-                    FontAwesomeIcons.checkDouble,
-                    color: Colors.white,
-                    size: Sizes.size32,
+          ListView(
+            children: [
+              Gaps.v14,
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Sizes.size12,
+                ),
+                child: Text(
+                  "New",
+                  style: TextStyle(
+                    fontSize: Sizes.size14,
+                    color: Colors.grey.shade500,
                   ),
                 ),
               ),
-              //오른쪽 색상 등
-              secondaryBackground: Container(
-                alignment: Alignment.centerRight,
-                color: Colors.red,
-                child: const Padding(
-                  padding: EdgeInsets.only(
-                    right: Sizes.size10,
-                  ),
-                  child: FaIcon(
-                    FontAwesomeIcons.trashCan,
-                    color: Colors.white,
-                    size: Sizes.size24,
-                  ),
-                ),
-              ),
-              child: ListTile(
-                minVerticalPadding: Sizes.size16,
-                //컨텐츠패딩 제로
-                //왼쪽 위젯
-                leading: Container(
-                  width: Sizes.size52,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey.shade400,
-                      width: Sizes.size1,
-                    ),
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                  ),
-                  child: const Center(
-                    child: FaIcon(
-                      FontAwesomeIcons.bell,
-                      color: Colors.black,
+              Gaps.v14,
+              for (var notification in _notifications)
+                Dismissible(
+                  key: Key(notification),
+                  //왼쪽 색상 등
+                  onDismissed: (direction) => _onDismissed(notification),
+                  background: Container(
+                    alignment: Alignment.centerLeft,
+                    color: Colors.green,
+                    child: const Padding(
+                      padding: EdgeInsets.only(
+                        left: Sizes.size10,
+                      ),
+                      child: FaIcon(
+                        FontAwesomeIcons.checkDouble,
+                        color: Colors.white,
+                        size: Sizes.size32,
+                      ),
                     ),
                   ),
-                ),
-                //오른쪽 위젯(아이콘)
-                trailing: const FaIcon(
-                  FontAwesomeIcons.chevronRight,
-                  size: Sizes.size16,
-                ),
-                title: RichText(
-                  text: TextSpan(
-                    text: "Account updates:",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                      fontSize: Sizes.size16,
+                  //오른쪽 색상 등
+                  secondaryBackground: Container(
+                    alignment: Alignment.centerRight,
+                    color: Colors.red,
+                    child: const Padding(
+                      padding: EdgeInsets.only(
+                        right: Sizes.size10,
+                      ),
+                      child: FaIcon(
+                        FontAwesomeIcons.trashCan,
+                        color: Colors.white,
+                        size: Sizes.size24,
+                      ),
                     ),
-                    children: [
-                      const TextSpan(
-                        text: " Upload longer videos",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
+                  ),
+                  child: ListTile(
+                    minVerticalPadding: Sizes.size16,
+                    //컨텐츠패딩 제로
+                    //왼쪽 위젯
+                    leading: Container(
+                      width: Sizes.size52,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey.shade400,
+                          width: Sizes.size1,
+                        ),
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                      ),
+                      child: const Center(
+                        child: FaIcon(
+                          FontAwesomeIcons.bell,
                           color: Colors.black,
                         ),
                       ),
-                      TextSpan(
-                        text: " $notification",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          color: Colors.grey.shade500,
+                    ),
+                    //오른쪽 위젯(아이콘)
+                    trailing: const FaIcon(
+                      FontAwesomeIcons.chevronRight,
+                      size: Sizes.size16,
+                    ),
+                    title: RichText(
+                      text: TextSpan(
+                        text: "Account updates:",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                          fontSize: Sizes.size16,
                         ),
+                        children: [
+                          const TextSpan(
+                            text: " Upload longer videos",
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: Colors.black,
+                            ),
+                          ),
+                          TextSpan(
+                            text: " $notification",
+                            style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          SlideTransition(
+            position: _panelAnimation,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(
+                    Sizes.size5,
+                  ),
+                  bottomRight: Radius.circular(
+                    Sizes.size5,
                   ),
                 ),
               ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var tab in _tabs)
+                    ListTile(
+                      title: Row(
+                        children: [
+                          FaIcon(
+                            tab["icon"],
+                          ),
+                          Gaps.h20,
+                          Text(
+                            tab['title'],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                ],
+              ),
             ),
+          ),
         ],
       ),
     );
