@@ -31,6 +31,11 @@ class _ActivityScreenState extends State<ActivityScreen>
     //arrowAnimation과 동일한 콘트롤러를 사용함
   ).animate(_animationController);
 
+  late final Animation<Color?> _barrierAnimation = ColorTween(
+    begin: Colors.transparent,
+    end: Colors.black38,
+  ).animate(_animationController);
+
   final List<String> _notifications = List.generate(20, (index) => "${index}h");
 
   final List<Map<String, dynamic>> _tabs = [
@@ -60,13 +65,15 @@ class _ActivityScreenState extends State<ActivityScreen>
     }
   ];
 
+  bool _showBarrier = false;
+
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(
-        milliseconds: 200,
+        milliseconds: 400,
       ),
     );
   }
@@ -78,12 +85,25 @@ class _ActivityScreenState extends State<ActivityScreen>
     setState(() {});
   }
 
-  void _onTitleTap() {
+  void _toggleAnimations() async {
     if (_animationController.isCompleted) {
-      _animationController.reverse();
+      //리버스를 실행할 때는 await를 하고
+      await _animationController.reverse();
     } else {
       _animationController.forward();
     }
+
+    //_animationController.isCompleted이 참인경우
+    //reverse()와 아래 문장의 setState()가 동시에 실행되어 배리어도 곧바로 사라진다.
+    //왜냐면 if(_showBarrier) AnimatedModalBarrier(...)
+    //이때 build가 다시 되고 그 즉시 AnimatedModalBarrier가 위젯에서도 사라잔다.
+    //build는 애니메이션 동작이 완료되는 것을 기다려 주지 않고 배리어를 사라지게 한다.
+    //다행이 reverse와 forward는 모두 Future를 리턴하는데,
+    //Future는 애니메이션이 다 끝나야 완료되므로,
+    //await를 적어주어 애니메이션이 다 끝나야 아래 문장을 실행할 수 있도록 한다.
+    setState(() {
+      _showBarrier = !_showBarrier;
+    });
   }
 
   @override
@@ -98,7 +118,7 @@ class _ActivityScreenState extends State<ActivityScreen>
     return Scaffold(
       appBar: AppBar(
         title: GestureDetector(
-          onTap: _onTitleTap,
+          onTap: _toggleAnimations,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -225,6 +245,15 @@ class _ActivityScreenState extends State<ActivityScreen>
                 ),
             ],
           ),
+          if (_showBarrier)
+            AnimatedModalBarrier(
+              color: _barrierAnimation,
+              //배리어를 터치할 때 반응할 것인가?
+              dismissible: true,
+              onDismiss: _toggleAnimations,
+            ),
+          //"end: Colors.black38"의 영향을 처음부터 받지 않도록 여기에 위치시킴
+          //왜냐면 스택이기때문, 스택은 맨 마지막 노드가 위에 온다.
           SlideTransition(
             position: _panelAnimation,
             child: Container(
