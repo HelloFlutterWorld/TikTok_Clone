@@ -157,9 +157,14 @@ class _ActivityScreenState extends State<ActivityScreen>
               Gaps.v14,
               for (var notification in _notifications)
                 Dismissible(
+                  //고유키를 설정해주고, .setState로 리빌드해주면
+                  //Dismiss한 아이템들이 아예 위젯트리에서 사라지게 된다.\
+                  //따라서 에러가 발생하지 않는다.
                   key: Key(notification),
-                  //왼쪽 색상 등
+                  //방향은 startToEnd 또는 endToStart다
+                  //방향에 신경쓸 것 없다. 어느 방향이건 동작을 하게끔 설정할 것이므로
                   onDismissed: (direction) => _onDismissed(notification),
+                  //왼쪽 색상 등
                   background: Container(
                     alignment: Alignment.centerLeft,
                     color: Colors.green,
@@ -190,8 +195,8 @@ class _ActivityScreenState extends State<ActivityScreen>
                     ),
                   ),
                   child: ListTile(
+                    //줄 간격
                     minVerticalPadding: Sizes.size16,
-                    //컨텐츠패딩 제로
                     //왼쪽 위젯
                     leading: Container(
                       width: Sizes.size52,
