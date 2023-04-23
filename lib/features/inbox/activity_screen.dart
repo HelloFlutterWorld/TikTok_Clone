@@ -120,6 +120,9 @@ class _ActivityScreenState extends State<ActivityScreen>
         title: GestureDetector(
           onTap: _toggleAnimations,
           child: Row(
+            //자기의 텍스트 만큼만 최소한의 공간을 차지함
+            //화면의 가운데로 정렬할 수 있음
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
