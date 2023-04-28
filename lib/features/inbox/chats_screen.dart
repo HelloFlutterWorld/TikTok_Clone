@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/inbox/chat_detail_screen.dart';
 
 class ChatsScreen extends StatefulWidget {
   const ChatsScreen({super.key});
@@ -15,6 +16,8 @@ class _ChatsScreenState extends State<ChatsScreen> {
   //AnimatedListState에 접근할 수 있는 key
   final GlobalKey<AnimatedListState> _key = GlobalKey<AnimatedListState>();
 
+  final Duration _duration = const Duration(milliseconds: 300);
+
   void _addItem() {
     if (_key.currentState != null) {
       //위에서부터(처음부터) 나타나게 하려면
@@ -23,12 +26,82 @@ class _ChatsScreenState extends State<ChatsScreen> {
       //왜냐면 initialItemCount: 0으로 세팅되어 있기 때문이다.
       _key.currentState!.insertItem(
         _items.length,
-        duration: const Duration(
-          milliseconds: 500,
-        ),
+        duration: _duration,
       );
       _items.add(_items.length);
     }
+  }
+
+  void _deleteItem(int index) {
+    if (_key.currentState != null) {
+      //아래의 => 함수는 view로부터 아이템을 삭제할 때 보여주고 싶은 아이템을 반환해야 함
+      _key.currentState!.removeItem(
+        index,
+        (context, animation) => SizeTransition(
+          sizeFactor: animation,
+          //삭제하는 것 처럼 보이지만 실제로는 뭔가를 만들어내고 있다.
+          //사용자가 같은 Tile을 보고 있다고 착각하게 만들지만
+          //사실은 다시 만들고 잇는 것이다.
+          //삭제시 보여준는 위젯이 삭제되는 해당 ListTile 자체여서
+          //애니메이션효과가 있다.
+          child: Container(
+            color: Colors.red,
+            child: _makeTile(index),
+          ),
+        ),
+        duration: _duration,
+      );
+      _items.remove(index);
+    }
+  }
+
+  void _onChatTap() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const ChatDetailScreen(),
+      ),
+    );
+  }
+
+  Widget _makeTile(int index) {
+    return ListTile(
+      onLongPress: () => _deleteItem(index),
+      //리스트타일이 문자 그대로 리스트의 모든 아이템에 똑같이 적용되기 때문에
+      //UniqueKey를 추가해준다.
+      //그러면 플러터가 헷갈리지 않을 거고, 애니메이션도 헷갈리지 않는다.
+      onTap: _onChatTap,
+      leading: const CircleAvatar(
+        radius: 30,
+        foregroundImage: NetworkImage(
+          "https://d1telmomo28umc.cloudfront.net/media/public/avatars/customs0529-1679985124.jpg",
+        ),
+        child: Text(
+          "Yoon",
+        ),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            "Lynn ($index)",
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          Text(
+            "2:16 PM",
+            style: TextStyle(
+              color: Colors.grey.shade500,
+              fontSize: Sizes.size12,
+            ),
+          ),
+        ],
+      ),
+      subtitle: const Text(
+        "Don't forget to make video",
+      ),
+    );
   }
 
   @override
@@ -61,42 +134,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
             opacity: animation,
             child: SizeTransition(
               sizeFactor: animation,
-              child: ListTile(
-                //리스트타일이 문자 그대로 리스트의 모든 아이템에 똑같이 적용되기 때문에
-                //UniqueKey를 추가해준다.
-                //그러면 플러터가 헷갈리지 않을 거고, 애니메이션도 헷갈리지 않는다.
-                leading: const CircleAvatar(
-                  radius: 30,
-                  foregroundImage: NetworkImage(
-                    "https://d1telmomo28umc.cloudfront.net/media/public/avatars/customs0529-1679985124.jpg",
-                  ),
-                  child: Text(
-                    "Yoon",
-                  ),
-                ),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "Lynn ($index)",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      "2:16 PM",
-                      style: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontSize: Sizes.size12,
-                      ),
-                    ),
-                  ],
-                ),
-                subtitle: const Text(
-                  "Don't forget to make video",
-                ),
-              ),
+              child: _makeTile(index),
             ),
           );
         },
