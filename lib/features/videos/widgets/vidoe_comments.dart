@@ -207,7 +207,7 @@ class _VideoCommentsState extends State<VideoComments> {
                                       if (_isWriting) Gaps.h14,
                                       if (_isWriting)
                                         GestureDetector(
-                                          onTap: _onStartWriting,
+                                          onTap: _onStopWriting,
                                           child: FaIcon(
                                             FontAwesomeIcons.circleArrowUp,
                                             color:
