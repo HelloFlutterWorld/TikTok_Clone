@@ -231,13 +231,11 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                       ),
                     ),
                     Gaps.h20,
-                    Container(
-                      child: GestureDetector(
-                        onTap: _onSendMessage,
-                        child: FaIcon(
-                          FontAwesomeIcons.paperPlane,
-                          color: _isWriting ? Colors.black : Colors.grey,
-                        ),
+                    GestureDetector(
+                      onTap: _onSendMessage,
+                      child: FaIcon(
+                        FontAwesomeIcons.paperPlane,
+                        color: _isWriting ? Colors.black : Colors.grey,
                       ),
                     )
                   ],
