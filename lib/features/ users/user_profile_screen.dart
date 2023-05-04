@@ -26,7 +26,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           stretch: true,
           //앱바의 배경색과 title을 보여준다.
           //스크롤이 다 올라와야지만 배경이미지가 보여진다.
-          pinned: true,
+          //pinned: true,
           backgroundColor: Colors.teal,
           //title: const Text("Hello!"),
           //슬리버앱바는 확장될 수 있다.
@@ -46,6 +46,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             title: const Text("Hello!"),
           ),
         ),
+        SliverToBoxAdapter(
+          child: Column(
+            children: const [
+              CircleAvatar(
+                backgroundColor: Colors.red,
+                radius: 20,
+              )
+            ],
+          ),
+        ),
         SliverFixedExtentList(
           delegate: SliverChildBuilderDelegate(
             childCount: 50,
@@ -56,6 +66,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             ),
           ),
           itemExtent: 100,
+        ),
+        SliverPersistentHeader(
+          delegate: CustomDelegate(),
+          //고정시켜줌
+          pinned: true,
+          floating: true, //별로임
         ),
         SliverGrid(
           delegate: SliverChildBuilderDelegate(
@@ -77,5 +93,42 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
       ],
     );
+  }
+}
+
+class CustomDelegate extends SliverPersistentHeaderDelegate {
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      color: Colors.indigo,
+      //부모위젯으로부터 최대한 많은 공간을 차지한다.
+      child: const FractionallySizedBox(
+        //100프로 차지함
+        heightFactor: 1,
+        child: Center(
+          child: Text(
+            "Title!!!!!",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  //스크롤을 올릴 때의 크기
+  double get maxExtent => 150;
+
+  @override
+  //고정된 상태의 크기
+  double get minExtent => 80;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+    //빌드메소드에서 완전히 다른 위젯 트리를 리턴하려면 false를 리턴해야 함,
+    return false;
   }
 }
