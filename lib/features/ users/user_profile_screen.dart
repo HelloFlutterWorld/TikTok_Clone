@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tiktok_clone/constants/sizes.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -17,10 +18,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         SliverAppBar(
           //플로팅과 동시에 사용시 스크롤을 조금만 올려도
           //앱바가 배경이미지와 함께 다시 나타남
-          snap: true,
+          //snap: true,
           //스크로을 올리면(as soon as the user scrolls towards the app bar)
           //그 자리에서 즉시 앱바가 나타맘.
-          floating: true,
+          //floating: true,
           //앱바 전체를 밑으로 당겨서 늘리는 것도 가능하게 해줌
           stretch: true,
           //앱바의 배경색과 title을 보여준다.
@@ -46,15 +47,34 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
         ),
         SliverFixedExtentList(
-            delegate: SliverChildBuilderDelegate(
-              childCount: 50,
-              (context, index) => Container(
-                color: Colors.amber[100 * (index % 9)],
-                child: Align(
-                    alignment: Alignment.center, child: Text("Item $index")),
+          delegate: SliverChildBuilderDelegate(
+            childCount: 50,
+            (context, index) => Container(
+              color: Colors.amber[100 * (index % 9)],
+              child: Align(
+                  alignment: Alignment.center, child: Text("Item $index")),
+            ),
+          ),
+          itemExtent: 100,
+        ),
+        SliverGrid(
+          delegate: SliverChildBuilderDelegate(
+            childCount: 50,
+            (context, index) => Container(
+              color: Colors.blue[100 * (index % 9)],
+              child: Align(
+                alignment: Alignment.center,
+                child: Text("Item $index"),
               ),
             ),
-            itemExtent: 100)
+          ),
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 100,
+            mainAxisSpacing: Sizes.size20,
+            crossAxisSpacing: Sizes.size20,
+            childAspectRatio: 1,
+          ),
+        ),
       ],
     );
   }
