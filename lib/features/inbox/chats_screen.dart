@@ -11,7 +11,7 @@ class ChatsScreen extends StatefulWidget {
 }
 
 class _ChatsScreenState extends State<ChatsScreen> {
-  final List<int> _items = [];
+  List<int> _items = [];
 
   //AnimatedListState에 접근할 수 있는 key
   final GlobalKey<AnimatedListState> _key = GlobalKey<AnimatedListState>();
@@ -53,6 +53,8 @@ class _ChatsScreenState extends State<ChatsScreen> {
       );
       _items.remove(index);
     }
+    //중간에 있는 리스트를 없앨 경우, 에러가 나기 때문에, 아래와 같이 _items를 재정렬해준다.
+    _items = List.generate(_items.length, (index) => index);
   }
 
   void _onChatTap() {
@@ -65,7 +67,9 @@ class _ChatsScreenState extends State<ChatsScreen> {
 
   Widget _makeTile(int index) {
     return ListTile(
-      onLongPress: () => _deleteItem(index),
+      onLongPress: () {
+        _deleteItem(index);
+      },
       //리스트타일이 문자 그대로 리스트의 모든 아이템에 똑같이 적용되기 때문에
       //UniqueKey를 추가해준다.
       //그러면 플러터가 헷갈리지 않을 거고, 애니메이션도 헷갈리지 않는다.
