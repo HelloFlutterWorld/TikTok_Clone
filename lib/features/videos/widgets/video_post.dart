@@ -116,6 +116,17 @@ class _VideoPostState extends State<VideoPost>
   }
 
   void _onVisibilityChanged(VisibilityInfo info) {
+    //visibility가 변하면, visibility detector가 무언가를 작동시키는데
+    //디텍터가 visibilityChanged 메소드를 작동시키면,
+    //videoPlayerController는 이미 삭제(dispose)가된 상태이다.
+    //띠라서 value.isPlaying을 불러오지 못하고,
+    //play를 호출할 수도 없고, 아무것도 할 수 없는 상태가 된다.
+    //모든 스테이트풀 위젯에는 mounted라는 프로퍼티가 있다.
+    //이것은 위짓이 mount되었는지 아닌지 알려준다.
+    //민액 mounted되지 않았다면, 사용자들에게 더 이상 보이지 않는다.
+    //즉 위젯트리로부터 제외되었다는 것이다. 따라서 그 이후가 실행되지 않는다.
+    //visibilityd에 변화가 있더라도, mount된 상태가 아니라면 아무것도 하지 않기를 원할 때
+    if (!mounted) return;
     //다음 영상이 완전히 빌드된 후에만 재생되도록
     //visibleFraction는 위젯이 얼마나 보이는 지를 나타내는 0이상 1이하 범위의 수
     if (info.visibleFraction == 1 &&
