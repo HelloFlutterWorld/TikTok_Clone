@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
@@ -151,30 +153,71 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ),
                     Gaps.v14,
                     //father의 너비와 높이에 의존해서 너비와 높이를 가진다.
-                    FractionallySizedBox(
-                      widthFactor: 0.33,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: Sizes.size12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(
-                              Sizes.size4,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.33,
+                          height: Sizes.size40 + Sizes.size1,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: Sizes.size12,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(
+                                  Sizes.size4,
+                                ),
+                              ),
+                            ),
+                            child: const Text(
+                              "Follow",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
                         ),
-                        child: const Text(
-                          "Follow",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
+                        Gaps.h3,
+                        Container(
+                          alignment: Alignment.center,
+                          width: Sizes.size40,
+                          height: Sizes.size40,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 0.5,
+                              color: Colors.grey,
+                            ),
+                            borderRadius: BorderRadius.circular(3),
                           ),
-                          textAlign: TextAlign.center,
+                          child: const FaIcon(
+                            FontAwesomeIcons.youtube,
+                            size: Sizes.size20,
+                          ),
                         ),
-                      ),
+                        Gaps.h3,
+                        Container(
+                          alignment: Alignment.center,
+                          width: Sizes.size40,
+                          height: Sizes.size40,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 0.5,
+                              color: Colors.grey,
+                            ),
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                          child: const Icon(
+                            Icons.arrow_drop_down_outlined,
+                            size: Sizes.size24,
+                          ),
+                        ),
+                      ],
                     ),
+
                     Gaps.v14,
                     const Padding(
                       padding: EdgeInsets.symmetric(
@@ -238,14 +281,39 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 itemBuilder: (context, index) => Column(
                   children: [
                     //종행비율 조절위젯
-                    AspectRatio(
-                      aspectRatio: 9 / 14,
-                      child: FadeInImage.assetNetwork(
-                        fit: BoxFit.cover,
-                        placeholder: "assets/images/image.jpg",
-                        image:
-                            "https://images.unsplash.com/photo-1673844969019-c99b0c933e90?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
-                      ),
+                    Stack(
+                      children: [
+                        AspectRatio(
+                          aspectRatio: 9 / 14,
+                          child: FadeInImage.assetNetwork(
+                            fit: BoxFit.cover,
+                            placeholder: "assets/images/image.jpg",
+                            image:
+                                "https://images.unsplash.com/photo-1673844969019-c99b0c933e90?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.play_arrow_outlined,
+                                color: Colors.white,
+                                size: Sizes.size28,
+                              ),
+                              Text(
+                                '${(Random().nextDouble() * 10).toStringAsFixed(1)}M',
+                                style: const TextStyle(
+                                  fontSize: Sizes.size16,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
