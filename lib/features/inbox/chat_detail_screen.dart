@@ -22,6 +22,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         _isWriting = _textEditingController.text.isNotEmpty;
       });
     });
+    //재정의된 이니트스테이트를 실행후에 부모클래스의 이니트스테이트를 한번 더 실행함
     super.initState();
   }
 
