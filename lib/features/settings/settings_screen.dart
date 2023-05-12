@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -10,29 +11,17 @@ class SettingsScreen extends StatelessWidget {
         title: const Text("Settings"),
         //actions: [CloseButton()],
       ),
-      body: ListWheelScrollView(
-        diameterRatio: 1.5,
-        offAxisFraction: 1.5,
-        // useMagnifier: true,
-        // magnification: 1.5,
-        //높이설정
-        itemExtent: 200,
-        children: [
-          for (var x in [1, 2, 1, 21, 2, 1, 2, 1, 2, 1, 2, 1, 2])
-            FractionallySizedBox(
-              widthFactor: 1,
-              child: Container(
-                color: Colors.teal,
-                alignment: Alignment.center,
-                child: Text(
-                  "Pick me $x",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 39,
-                  ),
-                ),
-              ),
-            )
+      body: Column(
+        children: const [
+          //아이폰스타일
+          CupertinoActivityIndicator(
+            radius: 40,
+            //animating: false,
+          ),
+          //안드로이드스타일
+          CircularProgressIndicator(),
+          //운영체제에 따라 다름
+          CircularProgressIndicator.adaptive(),
         ],
       ),
     );
