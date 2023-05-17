@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -11,7 +12,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _notifications = false;
 
-  void _onNotficationsChanged(bool? newValue) {
+  void _onNotificationsChanged(bool? newValue) {
     if (newValue == null) return;
     setState(() {
       _notifications = newValue;
@@ -22,31 +23,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Settings"),
-        //actions: [CloseButton()],
+        title: const Text('Settings'),
       ),
       body: ListView(
         children: [
-          CupertinoSwitch(
-            value: _notifications,
-            onChanged: _onNotficationsChanged,
-          ),
-          //adaptive 기기에 따라 바뀜
           SwitchListTile.adaptive(
             value: _notifications,
-            onChanged: _onNotficationsChanged,
+            onChanged: _onNotificationsChanged,
             title: const Text("Enable notifications"),
             subtitle: const Text("Enable notifications"),
           ),
-          Checkbox(
-            value: _notifications,
-            onChanged: _onNotficationsChanged,
-          ),
           CheckboxListTile(
             activeColor: Colors.black,
-            //value는 체크박스의 상태를 나타냄
             value: _notifications,
-            onChanged: _onNotficationsChanged,
+            onChanged: _onNotificationsChanged,
             title: const Text("Enable notifications"),
           ),
           ListTile(
@@ -64,28 +54,78 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
               print(time);
               final booking = await showDateRangePicker(
-                  context: context,
-                  firstDate: DateTime(1980),
-                  lastDate: DateTime(2030),
-                  //매개변수로 받는 child는 칼렌다이다.
-                  builder: (context, child) {
-                    return Theme(
-                      data: ThemeData(
+                context: context,
+                firstDate: DateTime(1980),
+                lastDate: DateTime(2030),
+                builder: (context, child) {
+                  return Theme(
+                    data: ThemeData(
                         appBarTheme: const AppBarTheme(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Colors.black,
-                        ),
-                      ),
-                      child: child!,
-                    );
-                  });
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.black)),
+                    child: child!,
+                  );
+                },
+              );
               print(booking);
             },
-            title: const Text(
-              "What is your birthday?",
-            ),
+            title: const Text("What is your birthday?"),
           ),
-          const AboutListTile(),
+          ListTile(
+            title: const Text("Log out (iOS)"),
+            textColor: Colors.red,
+            onTap: () {
+              showCupertinoDialog(
+                context: context,
+                builder: (context) => CupertinoAlertDialog(
+                  title: const Text("Are you sure?"),
+                  content: const Text("Plx dont go"),
+                  actions: [
+                    CupertinoDialogAction(
+                      //현재 새로운 Route를 push한 상태이므로 pop해준다.
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text("No"),
+                    ),
+                    CupertinoDialogAction(
+                      onPressed: () => Navigator.of(context).pop(),
+                      //No Yes 색깔 바뀜 뭔지 모르겠음
+                      isDestructiveAction: true,
+                      child: const Text("Yes"),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: const Text("Log out (Android)"),
+            textColor: Colors.red,
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  icon: const FaIcon(FontAwesomeIcons.youtube),
+                  title: const Text("Are you sure?"),
+                  content: const Text("Plx dont go"),
+                  actions: [
+                    IconButton(
+                      //현재 새로운 Route를 push한 상태이므로 pop해준다.
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const FaIcon(FontAwesomeIcons.car),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text("Yes"),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          const AboutListTile(
+            applicationVersion: "1.0",
+            applicationLegalese: "Don't copy me",
+          ),
         ],
       ),
     );
