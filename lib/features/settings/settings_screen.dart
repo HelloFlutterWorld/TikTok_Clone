@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -75,7 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text("Log out (iOS)"),
             textColor: Colors.red,
             onTap: () {
-              showCupertinoDialog(
+              showCupertinoModalPopup(
                 context: context,
                 builder: (context) => CupertinoAlertDialog(
                   title: const Text("Are you sure?"),
@@ -98,24 +97,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           ListTile(
-            title: const Text("Log out (Android)"),
+            title: const Text("Log out (iOS / Bottom)"),
             textColor: Colors.red,
             onTap: () {
-              showDialog(
+              showCupertinoModalPopup(
                 context: context,
-                builder: (context) => AlertDialog(
-                  icon: const FaIcon(FontAwesomeIcons.youtube),
+                builder: (context) => CupertinoActionSheet(
                   title: const Text("Are you sure?"),
-                  content: const Text("Plx dont go"),
+                  message: const Text("Pleese dooont goooo"),
                   actions: [
-                    IconButton(
-                      //현재 새로운 Route를 push한 상태이므로 pop해준다.
+                    CupertinoActionSheetAction(
+                      isDefaultAction: true,
                       onPressed: () => Navigator.of(context).pop(),
-                      icon: const FaIcon(FontAwesomeIcons.car),
+                      child: const Text("Not log out"),
                     ),
-                    TextButton(
+                    CupertinoActionSheetAction(
+                      //색깔 구분됨
+                      isDestructiveAction: true,
                       onPressed: () => Navigator.of(context).pop(),
-                      child: const Text("Yes"),
+                      child: const Text("Yes Plz."),
                     ),
                   ],
                 ),
