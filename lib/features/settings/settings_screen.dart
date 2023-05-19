@@ -100,6 +100,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             title: const Text("Log out (iOS / Bottom)"),
             textColor: Colors.red,
             onTap: () {
+              //modal밖을 누르면 pop됨
               showCupertinoModalPopup(
                 context: context,
                 builder: (context) => CupertinoActionSheet(
