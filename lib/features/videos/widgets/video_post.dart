@@ -48,6 +48,8 @@ class _VideoPostState extends State<VideoPost>
 
   bool _isPaused = false;
 
+  bool _isSound = kIsWeb ? false : true;
+
   final Duration _animationDuratrion = const Duration(milliseconds: 200);
 
   late final AnimationController _animationController;
@@ -186,6 +188,15 @@ class _VideoPostState extends State<VideoPost>
     _onTogglePause();
   }
 
+  void _onToggleMute() {
+    _isSound
+        ? _videoPlayerController.setVolume(0)
+        : _videoPlayerController.setVolume(1);
+    setState(() {
+      _isSound = !_isSound;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return VisibilityDetector(
@@ -305,6 +316,21 @@ class _VideoPostState extends State<VideoPost>
             right: 10,
             child: Column(
               children: [
+                GestureDetector(
+                  onTap: _onToggleMute,
+                  child: _isSound
+                      ? const Icon(
+                          Icons.volume_off_rounded,
+                          color: Colors.white,
+                          size: Sizes.size52,
+                        )
+                      : const Icon(
+                          Icons.volume_up_rounded,
+                          color: Colors.white,
+                          size: Sizes.size52,
+                        ),
+                ),
+                Gaps.v24,
                 //이미지가 있는 원을 제공해 줌
                 const CircleAvatar(
                   //아바타의 크기
@@ -313,7 +339,7 @@ class _VideoPostState extends State<VideoPost>
                   backgroundColor: Colors.black,
                   foregroundColor: Colors.white,
                   foregroundImage: NetworkImage(
-                      "https://d1telmomo28umc.cloudfront.net/media/public/avatars/customs0529-1679985124.jpg"),
+                      "https://avatars.githubusercontent.com/u/123614459?v=4"),
                   child: Text("Yoon"),
                 ),
                 Gaps.v24,
