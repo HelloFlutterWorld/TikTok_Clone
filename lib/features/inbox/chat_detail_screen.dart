@@ -67,7 +67,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                     const CircleAvatar(
                       radius: Sizes.size24,
                       foregroundImage: NetworkImage(
-                          "https://d1telmomo28umc.cloudfront.net/media/public/avatars/customs0529-1679985124.jpg"),
+                          "https://avatars.githubusercontent.com/u/123614459?v=4"),
                       child: Text("Yoon"),
                     ),
                     Positioned(

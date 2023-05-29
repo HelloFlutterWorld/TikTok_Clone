@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/authentication/sign_up_screen.dart';
+import 'package:tiktok_clone/features/main_navigation/main_navigation_screen.dart';
 
-void main(List<String> args) async {
+void main() async {
   //플러터 프레임워크를 이용해서 앱이 시작하기 전에 state를 어떤 식으로든 바꾸고 싶다면
   // 엔진과 위젯의 연결을 확실하게 초기화 시켜야 한다.
   //This is the glue that binds the framework to the Flutter engine.
@@ -11,12 +11,15 @@ void main(List<String> args) async {
   //이 함수는 런앱을 실행하기 전에 바인딩을 초기화 할 때만 호출해야 한다.
   WidgetsFlutterBinding.ensureInitialized();
 
+  //Future<void>이기 때문에 비동기키워드 await 써줌ㅗ
   await SystemChrome.setPreferredOrientations(
     [
+      //potrait모드로만 작동한다.
       DeviceOrientation.portraitUp,
     ],
   );
-
+  //시스템오버레이스타일 와이파이, 배터리 표시등의 색깔
+  //이 함수는 메인함수뿐만 아니라 원하는 곳 어디서든 사용 가능
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle.dark,
   );
@@ -53,6 +56,6 @@ class TikTokApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           primaryColor: const Color(0XFFE9435A),
         ),
-        home: const SignUpScreen());
+        home: const MainNavigationScreen());
   }
 }

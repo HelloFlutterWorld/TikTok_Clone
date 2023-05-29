@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
@@ -74,6 +75,11 @@ class _VideoPostState extends State<VideoPost>
     // 영상이 끝나면 화면 넘김 없이 제자리에서 계속 반복
     // _onVideoChanged를 호출해도 아무것도 반환 받지 않음으로 수정
     await _videoPlayerController.setLooping(true);
+    //KisWeb는 이 웹에서 잘 작동하도록 compile되었는지 확인하는 constants다.
+    //웹에서 재생될 때 처음에 소리가 나오제 않도록 세팅해야 오류가 없다.
+    if (kIsWeb) {
+      await _videoPlayerController.setVolume(0);
+    }
 
     //객체가 변경될 때 호출할 클로저를 등록함.
     //리스너가 영상이 바뀌는 시간, 길이, 끝나는 시간 등을 모두 알려줄 수 있다.

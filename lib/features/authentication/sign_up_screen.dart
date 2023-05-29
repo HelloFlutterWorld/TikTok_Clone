@@ -27,6 +27,14 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return OrientationBuilder(
       builder: (context, orientation) {
+        //builer은 위젯을 반환받는 Function이다.
+        //콘텍스트와 오리엔테이션을 넘겨받는다.
+        //required this.builder,
+        //final OrientationWidgetBuilder builder;
+        //typedef OrientationWidgetBuilder = Widget Function(BuildContext context, Orientation orientation);
+        //enum Orientation {portrait,landscape}
+
+        //Orientation
         /*  if (orientation == Orientation.landscape) {
           return const Scaffold(
             body: Center(
@@ -60,8 +68,8 @@ class SignUpScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   Gaps.v40,
-                  // ... 스프레드 연산자 세미콜론을 찍을 수 없는
-                  // 위젯문 안에서 리스트를 반환해준다.
+                  // ... 스프레드 연산자
+                  // 세미콜론을 찍을 수 없는 위젯문 안에서 리스트를 반환해준다.
                   if (orientation == Orientation.portrait) ...[
                     GestureDetector(
                       onTap: () => _onEmailTap(context),

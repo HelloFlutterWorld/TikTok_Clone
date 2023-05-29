@@ -203,7 +203,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                         const CircleAvatar(
                           radius: 12,
                           backgroundImage: NetworkImage(
-                            "https://d1telmomo28umc.cloudfront.net/media/public/avatars/customs0529-1679985124.jpg",
+                            "https://avatars.githubusercontent.com/u/123614459?v=4",
                           ),
                         ),
                         Gaps.h4,
