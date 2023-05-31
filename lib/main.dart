@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/main_navigation/main_navigation_screen.dart';
 
 void main() async {
   //플러터 프레임워크를 이용해서 앱이 시작하기 전에 state를 어떤 식으로든 바꾸고 싶다면
@@ -55,37 +56,6 @@ class TikTokApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           primaryColor: const Color(0XFFE9435A),
         ),
-        home: const LayoutBuilderCodeLab());
-  }
-}
-
-class LayoutBuilderCodeLab extends StatelessWidget {
-  const LayoutBuilderCodeLab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
-    return Scaffold(
-      body: SizedBox(
-        width: size.width / 2,
-        child: LayoutBuilder(
-          builder: (context, BoxConstraints constraints) => Container(
-            width: constraints.maxWidth,
-            height: constraints.maxHeight,
-            color: Colors.teal,
-            child: Center(
-              child: Text(
-                "${size.width} /${constraints.maxWidth}",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 98,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
+        home: const MainNavigationScreen());
   }
 }
