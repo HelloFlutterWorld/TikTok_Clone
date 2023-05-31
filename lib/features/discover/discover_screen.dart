@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok_clone/constants/breakpoints.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 
@@ -41,6 +42,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     //Tab는 controller를 필요로 하는데
     //이 에러를 해결하는 가장 간단한 방법은 Tab을 DefaultTabController 안에
     //넣어주는 것이다. 그리고 디폴트로 갯수를 지정해 준다.
@@ -152,9 +154,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               padding: const EdgeInsets.all(
                 Sizes.size6,
               ),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 //세로 갯수
-                crossAxisCount: 2,
+                crossAxisCount: width > Breakpoints.lg ? 5 : 2,
                 //가로 간격
                 crossAxisSpacing: Sizes.size10,
                 //세로 간격
