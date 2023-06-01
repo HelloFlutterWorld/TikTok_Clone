@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/breakpoints.dart';
@@ -66,10 +65,67 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             constraints: const BoxConstraints(
               maxWidth: Breakpoints.sm,
             ),
-            child: CupertinoSearchTextField(
-              controller: _textEditingController,
-              onChanged: _onSearchChanged,
-              onSubmitted: _onSearchSubmitted,
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.arrow_back_ios,
+                  size: Sizes.size28,
+                  color: Colors.black,
+                ),
+                Gaps.h12,
+                Expanded(
+                  child: SizedBox(
+                    height: Sizes.size44,
+                    child: TextField(
+                      controller: _textEditingController,
+                      cursorColor: Theme.of(context).primaryColor,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(
+                            Sizes.size4,
+                          ),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.grey.shade100,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: Sizes.size10,
+                          horizontal: Sizes.size12,
+                        ),
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: Sizes.size10,
+                            horizontal: Sizes.size12,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: const [
+                              FaIcon(
+                                FontAwesomeIcons.magnifyingGlass,
+                                size: Sizes.size16 + Sizes.size2,
+                                color: Colors.black,
+                              ),
+                            ],
+                          ),
+                        ),
+                        suffix: GestureDetector(
+                          onTap: _onClearTap,
+                          child: FaIcon(
+                            FontAwesomeIcons.solidCircleXmark,
+                            color: Colors.grey.shade500,
+                            size: Sizes.size16 + Sizes.size2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Gaps.h12,
+                const Icon(
+                  Icons.format_align_center,
+                  size: Sizes.size28,
+                ),
+              ],
             ),
           ),
           //PreferredSizeWidget: 특정한 크기를 가지려고 하지만

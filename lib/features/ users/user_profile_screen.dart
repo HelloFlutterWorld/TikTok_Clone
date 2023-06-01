@@ -161,72 +161,80 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                     ),
                     Gaps.v14,
-                    //father의 너비와 높이에 의존해서 너비와 높이를 가진다.
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.33,
-                          height: Sizes.size40 + Sizes.size1,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: Sizes.size12,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(
-                                  Sizes.size4,
+                        Flexible(
+                          //father의 너비와 높이에 의존해서 너비와 높이를 가진다.
+                          child: FractionallySizedBox(
+                            widthFactor: 1,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: Sizes.size12,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).primaryColor,
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(Sizes.size4),
                                 ),
                               ),
-                            ),
-                            child: const Text(
-                              "Follow",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
+                              child: const Text(
+                                'Follow',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                              textAlign: TextAlign.center,
                             ),
                           ),
                         ),
-                        Gaps.h3,
-                        Container(
-                          alignment: Alignment.center,
-                          width: Sizes.size40,
-                          height: Sizes.size40,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 0.5,
-                              color: Colors.grey,
+                        Gaps.h4,
+                        Flexible(
+                          child: FractionallySizedBox(
+                            widthFactor: 0.33,
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: Sizes.size40,
+                              height: Sizes.size40,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 0.5,
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: BorderRadius.circular(3),
+                              ),
+                              child: const FaIcon(
+                                FontAwesomeIcons.youtube,
+                                size: Sizes.size20,
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                          child: const FaIcon(
-                            FontAwesomeIcons.youtube,
-                            size: Sizes.size20,
                           ),
                         ),
-                        Gaps.h3,
-                        Container(
-                          alignment: Alignment.center,
-                          width: Sizes.size40,
-                          height: Sizes.size40,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 0.5,
-                              color: Colors.grey,
+                        Gaps.h4,
+                        Flexible(
+                          child: FractionallySizedBox(
+                            widthFactor: 0.33,
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: Sizes.size40,
+                              height: Sizes.size40,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  width: 0.5,
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: BorderRadius.circular(3),
+                              ),
+                              child: const Icon(
+                                Icons.arrow_drop_down_outlined,
+                                size: Sizes.size24,
+                              ),
                             ),
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                          child: const Icon(
-                            Icons.arrow_drop_down_outlined,
-                            size: Sizes.size24,
                           ),
                         ),
                       ],
                     ),
-
                     Gaps.v14,
                     const Padding(
                       padding: EdgeInsets.symmetric(
