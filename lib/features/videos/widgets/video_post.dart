@@ -184,6 +184,8 @@ class _VideoPostState extends State<VideoPost>
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => const VideoComments(),
+      //여기서 제한을 걸어줘도 됨
+      //constraints: const BoxConstraints(maxWidth: Breakpoints.md),
     );
     _onTogglePause();
   }

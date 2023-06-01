@@ -26,13 +26,13 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
     text: "Initial Text",
   );
 
-  void _onSearchChanged(String value) {
-    print("Searching form $value");
-  }
+  // void _onSearchChanged(String value) {
+  //   print("Searching form $value");
+  // }
 
-  void _onSearchSubmitted(String value) {
-    print("Submitted $value");
-  }
+  // void _onSearchSubmitted(String value) {
+  //   print("Submitted $value");
+  // }
 
   void _hidingKeyboard() {
     FocusScope.of(context).unfocus();

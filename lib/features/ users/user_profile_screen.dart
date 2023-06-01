@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok_clone/constants/breakpoints.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/%20users/widgets/persistent_tab_bar.dart';
@@ -25,6 +26,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     //텝바는 콘틀로러가 필요하므로 화면 전체를
     //DefaultTabController로 감싸줌, 탭은 총 2개
     return SafeArea(
@@ -161,79 +163,83 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                     ),
                     Gaps.v14,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          //father의 너비와 높이에 의존해서 너비와 높이를 가진다.
-                          child: FractionallySizedBox(
-                            widthFactor: 1,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: Sizes.size12,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: const BorderRadius.all(
-                                  Radius.circular(Sizes.size4),
+                    Container(
+                      constraints:
+                          const BoxConstraints(maxWidth: Breakpoints.md),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Flexible(
+                            //father의 너비와 높이에 의존해서 너비와 높이를 가진다.
+                            child: FractionallySizedBox(
+                              widthFactor: 1,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: Sizes.size12,
                                 ),
-                              ),
-                              child: const Text(
-                                'Follow',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(Sizes.size4),
+                                  ),
                                 ),
-                                textAlign: TextAlign.center,
+                                child: const Text(
+                                  'Follow',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Gaps.h4,
-                        Flexible(
-                          child: FractionallySizedBox(
-                            widthFactor: 0.33,
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: Sizes.size40,
-                              height: Sizes.size40,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 0.5,
-                                  color: Colors.grey,
+                          Gaps.h4,
+                          Flexible(
+                            child: FractionallySizedBox(
+                              widthFactor: 0.33,
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: Sizes.size40,
+                                height: Sizes.size40,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 0.5,
+                                    color: Colors.grey,
+                                  ),
+                                  borderRadius: BorderRadius.circular(3),
                                 ),
-                                borderRadius: BorderRadius.circular(3),
-                              ),
-                              child: const FaIcon(
-                                FontAwesomeIcons.youtube,
-                                size: Sizes.size20,
+                                child: const FaIcon(
+                                  FontAwesomeIcons.youtube,
+                                  size: Sizes.size20,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Gaps.h4,
-                        Flexible(
-                          child: FractionallySizedBox(
-                            widthFactor: 0.33,
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: Sizes.size40,
-                              height: Sizes.size40,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 0.5,
-                                  color: Colors.grey,
+                          Gaps.h4,
+                          Flexible(
+                            child: FractionallySizedBox(
+                              widthFactor: 0.33,
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: Sizes.size40,
+                                height: Sizes.size40,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 0.5,
+                                    color: Colors.grey,
+                                  ),
+                                  borderRadius: BorderRadius.circular(3),
                                 ),
-                                borderRadius: BorderRadius.circular(3),
-                              ),
-                              child: const Icon(
-                                Icons.arrow_drop_down_outlined,
-                                size: Sizes.size24,
+                                child: const Icon(
+                                  Icons.arrow_drop_down_outlined,
+                                  size: Sizes.size24,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     Gaps.v14,
                     const Padding(
@@ -285,9 +291,9 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     ScrollViewKeyboardDismissBehavior.onDrag,
                 itemCount: 20,
                 padding: EdgeInsets.zero,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   //세로 갯수
-                  crossAxisCount: 3,
+                  crossAxisCount: width > Breakpoints.lg ? 5 : 2,
                   //가로 간격
                   crossAxisSpacing: Sizes.size2,
                   //세로 간격
