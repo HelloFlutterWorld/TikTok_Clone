@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/main_navigation/main_navigation_screen.dart';
+import 'package:tiktok_clone/features/authentication/sign_up_screen.dart';
 
 void main() async {
   //플러터 프레임워크를 이용해서 앱이 시작하기 전에 state를 어떤 식으로든 바꾸고 싶다면
@@ -11,7 +11,7 @@ void main() async {
   //이 함수는 런앱을 실행하기 전에 바인딩을 초기화 할 때만 호출해야 한다.
   WidgetsFlutterBinding.ensureInitialized();
 
-  //Future<void>이기 때문에 비동기키워드 await 써줌ㅗ
+  //Future<void>이기 때문에 비동기키워드 await 써줌
   await SystemChrome.setPreferredOrientations(
     [
       //potrait모드로만 작동한다.
@@ -33,9 +33,14 @@ class TikTokApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        //휴태폰에게 어떤 theme를 사용할지 알려주는 기능을 한다.
+        //.system은 앱이 실행되는 기기의 환경에 맞추어 준다.
+        themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         title: 'TikTok Clone',
         theme: ThemeData(
+          //기본 글자색
+          brightness: Brightness.light,
           //앱 전체의 스플래쉬 효과 제거하기
           splashColor: Colors.transparent,
           //앱 전체의 롱프레스 스플래쉬 효과 제저하기
@@ -56,6 +61,15 @@ class TikTokApp extends StatelessWidget {
           scaffoldBackgroundColor: Colors.white,
           primaryColor: const Color(0XFFE9435A),
         ),
-        home: const MainNavigationScreen());
+        darkTheme: ThemeData(
+          scaffoldBackgroundColor: Colors.black,
+          primaryColor: const Color(0XFFE9435A),
+          //다크모드 글자색
+          brightness: Brightness.dark,
+          bottomAppBarTheme: BottomAppBarTheme(
+            color: Colors.grey.shade800,
+          ),
+        ),
+        home: const SignUpScreen());
   }
 }
