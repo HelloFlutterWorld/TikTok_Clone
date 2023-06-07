@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/sign_up_screen.dart';
 
@@ -40,9 +39,11 @@ class TikTokApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'TikTok Clone',
         theme: ThemeData(
+          //Robotov폰트를 기반으로 한다.
+          //font와 color만 제공하는 textTheme완성
+          textTheme: Typography.blackMountainView,
           //기본 글자색
           brightness: Brightness.light,
-          textTheme: GoogleFonts.itimTextTheme(),
           //앱 전체의 스플래쉬 효과 제거하기
           splashColor: Colors.transparent,
           //앱 전체의 롱프레스 스플래쉬 효과 제저하기
@@ -64,14 +65,18 @@ class TikTokApp extends StatelessWidget {
           primaryColor: const Color(0XFFE9435A),
         ),
         darkTheme: ThemeData(
-          textTheme: GoogleFonts.itimTextTheme(
-              ThemeData(brightness: Brightness.dark).textTheme),
+          //Roboto를 기반으로 한다.
+          //font와 color만 제공하는 textTheme완성
+          textTheme: Typography.whiteMountainView,
           scaffoldBackgroundColor: Colors.black,
           primaryColor: const Color(0XFFE9435A),
           //다크모드 글자색
           brightness: Brightness.dark,
+          appBarTheme: AppBarTheme(
+            backgroundColor: Colors.grey.shade900,
+          ),
           bottomAppBarTheme: BottomAppBarTheme(
-            color: Colors.grey.shade800,
+            color: Colors.grey.shade900,
           ),
         ),
         home: const SignUpScreen());
