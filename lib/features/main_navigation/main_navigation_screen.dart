@@ -59,7 +59,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     return Scaffold(
       //showModalBottomSheet가 올라가도 화면이 찌그러지지 않도록
       resizeToAvoidBottomInset: false,
-      backgroundColor: _selectedIndex == 0 ? Colors.black : Colors.white,
+      backgroundColor:
+          _selectedIndex == 0 || isDark ? Colors.black : Colors.white,
       body: Stack(
         children: [
           //위젯은 안보이지만 계속 존재하게 해줌

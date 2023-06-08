@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/utils.dart';
 
 class PersistentTabBar extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final isDark = isDarkMode(context);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).appBarTheme.backgroundColor,
         border: Border.symmetric(
           horizontal: BorderSide(
-            color: Colors.grey.shade200,
+            color: isDark ? Colors.grey.shade700 : Colors.grey.shade200,
             width: 0.5,
           ),
         ),
       ),
-      child: const TabBar(
+      child: TabBar(
         indicatorSize: TabBarIndicatorSize.label,
-        indicatorColor: Colors.black,
-        labelPadding: EdgeInsets.only(
-          bottom: Sizes.size10,
+        indicatorColor: Theme.of(context).tabBarTheme.indicatorColor,
+        labelPadding: const EdgeInsets.symmetric(
+          vertical: Sizes.size10,
         ),
-        labelColor: Colors.black,
-        tabs: [
+        tabs: const [
           //인디케이터의 사이즈을 늘리기 위해 패딩을 준다.
           //왜냐면 indicatorSize: TabBarIndicatorSize.label
           //사이즈가 레이블에 맞춰져 있기 때문이다.
@@ -52,6 +53,6 @@ class PersistentTabBar extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    return false;
+    return true;
   }
 }
