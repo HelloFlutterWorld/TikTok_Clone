@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/authentication/sign_up_screen.dart';
+import 'package:tiktok_clone/features/main_navigation/main_navigation_screen.dart';
 
 void main() async {
   //플러터 프레임워크를 이용해서 앱이 시작하기 전에 state를 어떤 식으로든 바꾸고 싶다면
@@ -61,10 +61,23 @@ class TikTokApp extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
+          tabBarTheme: TabBarTheme(
+            //밑줄색
+            indicatorColor: Colors.black,
+            //선택된 탭의 글자색
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.grey.shade500,
+          ),
           scaffoldBackgroundColor: Colors.white,
           primaryColor: const Color(0XFFE9435A),
         ),
         darkTheme: ThemeData(
+          tabBarTheme: const TabBarTheme(
+            indicatorColor: Colors.white,
+          ),
+          textSelectionTheme: const TextSelectionThemeData(
+            cursorColor: Color(0XFFE9435A),
+          ),
           //Roboto를 기반으로 한다.
           //font와 color만 제공하는 textTheme완성
           textTheme: Typography.whiteMountainView,
@@ -79,6 +92,6 @@ class TikTokApp extends StatelessWidget {
             color: Colors.grey.shade900,
           ),
         ),
-        home: const SignUpScreen());
+        home: const MainNavigationScreen());
   }
 }
