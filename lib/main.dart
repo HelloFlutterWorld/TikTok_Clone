@@ -39,38 +39,40 @@ class TikTokApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'TikTok Clone',
         theme: ThemeData(
-          //Robotov폰트를 기반으로 한다.
-          //font와 color만 제공하는 textTheme완성
-          textTheme: Typography.blackMountainView,
-          //기본 글자색
-          brightness: Brightness.light,
-          //앱 전체의 스플래쉬 효과 제거하기
-          splashColor: Colors.transparent,
-          //앱 전체의 롱프레스 스플래쉬 효과 제저하기
-          //highlightColor: Colors.transparent,
-          textSelectionTheme: const TextSelectionThemeData(
-            cursorColor: Color(0XFFE9435A),
-          ),
-          appBarTheme: const AppBarTheme(
-            foregroundColor: Colors.black,
-            backgroundColor: Colors.white,
-            elevation: 0,
-            titleTextStyle: TextStyle(
-              color: Colors.black,
-              fontSize: Sizes.size16 + Sizes.size2,
-              fontWeight: FontWeight.w600,
+            //Robotov폰트를 기반으로 한다.
+            //font와 color만 제공하는 textTheme완성
+            textTheme: Typography.blackMountainView,
+            //기본 글자색
+            brightness: Brightness.light,
+            //앱 전체의 스플래쉬 효과 제거하기
+            splashColor: Colors.transparent,
+            //앱 전체의 롱프레스 스플래쉬 효과 제저하기
+            //highlightColor: Colors.transparent,
+            textSelectionTheme: const TextSelectionThemeData(
+              cursorColor: Color(0XFFE9435A),
             ),
-          ),
-          tabBarTheme: TabBarTheme(
-            //밑줄색
-            indicatorColor: Colors.black,
-            //선택된 탭의 글자색
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.grey.shade500,
-          ),
-          scaffoldBackgroundColor: Colors.white,
-          primaryColor: const Color(0XFFE9435A),
-        ),
+            appBarTheme: const AppBarTheme(
+              foregroundColor: Colors.black,
+              backgroundColor: Colors.white,
+              elevation: 0,
+              titleTextStyle: TextStyle(
+                color: Colors.black,
+                fontSize: Sizes.size16 + Sizes.size2,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            tabBarTheme: TabBarTheme(
+              //밑줄색
+              indicatorColor: Colors.black,
+              //선택된 탭의 글자색
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.grey.shade500,
+            ),
+            scaffoldBackgroundColor: Colors.white,
+            primaryColor: const Color(0XFFE9435A),
+            listTileTheme: const ListTileThemeData(
+              iconColor: Colors.black,
+            )),
         darkTheme: ThemeData(
           tabBarTheme: const TabBarTheme(
             indicatorColor: Colors.white,
