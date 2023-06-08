@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/main_navigation/main_navigation_screen.dart';
+import 'package:tiktok_clone/features/authentication/sign_up_screen.dart';
 
 void main() async {
   //플러터 프레임워크를 이용해서 앱이 시작하기 전에 state를 어떤 식으로든 바꾸고 싶다면
@@ -39,6 +39,7 @@ class TikTokApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'TikTok Clone',
         theme: ThemeData(
+            useMaterial3: true,
             //Robotov폰트를 기반으로 한다.
             //font와 color만 제공하는 textTheme완성
             textTheme: Typography.blackMountainView,
@@ -54,6 +55,8 @@ class TikTokApp extends StatelessWidget {
             appBarTheme: const AppBarTheme(
               foregroundColor: Colors.black,
               backgroundColor: Colors.white,
+              //앱바가 사라질 때 나타나는 색깔
+              surfaceTintColor: Colors.white,
               elevation: 0,
               titleTextStyle: TextStyle(
                 color: Colors.black,
@@ -74,8 +77,11 @@ class TikTokApp extends StatelessWidget {
               iconColor: Colors.black,
             )),
         darkTheme: ThemeData(
-          tabBarTheme: const TabBarTheme(
+          useMaterial3: true,
+          tabBarTheme: TabBarTheme(
             indicatorColor: Colors.white,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.grey.shade700,
           ),
           textSelectionTheme: const TextSelectionThemeData(
             cursorColor: Color(0XFFE9435A),
@@ -88,12 +94,24 @@ class TikTokApp extends StatelessWidget {
           //다크모드 글자색
           brightness: Brightness.dark,
           appBarTheme: AppBarTheme(
+            surfaceTintColor: Colors.grey.shade900,
             backgroundColor: Colors.grey.shade900,
+            titleTextStyle: const TextStyle(
+              color: Colors.white,
+              fontSize: Sizes.size16 + Sizes.size2,
+              fontWeight: FontWeight.w600,
+            ),
+            actionsIconTheme: IconThemeData(
+              color: Colors.grey.shade100,
+            ),
+            iconTheme: IconThemeData(
+              color: Colors.grey.shade100,
+            ),
           ),
           bottomAppBarTheme: BottomAppBarTheme(
             color: Colors.grey.shade900,
           ),
         ),
-        home: const MainNavigationScreen());
+        home: const SignUpScreen());
   }
 }

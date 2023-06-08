@@ -214,9 +214,9 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: TextStyle(
-                        fontSize: Sizes.size16 + Sizes.size2,
-                        fontWeight: FontWeight.bold,
-                      ),
+                          fontSize: Sizes.size16 + Sizes.size2,
+                          fontWeight: FontWeight.bold,
+                          height: 1.1),
                     ),
                     Gaps.v8,
                     //200에서 250사이는 안보이게
@@ -245,7 +245,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            Gaps.v4,
+                            Gaps.h4,
                             FaIcon(
                               FontAwesomeIcons.heart,
                               size: Sizes.size16,
