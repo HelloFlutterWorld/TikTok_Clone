@@ -22,130 +22,126 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Localizations.override(
-      context: context,
-      locale: const Locale("es"),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Settings'),
-        ),
-        body: Align(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: Breakpoints.md),
-            child: ListView(
-              children: [
-                SwitchListTile.adaptive(
-                  value: _notifications,
-                  onChanged: _onNotificationsChanged,
-                  title: const Text("Enable notifications"),
-                  subtitle: const Text("Enable notifications"),
-                ),
-                CheckboxListTile(
-                  activeColor: Colors.black,
-                  value: _notifications,
-                  onChanged: _onNotificationsChanged,
-                  title: const Text("Enable notifications"),
-                ),
-                ListTile(
-                  onTap: () async {
-                    final date = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(1980),
-                      lastDate: DateTime(2030),
-                    );
-                    if (kDebugMode) {
-                      print(date);
-                    }
-                    if (!mounted) return;
-                    final time = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                    );
-                    if (kDebugMode) {
-                      print(time);
-                    }
-                    if (!mounted) return;
-                    //await안에서 context를 사용하는 것은 좋지 않다.
-                    final booking = await showDateRangePicker(
-                      context: context,
-                      firstDate: DateTime(1980),
-                      lastDate: DateTime(2030),
-                      builder: (context, child) {
-                        return Theme(
-                          data: ThemeData(
-                              appBarTheme: const AppBarTheme(
-                                  foregroundColor: Colors.white,
-                                  backgroundColor: Colors.black)),
-                          child: child!,
-                        );
-                      },
-                    );
-                    if (kDebugMode) {
-                      print(booking);
-                    }
-                  },
-                  title: const Text("What is your birthday?"),
-                ),
-                ListTile(
-                  title: const Text("Log out (iOS)"),
-                  textColor: Colors.red,
-                  onTap: () {
-                    showCupertinoModalPopup(
-                      context: context,
-                      builder: (context) => CupertinoAlertDialog(
-                        title: const Text("Are you sure?"),
-                        content: const Text("Plx dont go"),
-                        actions: [
-                          CupertinoDialogAction(
-                            //현재 새로운 Route를 push한 상태이므로 pop해준다.
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text("No"),
-                          ),
-                          CupertinoDialogAction(
-                            onPressed: () => Navigator.of(context).pop(),
-                            //No Yes 색깔 바뀜 뭔지 모르겠음
-                            isDestructiveAction: true,
-                            child: const Text("Yes"),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                ListTile(
-                  title: const Text("Log out (iOS / Bottom)"),
-                  textColor: Colors.red,
-                  onTap: () {
-                    //modal밖을 누르면 pop됨
-                    showCupertinoModalPopup(
-                      context: context,
-                      builder: (context) => CupertinoActionSheet(
-                        title: const Text("Are you sure?"),
-                        message: const Text("Pleese dooont goooo"),
-                        actions: [
-                          CupertinoActionSheetAction(
-                            isDefaultAction: true,
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text("Not log out"),
-                          ),
-                          CupertinoActionSheetAction(
-                            //색깔 구분됨
-                            isDestructiveAction: true,
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text("Yes Plz."),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                const AboutListTile(
-                  applicationVersion: "1.0",
-                  applicationLegalese: "Don't copy me",
-                ),
-              ],
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+      ),
+      body: Align(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: Breakpoints.md),
+          child: ListView(
+            children: [
+              SwitchListTile.adaptive(
+                value: _notifications,
+                onChanged: _onNotificationsChanged,
+                title: const Text("Enable notifications"),
+                subtitle: const Text("Enable notifications"),
+              ),
+              CheckboxListTile(
+                activeColor: Colors.black,
+                value: _notifications,
+                onChanged: _onNotificationsChanged,
+                title: const Text("Enable notifications"),
+              ),
+              ListTile(
+                onTap: () async {
+                  final date = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(1980),
+                    lastDate: DateTime(2030),
+                  );
+                  if (kDebugMode) {
+                    print(date);
+                  }
+                  if (!mounted) return;
+                  final time = await showTimePicker(
+                    context: context,
+                    initialTime: TimeOfDay.now(),
+                  );
+                  if (kDebugMode) {
+                    print(time);
+                  }
+                  if (!mounted) return;
+                  //await안에서 context를 사용하는 것은 좋지 않다.
+                  final booking = await showDateRangePicker(
+                    context: context,
+                    firstDate: DateTime(1980),
+                    lastDate: DateTime(2030),
+                    builder: (context, child) {
+                      return Theme(
+                        data: ThemeData(
+                            appBarTheme: const AppBarTheme(
+                                foregroundColor: Colors.white,
+                                backgroundColor: Colors.black)),
+                        child: child!,
+                      );
+                    },
+                  );
+                  if (kDebugMode) {
+                    print(booking);
+                  }
+                },
+                title: const Text("What is your birthday?"),
+              ),
+              ListTile(
+                title: const Text("Log out (iOS)"),
+                textColor: Colors.red,
+                onTap: () {
+                  showCupertinoModalPopup(
+                    context: context,
+                    builder: (context) => CupertinoAlertDialog(
+                      title: const Text("Are you sure?"),
+                      content: const Text("Plx dont go"),
+                      actions: [
+                        CupertinoDialogAction(
+                          //현재 새로운 Route를 push한 상태이므로 pop해준다.
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("No"),
+                        ),
+                        CupertinoDialogAction(
+                          onPressed: () => Navigator.of(context).pop(),
+                          //No Yes 색깔 바뀜 뭔지 모르겠음
+                          isDestructiveAction: true,
+                          child: const Text("Yes"),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                title: const Text("Log out (iOS / Bottom)"),
+                textColor: Colors.red,
+                onTap: () {
+                  //modal밖을 누르면 pop됨
+                  showCupertinoModalPopup(
+                    context: context,
+                    builder: (context) => CupertinoActionSheet(
+                      title: const Text("Are you sure?"),
+                      message: const Text("Pleese dooont goooo"),
+                      actions: [
+                        CupertinoActionSheetAction(
+                          isDefaultAction: true,
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("Not log out"),
+                        ),
+                        CupertinoActionSheetAction(
+                          //색깔 구분됨
+                          isDestructiveAction: true,
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("Yes Plz."),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              const AboutListTile(
+                applicationVersion: "1.0",
+                applicationLegalese: "Don't copy me",
+              ),
+            ],
           ),
         ),
       ),
