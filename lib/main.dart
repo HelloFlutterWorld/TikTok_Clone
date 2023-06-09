@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/authentication/sign_up_screen.dart';
+import 'package:tiktok_clone/features/settings/settings_screen.dart';
 
 void main() async {
   //플러터 프레임워크를 이용해서 앱이 시작하기 전에 state를 어떤 식으로든 바꾸고 싶다면
@@ -38,6 +39,21 @@ class TikTokApp extends StatelessWidget {
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         title: 'TikTok Clone',
+        localizationsDelegates: const [
+          //플러터에는 텍스트가 기본적으로 들어가있는 위젯들이 있다.
+          //예를 들면 licenses 같은 것들
+          //플러터가 기본적으로 가지고 있는 위젯들에 대한 번역들을 include 시켜준다.
+          //calendar, clock 등
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          //www.iana.org
+          Locale("en"),
+          Locale("ko"),
+          Locale("es"),
+        ],
         theme: ThemeData(
             useMaterial3: true,
             //Robotov폰트를 기반으로 한다.
@@ -112,6 +128,6 @@ class TikTokApp extends StatelessWidget {
             color: Colors.grey.shade900,
           ),
         ),
-        home: const SignUpScreen());
+        home: const SettingsScreen());
   }
 }
