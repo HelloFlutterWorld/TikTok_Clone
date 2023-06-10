@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/sign_up_screen.dart';
 //gen_l10n 임포트
@@ -41,7 +40,9 @@ class TikTokApp extends StatelessWidget {
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         title: 'TikTok Clone',
-        localizationsDelegates: const [
+        //아래의 코드로 주석의 코드 대체
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        /* const [
           AppLocalizations.delegate,
           //플러터에는 텍스트가 기본적으로 들어가있는 위젯들이 있다.
           //예를 들면 licenses 같은 것들
@@ -50,13 +51,15 @@ class TikTokApp extends StatelessWidget {
           GlobalMaterialLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: const [
+        ], */
+        //아래의 코드로 주석의 코드 대체
+        supportedLocales: AppLocalizations.supportedLocales,
+        /* const [
           //www.iana.org
           Locale("en"),
           Locale("ko"),
           Locale("es"),
-        ],
+        ], */
         theme: ThemeData(
             useMaterial3: true,
             //Robotov폰트를 기반으로 한다.
