@@ -35,6 +35,8 @@ class TikTokApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    //언어설정을 영어로 강제
+    S.load(const Locale("en"));
     return MaterialApp(
         //휴태폰에게 어떤 theme를 사용할지 알려주는 기능을 한다.
         //.system은 앱이 실행되는 기기의 환경에 맞추어 준다.
