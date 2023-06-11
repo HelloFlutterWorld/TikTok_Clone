@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/authentication/sign_up_screen.dart';
+import 'package:tiktok_clone/features/main_navigation/main_navigation_screen.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
 //gen_l10n 임포트
 
@@ -36,7 +36,7 @@ class TikTokApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //언어설정을 영어로 강제
-    S.load(const Locale("en"));
+    //S.load(const Locale("en"));
     return MaterialApp(
         //휴태폰에게 어떤 theme를 사용할지 알려주는 기능을 한다.
         //.system은 앱이 실행되는 기기의 환경에 맞추어 준다.
@@ -138,6 +138,6 @@ class TikTokApp extends StatelessWidget {
             color: Colors.grey.shade900,
           ),
         ),
-        home: const SignUpScreen());
+        home: const MainNavigationScreen());
   }
 }

@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/breakpoints.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/generated/l10n.dart';
 import 'package:tiktok_clone/utils.dart';
 
 class VideoComments extends StatefulWidget {
@@ -65,7 +66,7 @@ class _VideoCommentsState extends State<VideoComments> {
             //앱바에서 자동으로 제공해주는 뒤로가기(pop())버튼 없애기
             automaticallyImplyLeading: false,
             backgroundColor: isDark ? null : Colors.grey.shade50,
-            title: const Text("22796 comments"),
+            title: Text(S.of(context).commentTitle(9876537, 9876537)),
             actions: [
               IconButton(
                 onPressed: _onClosePressed,
