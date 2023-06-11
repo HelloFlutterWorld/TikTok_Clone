@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/sign_up_screen.dart';
+import 'package:tiktok_clone/generated/l10n.dart';
 //gen_l10n 임포트
-import 'package:flutter_gen/gen_l10n/intl_generated.dart';
 
 void main() async {
   //플러터 프레임워크를 이용해서 앱이 시작하기 전에 state를 어떤 식으로든 바꾸고 싶다면
@@ -40,26 +41,27 @@ class TikTokApp extends StatelessWidget {
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         title: 'TikTok Clone',
+
         //아래의 코드로 주석의 코드 대체
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        /* const [
-          AppLocalizations.delegate,
+        // localizationsDelegates: AppLocalizations.localizationsDelegates,
+        localizationsDelegates: const [
+          //AppLocalizations.delegate,
           //플러터에는 텍스트가 기본적으로 들어가있는 위젯들이 있다.
           //예를 들면 licenses 같은 것들
           //플러터가 기본적으로 가지고 있는 위젯들에 대한 번역들을 include 시켜준다.
           //calendar, clock 등
+          S.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
-        ], */
+        ],
         //아래의 코드로 주석의 코드 대체
-        supportedLocales: AppLocalizations.supportedLocales,
-        /* const [
+        //supportedLocales: AppLocalizations.supportedLocales,
+        supportedLocales: const [
           //www.iana.org
           Locale("en"),
           Locale("ko"),
-          Locale("es"),
-        ], */
+        ],
         theme: ThemeData(
             useMaterial3: true,
             //Robotov폰트를 기반으로 한다.
