@@ -54,7 +54,7 @@ class SignUpScreen extends StatelessWidget {
                 children: [
                   Gaps.v80,
                   Text(
-                    S.of(context).signUpTitle("TikTok"),
+                    S.of(context).signUpTitle("TikTok", DateTime.now()),
                     //copytWith()스타일을 그대로 사용하면서 다른 요소들을 추가할 수 있다.
                     style: const TextStyle(
                       fontSize: Sizes.size24,
