@@ -6,6 +6,7 @@ import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
 import 'package:tiktok_clone/utils.dart';
 
 class UsernameScreen extends StatefulWidget {
+  static String routeName = "/username";
   const UsernameScreen({super.key});
 
   @override
@@ -13,7 +14,6 @@ class UsernameScreen extends StatefulWidget {
 }
 
 class _UsernameScreenState extends State<UsernameScreen> {
-  static String routeName = "/username";
   //controller는 코드, 메소드 등으로 textfield와 같은 위젯을 컨트롤 할 수 있도록 해줌
   //생성된 컨트롤러를 텍스트필드에 넘겨준다.
   final TextEditingController _usernameController = TextEditingController();
@@ -41,10 +41,10 @@ class _UsernameScreenState extends State<UsernameScreen> {
   //state 안에 있다면, 어디서든 context를 사용할 수 있으므로, context를 전달받을 필요없다.
   void _onNextTap() {
     if (_username.isEmpty) return;
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const EmailScreen(),
-      ),
+    Navigator.pushNamed(
+      context,
+      EmailScreen.routeName,
+      arguments: EmailScreenArgs(username: _username),
     );
   }
 

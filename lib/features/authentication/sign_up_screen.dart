@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
@@ -14,7 +15,9 @@ class SignUpScreen extends StatelessWidget {
 
   void _onLoginTap(BuildContext context) async {
     final result = Navigator.of(context).pushNamed(LoginScreen.routeName);
-    print(result);
+    if (kDebugMode) {
+      print(result);
+    }
   }
 
   void _onEmailTap(BuildContext context) {

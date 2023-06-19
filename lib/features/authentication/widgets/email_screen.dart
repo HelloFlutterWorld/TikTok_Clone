@@ -4,7 +4,14 @@ import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
 import 'package:tiktok_clone/features/authentication/widgets/password_screen.dart';
 
+class EmailScreenArgs {
+  final String username;
+  EmailScreenArgs({required this.username});
+}
+
 class EmailScreen extends StatefulWidget {
+  static String routeName = "/email";
+
   const EmailScreen({super.key});
 
   @override
@@ -62,6 +69,8 @@ class _EmailScreenState extends State<EmailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //ModalRoute.of(context)!.settings.arguments는 현재 경로의 인수를 가져오기 위한 Flutter의 편리한 방법
+    final args = ModalRoute.of(context)!.settings.arguments as EmailScreenArgs;
     return GestureDetector(
       onTap: _onScaffoldTap,
       child: Scaffold(
@@ -79,9 +88,9 @@ class _EmailScreenState extends State<EmailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Gaps.v40,
-              const Text(
-                "Waht is your email?",
-                style: TextStyle(
+              Text(
+                "Waht is your email, ${args.username}?",
+                style: const TextStyle(
                   fontSize: Sizes.size24,
                   fontWeight: FontWeight.w700,
                 ),
