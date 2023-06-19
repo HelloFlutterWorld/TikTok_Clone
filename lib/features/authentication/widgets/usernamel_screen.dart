@@ -13,6 +13,7 @@ class UsernameScreen extends StatefulWidget {
 }
 
 class _UsernameScreenState extends State<UsernameScreen> {
+  static String routeName = "/username";
   //controller는 코드, 메소드 등으로 textfield와 같은 위젯을 컨트롤 할 수 있도록 해줌
   //생성된 컨트롤러를 텍스트필드에 넘겨준다.
   final TextEditingController _usernameController = TextEditingController();
