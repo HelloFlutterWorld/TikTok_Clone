@@ -22,6 +22,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 해당페이지에서 언어를 따로 설정하는 것 가능
+    // return Localizations.override(
+    //   context: context,
+    //   locale: const Locale("en"),
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -62,8 +66,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   if (kDebugMode) {
                     print(time);
                   }
-                  if (!mounted) return;
                   //await안에서 context를 사용하는 것은 좋지 않다.
+                  //mount되지 않았다면, showDateRangePicker를 호출하지 않는다.
+                  if (!mounted) return;
                   final booking = await showDateRangePicker(
                     context: context,
                     firstDate: DateTime(1980),

@@ -64,10 +64,10 @@ class S {
     );
   }
 
-  /// `Log into your {nameOfTheApp} account`
+  /// `Log in to {nameOfTheApp}`
   String loginTitle(String nameOfTheApp) {
     return Intl.message(
-      'Log into your $nameOfTheApp account',
+      'Log in to $nameOfTheApp',
       name: 'loginTitle',
       desc: 'The title peope see when they open the log in screen.',
       args: [nameOfTheApp],
@@ -132,7 +132,7 @@ class S {
     final String potatoString = potatoNumberFormat.format(potato);
 
     return Intl.message(
-      '$potatoString',
+      potatoString,
       name: 'likeCount',
       desc: 'Anything you want',
       args: [potatoString],
@@ -147,7 +147,7 @@ class S {
     final String potatoString = potatoNumberFormat.format(potato);
 
     return Intl.message(
-      '$potatoString',
+      potatoString,
       name: 'commentCount',
       desc: 'Anything you want',
       args: [potatoString],

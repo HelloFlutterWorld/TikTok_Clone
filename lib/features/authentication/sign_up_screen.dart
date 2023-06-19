@@ -27,6 +27,8 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //현재 어떤 언어로 되어있는지 확인하는 코드
+    //print(Localizations.localeOf(context));
     return OrientationBuilder(
       builder: (context, orientation) {
         //builer은 위젯을 반환받는 Function이다.
@@ -65,6 +67,7 @@ class SignUpScreen extends StatelessWidget {
                   Opacity(
                     opacity: 0.7,
                     child: Text(
+                      //codeAction -> Extract to ARB
                       S.of(context).signUpSubtitle(100),
                       style: Theme.of(context).textTheme.titleMedium,
                       textAlign: TextAlign.center,
@@ -132,7 +135,7 @@ class SignUpScreen extends StatelessWidget {
                   GestureDetector(
                     onTap: () => _onLoginTap(context),
                     child: Text(
-                      S.of(context).logIn("female"),
+                      S.of(context).logIn("male"),
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.w600,

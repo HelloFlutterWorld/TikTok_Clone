@@ -14,7 +14,7 @@
       }
     }
   },
-  "loginTitle": "Log into your {nameOfTheApp} account",
+  "loginTitle": "Log in to {nameOfTheApp}",
   "@loginTitle": {
     "description": "The title peope see when they open the log in screen.",
     "placeholders": {

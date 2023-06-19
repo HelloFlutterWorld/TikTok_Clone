@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/authentication/sign_up_screen.dart';
+import 'package:tiktok_clone/features/main_navigation/main_navigation_screen.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
 //gen_l10n 임포트
 
@@ -31,7 +31,6 @@ void main() async {
 
 class TikTokApp extends StatelessWidget {
   const TikTokApp({super.key});
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -43,24 +42,21 @@ class TikTokApp extends StatelessWidget {
         themeMode: ThemeMode.system,
         debugShowCheckedModeBanner: false,
         title: 'TikTok Clone',
-
-        //아래의 코드로 주석의 코드 대체
-        // localizationsDelegates: AppLocalizations.localizationsDelegates,
         localizationsDelegates: const [
-          //AppLocalizations.delegate,
+          //command pallete -> Flutter intl: initialize
+          //command pallete -> Flutter intl: add locale "ko"
+          S.delegate,
           //플러터에는 텍스트가 기본적으로 들어가있는 위젯들이 있다.
           //예를 들면 licenses 같은 것들
           //플러터가 기본적으로 가지고 있는 위젯들에 대한 번역들을 include 시켜준다.
           //calendar, clock 등
-          S.delegate,
+          //아래의 코드들은 일종의 번역 파일들이다.
           GlobalMaterialLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
         ],
-        //아래의 코드로 주석의 코드 대체
-        //supportedLocales: AppLocalizations.supportedLocales,
         supportedLocales: const [
-          //www.iana.org
+          //www.iana.org => Locale에 사용가능한 코드확인
           Locale("en"),
           Locale("ko"),
         ],
@@ -138,6 +134,6 @@ class TikTokApp extends StatelessWidget {
             color: Colors.grey.shade900,
           ),
         ),
-        home: const SignUpScreen());
+        home: const MainNavigationScreen());
   }
 }
