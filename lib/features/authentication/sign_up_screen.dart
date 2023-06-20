@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/login_screen.dart';
@@ -14,10 +14,7 @@ class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
 
   void _onLoginTap(BuildContext context) async {
-    final result = Navigator.of(context).pushNamed(LoginScreen.routeName);
-    if (kDebugMode) {
-      print(result);
-    }
+    context.push(LoginScreen.routeName);
   }
 
   void _onEmailTap(BuildContext context) {
@@ -46,7 +43,9 @@ class SignUpScreen extends StatelessWidget {
             );
           }),
     ); */
-    Navigator.of(context).pushNamed(UsernameScreen.routeName);
+    //Navigator.pushNamed(context, UsernameScreen.routeName);
+    //go는 push, pop와 달리 페이지 스택을 무시하고 원하는 곳으로 route해준다.
+    context.push(UsernameScreen.routeName);
   }
 
   @override
@@ -80,7 +79,7 @@ class SignUpScreen extends StatelessWidget {
                 children: [
                   Gaps.v80,
                   Text(
-                    S.of(context).signUpTitle("TikTok", DateTime.now()),
+                    S.of(context).signUpTitle("TikTok"),
                     //copytWith()스타일을 그대로 사용하면서 다른 요소들을 추가할 수 있다.
                     style: const TextStyle(
                       fontSize: Sizes.size24,

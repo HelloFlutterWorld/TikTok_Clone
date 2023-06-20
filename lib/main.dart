@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/authentication/login_screen.dart';
-import 'package:tiktok_clone/features/authentication/sign_up_screen.dart';
-import 'package:tiktok_clone/features/authentication/widgets/email_screen.dart';
-import 'package:tiktok_clone/features/authentication/widgets/usernamel_screen.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
+import 'package:tiktok_clone/router.dart';
 //gen_l10n 임포트
 
 void main() async {
@@ -39,7 +36,8 @@ class TikTokApp extends StatelessWidget {
   Widget build(BuildContext context) {
     //언어설정을 영어로 강제
     //S.load(const Locale("en"));
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: router,
       //휴태폰에게 어떤 theme를 사용할지 알려주는 기능을 한다.
       //.system은 앱이 실행되는 기기의 환경에 맞추어 준다.
       themeMode: ThemeMode.system,
@@ -137,13 +135,6 @@ class TikTokApp extends StatelessWidget {
           color: Colors.grey.shade900,
         ),
       ),
-      initialRoute: SignUpScreen.routeName,
-      routes: {
-        SignUpScreen.routeName: (context) => const SignUpScreen(),
-        UsernameScreen.routeName: (context) => const UsernameScreen(),
-        LoginScreen.routeName: (context) => const LoginScreen(),
-        EmailScreen.routeName: (context) => const EmailScreen(),
-      },
     );
   }
 }
