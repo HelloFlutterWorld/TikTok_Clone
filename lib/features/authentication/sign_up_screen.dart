@@ -5,7 +5,6 @@ import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/login_screen.dart';
 import 'package:tiktok_clone/features/authentication/widgets/auth_button.dart';
-import 'package:tiktok_clone/features/authentication/widgets/usernamel_screen.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
 import 'package:tiktok_clone/utils.dart';
 
@@ -45,7 +44,7 @@ class SignUpScreen extends StatelessWidget {
     ); */
     //Navigator.pushNamed(context, UsernameScreen.routeName);
     //go는 push, pop와 달리 페이지 스택을 무시하고 원하는 곳으로 route해준다.
-    context.push(UsernameScreen.routeName);
+    context.push("/users/lynn?show=likes");
   }
 
   @override

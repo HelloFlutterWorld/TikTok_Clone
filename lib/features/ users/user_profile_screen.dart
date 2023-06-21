@@ -4,13 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/breakpoints.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
-import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/%20users/widgets/persistent_tab_bar.dart';
 import 'package:tiktok_clone/features/settings/settings_screen.dart';
 
+import '../../constants/sizes.dart';
+
 class UserProfileScreen extends StatefulWidget {
   final String username;
-  const UserProfileScreen({super.key, required this.username});
+
+  final String tab;
+
+  const UserProfileScreen({
+    super.key,
+    required this.username,
+    required this.tab,
+  });
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
@@ -34,6 +42,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       body: SafeArea(
         child: DefaultTabController(
+          initialIndex: widget.tab == 'likes' ? 1 : 0,
           length: 2,
           // NestedScrollView를 사용하여 스크롤 문제를 해결한다.
           //NestedScrollView는 여럭 개의 스크롤 가능한 view들을 넣을 수 있게 해준다.
