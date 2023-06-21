@@ -11,7 +11,6 @@ import '../../constants/sizes.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final String username;
-
   final String tab;
 
   const UserProfileScreen({

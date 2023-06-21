@@ -22,7 +22,10 @@ final router = GoRouter(
     ),
     GoRoute(
       path: EmailScreen.routeName,
-      builder: (context, state) => const EmailScreen(),
+      builder: (context, state) {
+        final args = state.extra as EmailScreenArgs;
+        return EmailScreen(username: args.username);
+      },
     ),
     GoRoute(
       //웹 주소창에서 이름을 직접 입력해도 반응하도록
