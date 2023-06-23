@@ -7,7 +7,8 @@ import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
 import 'package:tiktok_clone/utils.dart';
 
 class UsernameScreen extends StatefulWidget {
-  static String routeName = "/username";
+  static String routeURL = "username";
+  static String routeNAme = "username";
   const UsernameScreen({super.key});
 
   @override
@@ -42,10 +43,21 @@ class _UsernameScreenState extends State<UsernameScreen> {
   //state 안에 있다면, 어디서든 context를 사용할 수 있으므로, context를 전달받을 필요없다.
   void _onNextTap() {
     if (_username.isEmpty) return;
-    context.push(
-      EmailScreen.routeName,
-      extra: EmailScreenArgs(username: _username),
-    );
+    context.pushNamed(EmailScreen.routeName,
+        //push는 page stack에 location을 push한다.
+        //이것은 이전 화면 위에 다른 화면을 올린다는 뜻이다.
+
+        //extra를 사용하여 페이지 스택 위에 푸시되는 경로(path:"/email")로
+        //데이터를 전달할 수 있다.
+        //EmailScreenArgs 객체는 페이지 스택 위에 쌓이는 경로(path:"/email")로
+        //함께 저장되며,
+        //이후 해당 경로(path:"/email")호출하는 GoRoute에서
+        //builder 함수를 콜백하여 state.extra를 통해 해당 객체에 접근할 수 있다.
+
+        //extra: EmailScreenArgs(username: _username),
+        //위 구문 자체가 객체를 생성하고 router에서 state.extra로 접근 가능한 형태다.
+        //이를 통해 생성된 EmailScreenArgs 객체의 속성이나 메서드에 접근하여 사용할 수 있다.
+        extra: EmailScreenArgs(username: _username));
   }
 
   @override

@@ -10,7 +10,8 @@ import 'package:tiktok_clone/generated/l10n.dart';
 import 'package:tiktok_clone/utils.dart';
 
 class SignUpScreen extends StatelessWidget {
-  static String routeName = "/";
+  static String routeURL = "/";
+  static String routeName = "signUp";
   const SignUpScreen({super.key});
 
   void _onLoginTap(BuildContext context) async {
@@ -45,7 +46,10 @@ class SignUpScreen extends StatelessWidget {
     ); */
     //Navigator.pushNamed(context, UsernameScreen.routeName);
     //go는 push, pop와 달리 페이지 스택을 무시하고 원하는 곳으로 route해준다.
-    context.push(UsernameScreen.routeName);
+    //context.push("/users/yoon?show=likes");
+    //context.push(UsernameScreen.routeName);
+    //context.push("/username");
+    context.pushNamed(UsernameScreen.routeNAme);
   }
 
   @override

@@ -231,6 +231,7 @@ class _VideoPostState extends State<VideoPost>
                   //방법2
                   //animation은 Listenable 타입이다.
                   //_animationController를 감지한다.
+                  //class AnimationController <<< class Animation<T> <<< Listenable implements ValueListenable<T>
                   animation: _animationController,
                   //builder는 애니메이션 컨트롤러거 변할 때마다 실행됨
                   //_animationController가 변할 때마다 setState가
@@ -242,6 +243,10 @@ class _VideoPostState extends State<VideoPost>
                       //animated를 하고 싶은 child인
                       //AnimatedOpacity를 넘겨준다.
                       //child는 옵셔널 파라미터다. return 값은 widget
+                      //child는 scale하고 싶은 위젯을 말한다.
+                      //builder: (context, child)에서
+                      //매개변수로 넘어오는 child를 그대로 넣는다.
+                      //여기서 child는 child: AnimatedOpacity 다
                       child: child,
                     );
                   },
