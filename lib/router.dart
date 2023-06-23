@@ -1,16 +1,12 @@
 import 'package:go_router/go_router.dart';
-import 'package:tiktok_clone/features/%20users/user_profile_screen.dart';
-
-import 'features/authentication/sign_up_screen.dart';
-import 'features/authentication/widgets/email_screen.dart';
-import 'features/authentication/widgets/usernamel_screen.dart';
+import 'package:tiktok_clone/features/videos/video_recording_screen.dart';
 
 final router = GoRouter(
   routes: [
     GoRoute(
-      name: SignUpScreen.routeName,
-      path: SignUpScreen.routeURL,
-      builder: (context, state) => const SignUpScreen(),
+      path: "/",
+      builder: (context, state) => const VideoRecordingScreen(),
+      /* name: SignUpScreen.routeName,
       routes: [
         GoRoute(
           path: UsernameScreen.routeURL,
@@ -97,7 +93,7 @@ final router = GoRouter(
         final tab = state.queryParams["show"];
         //UserProfileScreen에 파라미터로 전달
         return UserProfileScreen(username: username!, tab: tab!);
-      },
+      }, */
     )
   ],
 );
