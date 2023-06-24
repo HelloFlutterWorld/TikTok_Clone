@@ -13,10 +13,12 @@ class VideoRecordingScreen extends StatefulWidget {
 
 class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
   bool _hasPermission = false;
+  bool _deniedPermissions = false;
 
   late final CameraController _cameraController;
 
   Future<void> initCamera() async {
+    //사용가능한 카메라들을 반환
     final cameras = await availableCameras();
 
     if (cameras.isEmpty) {
@@ -43,6 +45,9 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
       _hasPermission = true;
       await initCamera();
       setState(() {});
+    } else {
+      _deniedPermissions = true;
+      setState(() {});
     }
   }
 
@@ -62,16 +67,41 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Text(
-                    "Initializing...",
-                    style: TextStyle(
+                    !_deniedPermissions
+                        ? "Initializing..."
+                        : "The camera and microphone permissions are required.",
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: Sizes.size20,
                     ),
                   ),
                   Gaps.v20,
-                  CircularProgressIndicator.adaptive(),
+                  if (!_deniedPermissions)
+                    const CircularProgressIndicator.adaptive(),
+                  if (_deniedPermissions) ...[
+                    Gaps.v96,
+                    GestureDetector(
+                      onTap: () async {
+                        await openAppSettings();
+                        initPermissions();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(Sizes.size8),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white),
+                        ),
+                        child: const Text(
+                          "Device Permission Settings",
+                          style: TextStyle(
+                            fontSize: Sizes.size20,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]
                 ],
               )
             : Stack(
