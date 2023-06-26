@@ -14,8 +14,9 @@ class VideoRecordingScreen extends StatefulWidget {
 class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
   bool _hasPermission = false;
   bool _deniedPermissions = false;
+  bool _isSelfieMode = false;
 
-  late final CameraController _cameraController;
+  late CameraController _cameraController;
 
   Future<void> initCamera() async {
     //사용가능한 카메라들을 반환
@@ -26,8 +27,10 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
     }
     /*  print(cameras);
     //[CameraDescription(0, CameraLensDirection.back, 90), CameraDescription(1, CameraLensDirection.front, 270), CameraDescription(2, CameraLensDirection.back, 90), CameraDescription(3, CameraLensDirection.front, 270)] Lost connection to device */
-    _cameraController =
-        CameraController(cameras[0], ResolutionPreset.ultraHigh);
+    _cameraController = CameraController(
+        //0: 후면, 1: 전면
+        cameras[_isSelfieMode ? 1 : 0],
+        ResolutionPreset.ultraHigh);
 
     await _cameraController.initialize();
   }
@@ -57,6 +60,12 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
     initPermissions();
   }
 
+  Future<void> _toggleSelfieMode() async {
+    _isSelfieMode = !_isSelfieMode;
+    await initCamera();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +85,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
                       color: Colors.white,
                       fontSize: Sizes.size20,
                     ),
+                    textAlign: TextAlign.center,
                   ),
                   Gaps.v20,
                   if (!_deniedPermissions)
@@ -108,6 +118,17 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
                 alignment: Alignment.center,
                 children: [
                   CameraPreview(_cameraController),
+                  Positioned(
+                    top: Sizes.size20,
+                    left: Sizes.size20,
+                    child: IconButton(
+                      color: Colors.black,
+                      onPressed: _toggleSelfieMode,
+                      icon: const Icon(
+                        Icons.cameraswitch,
+                      ),
+                    ),
+                  ),
                 ],
               ),
       ),
