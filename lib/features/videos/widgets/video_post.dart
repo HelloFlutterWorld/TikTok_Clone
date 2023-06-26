@@ -108,7 +108,7 @@ class _VideoPostState extends State<VideoPost>
       //위젯이 위젯 tree에 있을 때만 Ticker를 유지해준다.
       lowerBound: 1.0,
       upperBound: 1.5,
-      //value 는 기본값이다.
+      //value는 기본값이다.
       value: 1.5,
       duration: _animationDuratrion,
     );
@@ -227,10 +227,10 @@ class _VideoPostState extends State<VideoPost>
             //클릭무시하는 위젯
             child: IgnorePointer(
               child: Center(
+                //방법2
+                //_animationController를 감지한다.
                 child: AnimatedBuilder(
-                  //방법2
                   //animation은 Listenable 타입이다.
-                  //_animationController를 감지한다.
                   //class AnimationController <<< class Animation<T> <<< Listenable implements ValueListenable<T>
                   animation: _animationController,
                   //builder는 애니메이션 컨트롤러거 변할 때마다 실행됨
@@ -238,6 +238,8 @@ class _VideoPostState extends State<VideoPost>
                   // build를 실행하고 build 메서드가 가장 최신값으로 rebuild하는
                   // 일을 대신해줌
                   builder: (context, child) {
+                    //ScaleTransition
+                    //scale: _animationController
                     return Transform.scale(
                       scale: _animationController.value,
                       //animated를 하고 싶은 child인
