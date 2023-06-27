@@ -1,18 +1,18 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPreviewScreen extends StatefulWidget {
   final XFile video;
+  final bool isPicked;
 
   const VideoPreviewScreen({
     super.key,
     required this.video,
+    required this.isPicked,
   });
 
   @override
@@ -31,7 +31,7 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
     _videoPlayerController = VideoPlayerController.file(
       File(widget.video.path),
     );
-    try {
+    /* try {
       await _videoPlayerController.initialize();
     } on PlatformException catch (e) {
       // PlatformException 예외 처리
@@ -51,7 +51,8 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
       if (kDebugMode) {
         print('Exception occurred: $e');
       }
-    }
+    } */
+    await _videoPlayerController.initialize();
     await _videoPlayerController.setLooping(true);
     await _videoPlayerController.play();
 
@@ -85,12 +86,15 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
       appBar: AppBar(
         title: const Text("Preview Video"),
         actions: [
-          IconButton(
-            onPressed: _saveToGallery,
-            icon: FaIcon(_savedVideo
-                ? FontAwesomeIcons.check
-                : FontAwesomeIcons.download),
-          ),
+          //아이콘버튼은 카메라가 찍고 있을 때만 보여지게 된다.
+          //다시 다운로드 받을 수 없어야 함으로
+          if (!widget.isPicked)
+            IconButton(
+              onPressed: _saveToGallery,
+              icon: FaIcon(_savedVideo
+                  ? FontAwesomeIcons.check
+                  : FontAwesomeIcons.download),
+            ),
         ],
       ),
       body: _videoPlayerController.value.isInitialized
