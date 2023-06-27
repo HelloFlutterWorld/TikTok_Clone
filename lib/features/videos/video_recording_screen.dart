@@ -196,6 +196,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                       Gaps.v96,
                       GestureDetector(
                         onTap: () async {
+                          //사용자가 거부한 권한항목들이 남아있다.
                           await openAppSettings();
                           initPermissions();
                         },

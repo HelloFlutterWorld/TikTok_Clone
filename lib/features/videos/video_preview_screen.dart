@@ -3,6 +3,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPreviewScreen extends StatefulWidget {
@@ -19,6 +21,8 @@ class VideoPreviewScreen extends StatefulWidget {
 
 class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
   late final VideoPlayerController _videoPlayerController;
+
+  bool _savedVideo = false;
 
   Future<void> _initVideo() async {
     //widget.video는 XFile class이고, name과 path를 가지고 있다.
@@ -67,12 +71,27 @@ class _VideoPreviewScreenState extends State<VideoPreviewScreen> {
     super.dispose();
   }
 
+  Future<void> _saveToGallery() async {
+    if (_savedVideo) return;
+    await GallerySaver.saveVideo(widget.video.path, albumName: "TikTok Clone");
+    _savedVideo = true;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text("Preview Video"),
+        actions: [
+          IconButton(
+            onPressed: _saveToGallery,
+            icon: FaIcon(_savedVideo
+                ? FontAwesomeIcons.check
+                : FontAwesomeIcons.download),
+          ),
+        ],
       ),
       body: _videoPlayerController.value.isInitialized
           ? VideoPlayer(_videoPlayerController)
