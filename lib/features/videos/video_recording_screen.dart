@@ -1,8 +1,11 @@
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/videos/video_preview_screen.dart';
+import 'package:tiktok_clone/features/videos/widgets/camera_flash_button.dart';
 
 class VideoRecordingScreen extends StatefulWidget {
   const VideoRecordingScreen({super.key});
@@ -20,6 +23,8 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   bool _deniedPermissions = false;
 
   bool _isSelfieMode = false;
+
+  late XFile video;
 
   late final AnimationController _buttonAnimationController =
       AnimationController(
@@ -40,10 +45,11 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
 
   late final Animation<double> _buttonAnimation =
       //Tween을 _animationController와 결합하여 _buttonAnimation을 만듭니다.
-      // 이렇게 함으로써 _buttonAnimation은 _animationController를 기반으로하는 1.0에서 1.3 사이의 값을 가지게 됩니다.
+      //이렇게 함으로써 _buttonAnimation은 _animationController를 기반으로하는 1.0에서 1.3 사이의 값을 가지게 됩니다.
       Tween(begin: 1.0, end: 1.3).animate(_buttonAnimationController);
 
   late FlashMode _flashMode;
+
   late CameraController _cameraController;
 
   Future<void> initCamera() async {
@@ -56,11 +62,15 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     /*  print(cameras);
     //[CameraDescription(0, CameraLensDirection.back, 90), CameraDescription(1, CameraLensDirection.front, 270), CameraDescription(2, CameraLensDirection.back, 90), CameraDescription(3, CameraLensDirection.front, 270)] Lost connection to device */
     _cameraController = CameraController(
-        //0: 후면, 1: 전면
-        cameras[_isSelfieMode ? 1 : 0],
-        ResolutionPreset.ultraHigh);
+      //0: 후면, 1: 전면
+      cameras[_isSelfieMode ? 1 : 0],
+      ResolutionPreset.ultraHigh,
+    );
 
     await _cameraController.initialize();
+
+    //IOS만을 위한 코드
+    await _cameraController.prepareForVideoRecording();
 
     //처음엔  FlashMode.auto 로 초기회되어있음
     _flashMode = _cameraController.value.flashMode;
@@ -109,157 +119,189 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     setState(() {});
   }
 
-  void _startRecording(TapDownDetails _) {
+  Future<void> _startRecording(TapDownDetails _) async {
+    //안전을 위한 코드, 녹화중인데 또 녹화하면 안됨으로
+    if (_cameraController.value.isRecordingVideo) return;
+
+    await _cameraController.startVideoRecording();
     _buttonAnimationController.forward();
     _progressAnimationController.forward();
   }
 
-  void _stopRecording() {
+  Future<void> _stopRecording() async {
+    //안전을 위한 코드, 녹화중이 아닌데 녹화를 중지하면 안됨으로
+    if (!_cameraController.value.isRecordingVideo) return;
+
     _buttonAnimationController.reverse();
     _progressAnimationController.reset();
+    try {
+      video = await _cameraController.stopVideoRecording();
+    } on CameraException catch (e) {
+      // 카메라 중지 중에 예외가 발생한 경우 수행할 작업
+      if (kDebugMode) {
+        print('Camera Exception: ${e.description}');
+      }
+      if (kDebugMode) {
+        print('Camera Exception Code: ${e.code}');
+      }
+      initState();
+    }
+
+    //final picture = await _cameraController.takePicture();
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VideoPreviewScreen(
+          video: video,
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _buttonAnimationController.dispose();
+    _progressAnimationController.dispose();
+    _cameraController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: !_hasPermission || !_cameraController.value.isInitialized
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    !_deniedPermissions
-                        ? "Initializing..."
-                        : "The camera and microphone permissions are required.",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: Sizes.size20,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: !_hasPermission || !_cameraController.value.isInitialized
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      !_deniedPermissions
+                          ? "Initializing..."
+                          : "The camera and microphone permissions are required.",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: Sizes.size20,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  Gaps.v20,
-                  if (!_deniedPermissions)
-                    const CircularProgressIndicator.adaptive(),
-                  if (_deniedPermissions) ...[
-                    Gaps.v96,
-                    GestureDetector(
-                      onTap: () async {
-                        await openAppSettings();
-                        initPermissions();
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(Sizes.size8),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white),
+                    Gaps.v20,
+                    if (!_deniedPermissions)
+                      const CircularProgressIndicator.adaptive(),
+                    if (_deniedPermissions) ...[
+                      Gaps.v96,
+                      GestureDetector(
+                        onTap: () async {
+                          await openAppSettings();
+                          initPermissions();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(Sizes.size8),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white),
+                          ),
+                          child: const Text(
+                            "Device Permission Settings",
+                            style: TextStyle(
+                              fontSize: Sizes.size20,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
-                        child: const Text(
-                          "Device Permission Settings",
-                          style: TextStyle(
-                            fontSize: Sizes.size20,
+                      ),
+                    ]
+                  ],
+                )
+              : Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: CameraPreview(_cameraController),
+                    ),
+                    Positioned(
+                      top: Sizes.size20,
+                      right: Sizes.size20,
+                      child: Column(
+                        children: [
+                          IconButton(
                             color: Colors.white,
+                            onPressed: _toggleSelfieMode,
+                            icon: const Icon(
+                              Icons.cameraswitch,
+                            ),
+                          ),
+                          Gaps.v10,
+                          CameraFlashButton(
+                            flashMode: _flashMode,
+                            targetMode: FlashMode.off,
+                            setFlashMode: _setFlashMode,
+                            icon: Icons.flash_off_rounded,
+                          ),
+                          Gaps.v10,
+                          CameraFlashButton(
+                            flashMode: _flashMode,
+                            targetMode: FlashMode.always,
+                            setFlashMode: _setFlashMode,
+                            icon: Icons.flash_on_rounded,
+                          ),
+                          Gaps.v10,
+                          CameraFlashButton(
+                            flashMode: _flashMode,
+                            targetMode: FlashMode.auto,
+                            setFlashMode: _setFlashMode,
+                            icon: Icons.flash_auto_rounded,
+                          ),
+                          Gaps.v10,
+                          CameraFlashButton(
+                            flashMode: _flashMode,
+                            targetMode: FlashMode.torch,
+                            setFlashMode: _setFlashMode,
+                            icon: Icons.flashlight_on_rounded,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      bottom: Sizes.size40,
+                      child: GestureDetector(
+                        onTapDown: _startRecording,
+                        //TapUpDetailsd없이 stopRecording를 호출
+                        onTapUp: (details) => _stopRecording(),
+                        child: ScaleTransition(
+                          scale: _buttonAnimation,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              SizedBox(
+                                width: Sizes.size80 + Sizes.size14,
+                                height: Sizes.size80 + Sizes.size14,
+                                child: CircularProgressIndicator(
+                                  color: Colors.red.shade400,
+                                  strokeWidth: Sizes.size6,
+                                  value: _progressAnimationController.value,
+                                ),
+                              ),
+                              Container(
+                                width: Sizes.size80,
+                                height: Sizes.size80,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.red.shade400,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ),
-                  ]
-                ],
-              )
-            : Stack(
-                alignment: Alignment.center,
-                children: [
-                  CameraPreview(_cameraController),
-                  Positioned(
-                    top: Sizes.size20,
-                    right: Sizes.size20,
-                    child: Column(
-                      children: [
-                        IconButton(
-                          color: Colors.white,
-                          onPressed: _toggleSelfieMode,
-                          icon: const Icon(
-                            Icons.cameraswitch,
-                          ),
-                        ),
-                        Gaps.v10,
-                        IconButton(
-                          color: _flashMode == FlashMode.off
-                              ? Colors.amber.shade200
-                              : Colors.white,
-                          onPressed: () => _setFlashMode(FlashMode.off),
-                          icon: const Icon(
-                            Icons.flash_off_rounded,
-                          ),
-                        ),
-                        Gaps.v10,
-                        IconButton(
-                          color: _flashMode == FlashMode.always
-                              ? Colors.amber.shade200
-                              : Colors.white,
-                          onPressed: () => _setFlashMode(FlashMode.always),
-                          icon: const Icon(
-                            Icons.flash_on_rounded,
-                          ),
-                        ),
-                        Gaps.v10,
-                        IconButton(
-                          color: _flashMode == FlashMode.auto
-                              ? Colors.amber.shade200
-                              : Colors.white,
-                          onPressed: () => _setFlashMode(FlashMode.auto),
-                          icon: const Icon(
-                            Icons.flash_auto_rounded,
-                          ),
-                        ),
-                        Gaps.v10,
-                        IconButton(
-                          color: _flashMode == FlashMode.torch
-                              ? Colors.amber.shade200
-                              : Colors.white,
-                          onPressed: () => _setFlashMode(FlashMode.torch),
-                          icon: const Icon(
-                            Icons.flashlight_on_rounded,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    bottom: Sizes.size40,
-                    child: GestureDetector(
-                      onTapDown: _startRecording,
-                      onTapUp: (details) => _stopRecording(),
-                      child: ScaleTransition(
-                        scale: _buttonAnimation,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            SizedBox(
-                              width: Sizes.size80 + Sizes.size14,
-                              height: Sizes.size80 + Sizes.size14,
-                              child: CircularProgressIndicator(
-                                color: Colors.red.shade400,
-                                strokeWidth: Sizes.size6,
-                                value: _progressAnimationController.value,
-                              ),
-                            ),
-                            Container(
-                              width: Sizes.size80,
-                              height: Sizes.size80,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.red.shade400,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+        ),
       ),
     );
   }
