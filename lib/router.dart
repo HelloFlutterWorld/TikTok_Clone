@@ -6,6 +6,7 @@ final router = GoRouter(
     GoRoute(
       path: "/",
       builder: (context, state) => const VideoRecordingScreen(),
+
       /* name: SignUpScreen.routeName,
       routes: [
         GoRoute(
