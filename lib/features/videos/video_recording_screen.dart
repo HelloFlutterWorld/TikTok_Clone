@@ -18,6 +18,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
   bool _hasPermission = false;
   bool _isSelfieMode = false;
+  bool _deniedPermission = false;
 
   late final AnimationController _buttonAnimationController =
       AnimationController(
@@ -91,6 +92,9 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       _hasPermission = true;
       await initCamera();
       setState(() {});
+    } else {
+      _deniedPermission = true;
+      setState(() {});
     }
   }
 
@@ -121,7 +125,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     setState(() {});
   }
 
-  Future<void> _starRecording(TapDownDetails _) async {
+  Future<void> _starRecording() async {
     if (_cameraController.value.isRecordingVideo) return;
 
     await _cameraController.startVideoRecording();
@@ -189,15 +193,40 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Text(
-                      "Initializing...",
-                      style: TextStyle(
+                      !_deniedPermission
+                          ? "Initializing..."
+                          : "The camera and microphone permissions are required.",
+                      style: const TextStyle(
                           color: Colors.white, fontSize: Sizes.size20),
                       textAlign: TextAlign.center,
                     ),
                     Gaps.v20,
-                    CircularProgressIndicator.adaptive(),
+                    if (!_deniedPermission)
+                      const CircularProgressIndicator.adaptive(),
+                    if (_deniedPermission) ...[
+                      Gaps.v96,
+                      GestureDetector(
+                        onTap: () async {
+                          await openAppSettings();
+                          initPermissions();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(Sizes.size8),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white),
+                          ),
+                          child: const Text(
+                            "Device Permission Settings",
+                            style: TextStyle(
+                              fontSize: Sizes.size20,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ]
                   ],
                 )
               : Stack(
@@ -270,8 +299,9 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                         children: [
                           const Spacer(),
                           GestureDetector(
-                            onTapDown: _starRecording,
-                            onTapUp: (details) => _stopRecording(),
+                            onTapDown: (_) => _starRecording(),
+                            onTapUp: (_) => _stopRecording(),
+                            onLongPressEnd: (_) => _stopRecording(),
                             child: ScaleTransition(
                               scale: _buttonAnimation,
                               child: Stack(
