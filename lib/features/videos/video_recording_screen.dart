@@ -14,8 +14,11 @@ class VideoRecordingScreen extends StatefulWidget {
 class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
   bool _hasPermission = false;
   bool _deniedPermission = false;
+  bool _isSelfieMode = false;
 
-  late final CameraController _cameraController;
+  late FlashMode _flashMode;
+
+  late CameraController _cameraController;
 
   Future<void> initCamera() async {
     final cameras = await availableCameras();
@@ -25,11 +28,13 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
     }
 
     _cameraController = CameraController(
-      cameras[0],
+      cameras[_isSelfieMode ? 1 : 0],
       ResolutionPreset.ultraHigh,
     );
 
     await _cameraController.initialize();
+
+    _flashMode = _cameraController.value.flashMode;
   }
 
   Future<void> initPermissions() async {
@@ -58,53 +63,131 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
     initPermissions();
   }
 
+  Future<void> _toggleSelfieMode() async {
+    _isSelfieMode = !_isSelfieMode;
+    await initCamera();
+    setState(() {});
+  }
+
+  Future<void> _setFlashMode(FlashMode newFlashMode) async {
+    await _cameraController.setFlashMode(newFlashMode);
+    _flashMode = newFlashMode;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: !_hasPermission || !_cameraController.value.isInitialized
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    !_deniedPermission
-                        ? "Initializing..."
-                        : "The camera and microphone permissions are required.",
-                    style: const TextStyle(
-                        color: Colors.white, fontSize: Sizes.size20),
-                    textAlign: TextAlign.center,
-                  ),
-                  Gaps.v20,
-                  if (!_deniedPermission)
-                    const CircularProgressIndicator.adaptive(),
-                  if (_deniedPermission) ...[
-                    Gaps.v96,
-                    GestureDetector(
-                      onTap: () async {
-                        await openAppSettings();
-                        initPermissions();
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(Sizes.size8),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white),
-                        ),
-                        child: const Text(
-                          "Device Permission Settings",
-                          style: TextStyle(
-                            fontSize: Sizes.size20,
-                            color: Colors.white,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: !_hasPermission || !_cameraController.value.isInitialized
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      !_deniedPermission
+                          ? "Initializing..."
+                          : "The camera and microphone permissions are required.",
+                      style: const TextStyle(
+                          color: Colors.white, fontSize: Sizes.size20),
+                      textAlign: TextAlign.center,
+                    ),
+                    Gaps.v20,
+                    if (!_deniedPermission)
+                      const CircularProgressIndicator.adaptive(),
+                    if (_deniedPermission) ...[
+                      Gaps.v96,
+                      GestureDetector(
+                        onTap: () async {
+                          await openAppSettings();
+                          initPermissions();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(Sizes.size8),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white),
+                          ),
+                          child: const Text(
+                            "Device Permission Settings",
+                            style: TextStyle(
+                              fontSize: Sizes.size20,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
+                    ]
+                  ],
+                )
+              : Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: CameraPreview(_cameraController),
                     ),
-                  ]
-                ],
-              )
-            : CameraPreview(_cameraController),
+                    Positioned(
+                      top: Sizes.size20,
+                      right: Sizes.size20,
+                      child: Column(
+                        children: [
+                          IconButton(
+                            color: Colors.white,
+                            onPressed: _toggleSelfieMode,
+                            icon: const Icon(
+                              Icons.cameraswitch,
+                            ),
+                          ),
+                          Gaps.v10,
+                          IconButton(
+                            color: _flashMode == FlashMode.off
+                                ? Colors.amber.shade200
+                                : Colors.white,
+                            onPressed: () => _setFlashMode(FlashMode.off),
+                            icon: const Icon(
+                              Icons.flash_off_rounded,
+                            ),
+                          ),
+                          Gaps.v10,
+                          IconButton(
+                            color: _flashMode == FlashMode.always
+                                ? Colors.amber.shade200
+                                : Colors.white,
+                            onPressed: () => _setFlashMode(FlashMode.always),
+                            icon: const Icon(
+                              Icons.flash_on_rounded,
+                            ),
+                          ),
+                          Gaps.v10,
+                          IconButton(
+                            color: _flashMode == FlashMode.auto
+                                ? Colors.amber.shade200
+                                : Colors.white,
+                            onPressed: () => _setFlashMode(FlashMode.auto),
+                            icon: const Icon(
+                              Icons.flash_auto_rounded,
+                            ),
+                          ),
+                          Gaps.v10,
+                          IconButton(
+                            color: _flashMode == FlashMode.torch
+                                ? Colors.amber.shade200
+                                : Colors.white,
+                            onPressed: () => _setFlashMode(FlashMode.torch),
+                            icon: const Icon(
+                              Icons.flashlight_on_rounded,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+        ),
       ),
     );
   }
