@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/videos/video_preview_screen.dart';
 
 class VideoRecordingScreen extends StatefulWidget {
   const VideoRecordingScreen({super.key});
@@ -14,7 +15,6 @@ class VideoRecordingScreen extends StatefulWidget {
 class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     with TickerProviderStateMixin {
   bool _hasPermission = false;
-  bool _deniedPermission = false;
   bool _isSelfieMode = false;
 
   late final AnimationController _buttonAnimationController =
@@ -48,9 +48,12 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     _cameraController = CameraController(
       cameras[_isSelfieMode ? 1 : 0],
       ResolutionPreset.ultraHigh,
+      enableAudio: false,
     );
 
     await _cameraController.initialize();
+
+    await _cameraController.prepareForVideoRecording();
 
     _flashMode = _cameraController.value.flashMode;
   }
@@ -68,9 +71,6 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     if (!cameraDenied && !micDenied) {
       _hasPermission = true;
       await initCamera();
-      setState(() {});
-    } else {
-      _deniedPermission = true;
       setState(() {});
     }
   }
@@ -101,14 +101,39 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     setState(() {});
   }
 
-  void _starRecording(TapDownDetails _) {
+  Future<void> _starRecording(TapDownDetails _) async {
+    if (_cameraController.value.isRecordingVideo) return;
+
+    await _cameraController.startVideoRecording();
+
     _buttonAnimationController.forward();
     _progressAnimationController.forward();
   }
 
-  void _stopRecording() {
+  Future<void> _stopRecording() async {
+    if (!_cameraController.value.isRecordingVideo) return;
+
     _buttonAnimationController.reverse();
     _progressAnimationController.reset();
+
+    final video = await _cameraController.stopVideoRecording();
+
+    if (!mounted) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VideoPreviewScreen(video: video),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _progressAnimationController.dispose();
+    _buttonAnimationController.dispose();
+    _cameraController.dispose();
+    super.dispose();
   }
 
   @override
@@ -122,40 +147,15 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     Text(
-                      !_deniedPermission
-                          ? "Initializing..."
-                          : "The camera and microphone permissions are required.",
-                      style: const TextStyle(
+                      "Initializing...",
+                      style: TextStyle(
                           color: Colors.white, fontSize: Sizes.size20),
                       textAlign: TextAlign.center,
                     ),
                     Gaps.v20,
-                    if (!_deniedPermission)
-                      const CircularProgressIndicator.adaptive(),
-                    if (_deniedPermission) ...[
-                      Gaps.v96,
-                      GestureDetector(
-                        onTap: () async {
-                          await openAppSettings();
-                          initPermissions();
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(Sizes.size8),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white),
-                          ),
-                          child: const Text(
-                            "Device Permission Settings",
-                            style: TextStyle(
-                              fontSize: Sizes.size20,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ]
+                    CircularProgressIndicator.adaptive(),
                   ],
                 )
               : Stack(
