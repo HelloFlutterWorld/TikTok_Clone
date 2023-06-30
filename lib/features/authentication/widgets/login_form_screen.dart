@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
@@ -30,7 +31,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
       }
       _formKey.currentState!.save();
       //push는 다른화면의 위에 올려놓는 것을 말한다.
-      Navigator.of(context).pushAndRemoveUntil(
+      /* Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => const InterestsScreen(),
         ),
@@ -38,8 +39,9 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
         // predicate가 true를 리턴하면 이전화면을 돌아갈 수 있다.
         // false면 못돌아간다.
         (route) => false,
-      );
+      ); */
     }
+    context.goNamed(InterestsScreen.routeName);
     //_formKey.currentState?.validate()
     //1. 단순한 유효성 검사를 한 후
     //2. 이상 없으면 true 반환
