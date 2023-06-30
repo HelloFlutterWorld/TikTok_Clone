@@ -31,15 +31,11 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
@@ -51,5 +47,7 @@
 	<string>your usage description here</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>your usage description here</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Plz let me see yout photos</string>
 </dict>
 </plist>
