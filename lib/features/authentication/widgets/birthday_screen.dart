@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
@@ -39,7 +40,7 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
 
   //state 안에 있다면, 어디서든 context를 사용할 수 있으므로, context를 전달받을 필요없다.
   void _onNextTap() {
-    Navigator.of(context).pushAndRemoveUntil(
+/*     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
         builder: (context) => const InterestsScreen(),
       ),
@@ -47,7 +48,8 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
       // predicate가 true를 리턴하면 이전화면을 돌아갈 수 있다.
       // false면 못돌아간다.
       (route) => false,
-    );
+    ); */
+    context.pushReplacementNamed(InterestsScreen.routeName);
   }
 
   void _setTextFieldDate(DateTime date) {

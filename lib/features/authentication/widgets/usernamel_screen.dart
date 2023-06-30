@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/widgets/email_screen.dart';
@@ -7,8 +6,6 @@ import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
 import 'package:tiktok_clone/utils.dart';
 
 class UsernameScreen extends StatefulWidget {
-  static String routeURL = "username";
-  static String routeNAme = "username";
   const UsernameScreen({super.key});
 
   @override
@@ -43,7 +40,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
   //state 안에 있다면, 어디서든 context를 사용할 수 있으므로, context를 전달받을 필요없다.
   void _onNextTap() {
     if (_username.isEmpty) return;
-    context.pushNamed(EmailScreen.routeName,
+    /*context.pushNamed(EmailScreen.routeName,
         //push는 page stack에 location을 push한다.
         //이것은 이전 화면 위에 다른 화면을 올린다는 뜻이다.
 
@@ -57,7 +54,13 @@ class _UsernameScreenState extends State<UsernameScreen> {
         //extra: EmailScreenArgs(username: _username),
         //위 구문 자체가 객체를 생성하고 router에서 state.extra로 접근 가능한 형태다.
         //이를 통해 생성된 EmailScreenArgs 객체의 속성이나 메서드에 접근하여 사용할 수 있다.
-        extra: EmailScreenArgs(username: _username));
+        extra: EmailScreenArgs(username: _username)); */
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EmailScreen(username: _username),
+      ),
+    );
   }
 
   @override

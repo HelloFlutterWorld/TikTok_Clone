@@ -137,6 +137,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   }
 
   Future<void> _starRecording() async {
+    if (_noCamera) return;
     if (_cameraController.value.isRecordingVideo) return;
 
     await _cameraController.startVideoRecording();
@@ -146,6 +147,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   }
 
   Future<void> _stopRecording() async {
+    if (_noCamera) return;
     if (!_cameraController.value.isRecordingVideo) return;
 
     _buttonAnimationController.reverse();
