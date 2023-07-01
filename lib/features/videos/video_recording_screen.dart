@@ -175,7 +175,9 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   void dispose() {
     _progressAnimationController.dispose();
     _buttonAnimationController.dispose();
-    _cameraController.dispose();
+    if (!_noCamera) {
+      _cameraController.dispose();
+    }
     super.dispose();
   }
 
@@ -252,6 +254,13 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                         //IOS시뮬레이터 사용시 조건문 추가
                         if (!_noCamera && _cameraController.value.isInitialized)
                           CameraPreview(_cameraController),
+                        const Positioned(
+                          top: Sizes.size40,
+                          left: Sizes.size20,
+                          child: CloseButton(
+                            color: Colors.white,
+                          ),
+                        ),
                         if (!_noCamera)
                           Positioned(
                             top: Sizes.size20,
