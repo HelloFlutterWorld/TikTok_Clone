@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/inbox/chat_detail_screen.dart';
+
+import 'chat_detail_screen.dart';
 
 class ChatsScreen extends StatefulWidget {
+  static const String routeName = "chats";
+  static const String routeURL = "/chats";
   const ChatsScreen({super.key});
 
   @override
@@ -57,12 +61,15 @@ class _ChatsScreenState extends State<ChatsScreen> {
     _items = List.generate(_items.length, (index) => index);
   }
 
-  void _onChatTap() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const ChatDetailScreen(),
-      ),
-    );
+  void _onChatTap(int index) {
+    //Map<String, String> state.params['chatId'] => {"chidId" : "$index"}
+    //GoRoute가 갖고 있는 인스턴스에 String으로 전달. route에 정의되어 있다 => final chatId
+    context.pushNamed(ChatDetailScreen.routeName, params: {"chatId": "$index"});
+    /*Navigator.push(
+        context,
+        (MaterialPageRoute(
+          builder: (context) => ChatDetailScreen(chatId: "$index"),
+        ))); */
   }
 
   Widget _makeTile(int index) {
@@ -73,7 +80,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
       //리스트타일이 문자 그대로 리스트의 모든 아이템에 똑같이 적용되기 때문에
       //UniqueKey를 추가해준다.
       //그러면 플러터가 헷갈리지 않을 거고, 애니메이션도 헷갈리지 않는다.
-      onTap: _onChatTap,
+      onTap: () => _onChatTap(index),
       leading: const CircleAvatar(
         radius: 30,
         foregroundImage: NetworkImage(
@@ -88,7 +95,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            "Lynn ($index)",
+            "Yoon ($index)",
             style: const TextStyle(
               fontWeight: FontWeight.w600,
             ),
