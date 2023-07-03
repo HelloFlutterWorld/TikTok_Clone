@@ -65,6 +65,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
     //Map<String, String> state.params['chatId'] => {"chidId" : "$index"}
     //GoRoute가 갖고 있는 인스턴스에 String으로 전달. route에 정의되어 있다 => final chatId
     context.pushNamed(ChatDetailScreen.routeName, params: {"chatId": "$index"});
+    //context.go('chatId/$index');
     /*Navigator.push(
         context,
         (MaterialPageRoute(

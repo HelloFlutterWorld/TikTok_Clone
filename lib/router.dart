@@ -122,6 +122,7 @@ final router = GoRouter(
       builder: (context, state) {
         final tab = state.params['tab']!;
         return MainNavigationScreen(
+          //tab: statelparams['tab']!,도 가능
           tab: tab,
         );
       },
@@ -140,7 +141,7 @@ final router = GoRouter(
           name: ChatDetailScreen.routeName,
           path: ChatDetailScreen.routeURL,
           builder: (context, state) {
-            //"final chatId" 이 GoRoute의 객체가 갖고 있는 인스턴스다.
+            //"final chatId"는 GoRoute의 객체가 갖고 있는 인스턴스다.
             //context.pushNamed(ChatDetailScreen.routeName, params: {"chatId": "$index"});
             final chatId = state.params['chatId']!;
             return ChatDetailScreen(

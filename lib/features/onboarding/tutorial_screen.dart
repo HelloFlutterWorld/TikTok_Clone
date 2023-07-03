@@ -55,6 +55,8 @@ class _TutorialScreenState extends State<TutorialScreen> {
       // false면 못돌아간다.
       (route) => false,
     );*/
+    /* context.pushReplacementNamed(MainNavigationScreen.routeName,
+        params: {'tab': 'home'}); */
     context.go("/home");
   }
 

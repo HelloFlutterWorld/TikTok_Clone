@@ -49,7 +49,7 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
       // false면 못돌아간다.
       (route) => false,
     ); */
-    context.pushNamed(InterestsScreen.routeName);
+    context.goNamed(InterestsScreen.routeName);
   }
 
   void _setTextFieldDate(DateTime date) {

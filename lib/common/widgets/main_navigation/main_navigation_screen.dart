@@ -40,6 +40,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   bool _isLongPressed = false;
 
   void _onTap(int index) {
+    //URL을 인덱스와 연동함
     context.go("/${_tabs[index]}");
     setState(() {
       _selectedIndex = index;
