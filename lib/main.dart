@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:tiktok_clone/common/widgets/video_config/video_config.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
 import 'package:tiktok_clone/router.dart';
@@ -36,103 +37,105 @@ class TikTokApp extends StatelessWidget {
   Widget build(BuildContext context) {
     //언어설정을 영어로 강제
     //S.load(const Locale("en"));
-    return MaterialApp.router(
-      routerConfig: router,
-      //휴태폰에게 어떤 theme를 사용할지 알려주는 기능을 한다.
-      //.system은 앱이 실행되는 기기의 환경에 맞추어 준다.
-      themeMode: ThemeMode.system,
-      debugShowCheckedModeBanner: false,
-      title: 'TikTok Clone',
-      localizationsDelegates: const [
-        //command pallete -> Flutter intl: initialize
-        //command pallete -> Flutter intl: add locale "ko"
-        S.delegate,
-        //플러터에는 텍스트가 기본적으로 들어가있는 위젯들이 있다.
-        //예를 들면 licenses 같은 것들
-        //플러터가 기본적으로 가지고 있는 위젯들에 대한 번역들을 include 시켜준다.
-        //calendar, clock 등
-        //아래의 코드들은 일종의 번역 파일들이다.
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        //www.iana.org => Locale에 사용가능한 코드확인
-        Locale("en"),
-        Locale("ko"),
-      ],
-      theme: ThemeData(
+    return VideoConfig(
+      child: MaterialApp.router(
+        routerConfig: router,
+        //휴태폰에게 어떤 theme를 사용할지 알려주는 기능을 한다.
+        //.system은 앱이 실행되는 기기의 환경에 맞추어 준다.
+        themeMode: ThemeMode.system,
+        debugShowCheckedModeBanner: false,
+        title: 'TikTok Clone',
+        localizationsDelegates: const [
+          //command pallete -> Flutter intl: initialize
+          //command pallete -> Flutter intl: add locale "ko"
+          S.delegate,
+          //플러터에는 텍스트가 기본적으로 들어가있는 위젯들이 있다.
+          //예를 들면 licenses 같은 것들
+          //플러터가 기본적으로 가지고 있는 위젯들에 대한 번역들을 include 시켜준다.
+          //calendar, clock 등
+          //아래의 코드들은 일종의 번역 파일들이다.
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          //www.iana.org => Locale에 사용가능한 코드확인
+          Locale("en"),
+          Locale("ko"),
+        ],
+        theme: ThemeData(
+            useMaterial3: true,
+            //Robotov폰트를 기반으로 한다.
+            //font와 color만 제공하는 textTheme완성
+            textTheme: Typography.blackMountainView,
+            //기본 글자색
+            brightness: Brightness.light,
+            //앱 전체의 스플래쉬 효과 제거하기
+            splashColor: Colors.transparent,
+            //앱 전체의 롱프레스 스플래쉬 효과 제저하기
+            //highlightColor: Colors.transparent,
+            textSelectionTheme: const TextSelectionThemeData(
+              cursorColor: Color(0XFFE9435A),
+            ),
+            appBarTheme: const AppBarTheme(
+              foregroundColor: Colors.black,
+              backgroundColor: Colors.white,
+              //앱바가 사라질 때 나타나는 색깔
+              surfaceTintColor: Colors.white,
+              elevation: 0,
+              titleTextStyle: TextStyle(
+                color: Colors.black,
+                fontSize: Sizes.size16 + Sizes.size2,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            tabBarTheme: TabBarTheme(
+              //밑줄색
+              indicatorColor: Colors.black,
+              //선택된 탭의 글자색
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.grey.shade500,
+            ),
+            scaffoldBackgroundColor: Colors.white,
+            primaryColor: const Color(0XFFE9435A),
+            listTileTheme: const ListTileThemeData(
+              iconColor: Colors.black,
+            )),
+        darkTheme: ThemeData(
           useMaterial3: true,
-          //Robotov폰트를 기반으로 한다.
-          //font와 color만 제공하는 textTheme완성
-          textTheme: Typography.blackMountainView,
-          //기본 글자색
-          brightness: Brightness.light,
-          //앱 전체의 스플래쉬 효과 제거하기
-          splashColor: Colors.transparent,
-          //앱 전체의 롱프레스 스플래쉬 효과 제저하기
-          //highlightColor: Colors.transparent,
+          tabBarTheme: TabBarTheme(
+            indicatorColor: Colors.white,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.grey.shade700,
+          ),
           textSelectionTheme: const TextSelectionThemeData(
             cursorColor: Color(0XFFE9435A),
           ),
-          appBarTheme: const AppBarTheme(
-            foregroundColor: Colors.black,
-            backgroundColor: Colors.white,
-            //앱바가 사라질 때 나타나는 색깔
-            surfaceTintColor: Colors.white,
-            elevation: 0,
-            titleTextStyle: TextStyle(
-              color: Colors.black,
+          //Roboto를 기반으로 한다.
+          //font와 color만 제공하는 textTheme완성
+          textTheme: Typography.whiteMountainView,
+          scaffoldBackgroundColor: Colors.black,
+          primaryColor: const Color(0XFFE9435A),
+          //다크모드 글자색
+          brightness: Brightness.dark,
+          appBarTheme: AppBarTheme(
+            surfaceTintColor: Colors.grey.shade900,
+            backgroundColor: Colors.grey.shade900,
+            titleTextStyle: const TextStyle(
+              color: Colors.white,
               fontSize: Sizes.size16 + Sizes.size2,
               fontWeight: FontWeight.w600,
             ),
+            actionsIconTheme: IconThemeData(
+              color: Colors.grey.shade100,
+            ),
+            iconTheme: IconThemeData(
+              color: Colors.grey.shade100,
+            ),
           ),
-          tabBarTheme: TabBarTheme(
-            //밑줄색
-            indicatorColor: Colors.black,
-            //선택된 탭의 글자색
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.grey.shade500,
+          bottomAppBarTheme: BottomAppBarTheme(
+            color: Colors.grey.shade900,
           ),
-          scaffoldBackgroundColor: Colors.white,
-          primaryColor: const Color(0XFFE9435A),
-          listTileTheme: const ListTileThemeData(
-            iconColor: Colors.black,
-          )),
-      darkTheme: ThemeData(
-        useMaterial3: true,
-        tabBarTheme: TabBarTheme(
-          indicatorColor: Colors.white,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.grey.shade700,
-        ),
-        textSelectionTheme: const TextSelectionThemeData(
-          cursorColor: Color(0XFFE9435A),
-        ),
-        //Roboto를 기반으로 한다.
-        //font와 color만 제공하는 textTheme완성
-        textTheme: Typography.whiteMountainView,
-        scaffoldBackgroundColor: Colors.black,
-        primaryColor: const Color(0XFFE9435A),
-        //다크모드 글자색
-        brightness: Brightness.dark,
-        appBarTheme: AppBarTheme(
-          surfaceTintColor: Colors.grey.shade900,
-          backgroundColor: Colors.grey.shade900,
-          titleTextStyle: const TextStyle(
-            color: Colors.white,
-            fontSize: Sizes.size16 + Sizes.size2,
-            fontWeight: FontWeight.w600,
-          ),
-          actionsIconTheme: IconThemeData(
-            color: Colors.grey.shade100,
-          ),
-          iconTheme: IconThemeData(
-            color: Colors.grey.shade100,
-          ),
-        ),
-        bottomAppBarTheme: BottomAppBarTheme(
-          color: Colors.grey.shade900,
         ),
       ),
     );

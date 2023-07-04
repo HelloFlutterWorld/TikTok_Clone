@@ -144,6 +144,8 @@ final router = GoRouter(
             //"final chatId"는 GoRoute의 객체가 갖고 있는 인스턴스다.
             //context.pushNamed(ChatDetailScreen.routeName, params: {"chatId": "$index"});
             final chatId = state.params['chatId']!;
+            // ignore: unused_local_variable
+            final args = state.extra as ChatDetailScreenArg;
             return ChatDetailScreen(
               chatId: chatId,
             );

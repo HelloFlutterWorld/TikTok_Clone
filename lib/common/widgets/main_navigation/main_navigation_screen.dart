@@ -57,6 +57,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     setState(() {
       _isLongPressed = false;
     });
+    _onPostVideoButtonTap();
   }
 
   void _onPostVideoButtonTap() {

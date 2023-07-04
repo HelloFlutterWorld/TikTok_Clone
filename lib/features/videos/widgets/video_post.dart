@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok_clone/common/widgets/video_config/video_config.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/videos/widgets/video_button.dart';
@@ -202,6 +203,10 @@ class _VideoPostState extends State<VideoPost>
 
   @override
   Widget build(BuildContext context) {
+    /* 20.6 InheritedWidget  
+    final videoConfig =
+        context.dependOnInheritedWidgetOfExactType<VideoConfig>()!;
+    print(videoConfig.autoMute); */
     return VisibilityDetector(
       key: Key("${widget.index}"),
       //visibility가 바뀔 때 호출할 콜백함수
@@ -268,6 +273,19 @@ class _VideoPostState extends State<VideoPost>
             ),
           ),
           Positioned(
+            left: 20,
+            top: 40,
+            child: IconButton(
+              icon: FaIcon(
+                VideoConfig.of(context).autoMute
+                    ? FontAwesomeIcons.volumeOff
+                    : FontAwesomeIcons.volumeHigh,
+                color: Colors.white,
+              ),
+              onPressed: () {},
+            ),
+          ),
+          Positioned(
             bottom: 20,
             left: 10,
             child: Column(
@@ -327,19 +345,14 @@ class _VideoPostState extends State<VideoPost>
             child: Column(
               children: [
                 GestureDetector(
-                  onTap: _onToggleMute,
-                  child: _isSound
-                      ? const Icon(
-                          Icons.volume_off_rounded,
-                          color: Colors.white,
-                          size: Sizes.size52,
-                        )
-                      : const Icon(
-                          Icons.volume_up_rounded,
-                          color: Colors.white,
-                          size: Sizes.size52,
-                        ),
-                ),
+                    onTap: _onToggleMute,
+                    child: Icon(
+                      _isSound
+                          ? Icons.volume_off_rounded
+                          : Icons.volume_up_rounded,
+                      color: Colors.white,
+                      size: Sizes.size52,
+                    )),
                 Gaps.v24,
                 //이미지가 있는 원을 제공해 줌
                 const CircleAvatar(
