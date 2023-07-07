@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-class VideoConfigData extends InheritedWidget {
+/* class VideoConfigData extends InheritedWidget {
+  //InheritedWidget은 다시 빌드하지 않는 이상, 인스턴스들을 수정할 수 없다.
+
   final bool autoMute;
   final void Function() toggleMuted;
   //if final void Function => onPressed: () => VideoConfigData.of(context).toggleMuted(),
@@ -59,3 +61,24 @@ class _VideoConfigState extends State<VideoConfig> {
     );
   }
 }
+
+//VideoConfig(child: MatreialApp) => 
+//VideoConfigData(child: MaterialApp) & 데이터와 콜백함수 */
+
+class VideoConfig extends ChangeNotifier {
+  bool autoMute = false;
+
+  bool get autoMute1 {
+    return autoMute;
+  }
+
+  void toggleAutiMute() {
+    autoMute = !autoMute;
+    //구독이란 ChangeNotifier를 사용하여 해당 변수의 상태변화를
+    //감지하는 것이다.
+    //autoMute 정보를 구독하고 있는 다른 객체들에게 알려주는 역할을 한다.
+    notifyListeners();
+  }
+}
+
+final videoConfig = VideoConfig();

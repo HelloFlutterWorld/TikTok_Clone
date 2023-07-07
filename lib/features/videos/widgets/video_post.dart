@@ -52,6 +52,8 @@ class _VideoPostState extends State<VideoPost>
 
   bool _isSound = kIsWeb ? false : true;
 
+  bool _autoMute = videoConfig.autoMute;
+
   final Duration _animationDuratrion = const Duration(milliseconds: 200);
 
   late final AnimationController _animationController;
@@ -117,6 +119,14 @@ class _VideoPostState extends State<VideoPost>
     //_animationController.addListener(() {
     //   setState(() {});
     // });
+
+    //videoConfig.addListener() 메서드는
+    //VideoConfig 객체의 모든 프로퍼티 변화에 대해 반응한다.
+    videoConfig.addListener(() {
+      setState(() {
+        _autoMute = videoConfig.autoMute;
+      });
+    });
   }
 
   @override
@@ -277,12 +287,12 @@ class _VideoPostState extends State<VideoPost>
             top: 40,
             child: IconButton(
               icon: FaIcon(
-                VideoConfigData.of(context).autoMute
+                _autoMute
                     ? FontAwesomeIcons.volumeOff
                     : FontAwesomeIcons.volumeHigh,
                 color: Colors.white,
               ),
-              onPressed: VideoConfigData.of(context).toggleMuted,
+              onPressed: videoConfig.toggleAutiMute,
             ),
           ),
           Positioned(
@@ -348,8 +358,8 @@ class _VideoPostState extends State<VideoPost>
                     onTap: _onToggleMute,
                     child: Icon(
                       _isSound
-                          ? Icons.volume_off_rounded
-                          : Icons.volume_up_rounded,
+                          ? Icons.volume_up_rounded
+                          : Icons.volume_off_rounded,
                       color: Colors.white,
                       size: Sizes.size52,
                     )),
