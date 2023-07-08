@@ -65,14 +65,16 @@ class _VideoConfigState extends State<VideoConfig> {
 //VideoConfig(child: MatreialApp) => 
 //VideoConfigData(child: MaterialApp) & 데이터와 콜백함수 */
 
+/* //ChangeNotifier는 데이터가 많을 때 유리하다.
+//List나 메소드나 API 등
 class VideoConfig extends ChangeNotifier {
   bool autoMute = false;
-
+  
   bool get autoMute1 {
     return autoMute;
   }
 
-  void toggleAutiMute() {
+  void toggleAutoMute() {
     autoMute = !autoMute;
     //구독이란 ChangeNotifier를 사용하여 해당 변수의 상태변화를
     //감지하는 것이다.
@@ -81,4 +83,7 @@ class VideoConfig extends ChangeNotifier {
   }
 }
 
-final videoConfig = VideoConfig();
+final videoConfig = VideoConfig(); */
+
+//ValueNotifier는 결국 하나의 값에 대한 ChangeNotifier다.
+final videoConfig = ValueNotifier(false);

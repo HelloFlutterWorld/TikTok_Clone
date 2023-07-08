@@ -36,12 +36,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
           constraints: const BoxConstraints(maxWidth: Breakpoints.md),
           child: ListView(
             children: [
-              AnimatedBuilder(
+              /* AnimatedBuilder(
                 animation: videoConfig,
                 builder: (context, child) => SwitchListTile.adaptive(
-                  value: videoConfig.autoMute,
+                  value: videoConfig.value,
                   onChanged: (value) {
-                    videoConfig.toggleAutiMute();
+                    //videoConfig.toggleAutoMute();
+                    videoConfig.value = !videoConfig.value;
+                  },
+                  title: const Text("Mute Video"),
+                  subtitle: const Text("Videos will be muted by default."),
+                ),
+              ), */
+              ValueListenableBuilder(
+                //videoConfig구독, 값이 변할 때마다 리빌드해준다.
+                valueListenable: videoConfig,
+                builder: (context, value, child) => SwitchListTile.adaptive(
+                  value: value,
+                  onChanged: (value) {
+                    //videoConfig.toggleAutoMute();
+                    videoConfig.value = !videoConfig.value;
                   },
                   title: const Text("Mute Video"),
                   subtitle: const Text("Videos will be muted by default."),

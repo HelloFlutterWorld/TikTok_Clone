@@ -52,7 +52,7 @@ class _VideoPostState extends State<VideoPost>
 
   bool _isSound = kIsWeb ? false : true;
 
-  bool _autoMute = videoConfig.autoMute;
+  bool _autoMute = videoConfig.value;
 
   final Duration _animationDuratrion = const Duration(milliseconds: 200);
 
@@ -124,7 +124,7 @@ class _VideoPostState extends State<VideoPost>
     //VideoConfig 객체의 모든 프로퍼티 변화에 대해 반응한다.
     videoConfig.addListener(() {
       setState(() {
-        _autoMute = videoConfig.autoMute;
+        _autoMute = videoConfig.value;
       });
     });
   }
@@ -292,7 +292,10 @@ class _VideoPostState extends State<VideoPost>
                     : FontAwesomeIcons.volumeHigh,
                 color: Colors.white,
               ),
-              onPressed: videoConfig.toggleAutiMute,
+              onPressed: () {
+                //videoConfig.toggleAutoMute();
+                videoConfig.value = !videoConfig.value;
+              },
             ),
           ),
           Positioned(
