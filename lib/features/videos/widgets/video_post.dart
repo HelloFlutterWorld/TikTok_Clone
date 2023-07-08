@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:tiktok_clone/common/widgets/video_config/video_config.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
@@ -52,7 +53,7 @@ class _VideoPostState extends State<VideoPost>
 
   bool _isSound = kIsWeb ? false : true;
 
-  bool _autoMute = videoConfig.value;
+  //bool _autoMute = videoConfig.value;
 
   final Duration _animationDuratrion = const Duration(milliseconds: 200);
 
@@ -122,11 +123,11 @@ class _VideoPostState extends State<VideoPost>
 
     //videoConfig.addListener() 메서드는
     //VideoConfig 객체의 모든 프로퍼티 변화에 대해 반응한다.
-    videoConfig.addListener(() {
+    /* videoConfig.addListener(() {
       setState(() {
         _autoMute = videoConfig.value;
       });
-    });
+    }); */
   }
 
   @override
@@ -287,14 +288,15 @@ class _VideoPostState extends State<VideoPost>
             top: 40,
             child: IconButton(
               icon: FaIcon(
-                _autoMute
+                context.watch<VideoConfig>().isMuted
                     ? FontAwesomeIcons.volumeOff
                     : FontAwesomeIcons.volumeHigh,
                 color: Colors.white,
               ),
               onPressed: () {
                 //videoConfig.toggleAutoMute();
-                videoConfig.value = !videoConfig.value;
+                //videoConfig.value = !videoConfig.value;
+                context.read<VideoConfig>().toggleIsMuted();
               },
             ),
           ),

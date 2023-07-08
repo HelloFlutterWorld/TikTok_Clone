@@ -85,5 +85,26 @@ class VideoConfig extends ChangeNotifier {
 
 final videoConfig = VideoConfig(); */
 
-//ValueNotifier는 결국 하나의 값에 대한 ChangeNotifier다.
-final videoConfig = ValueNotifier(false);
+/* //ValueNotifier는 결국 하나의 값에 대한 ChangeNotifier다.
+final videoConfig = ValueNotifier(false); */
+
+class VideoConfig extends ChangeNotifier {
+  bool isMuted = false;
+  bool isAutoplay = false;
+  bool isDarkMode = false;
+
+  void toggleIsMuted() {
+    isMuted = !isMuted;
+    notifyListeners();
+  }
+
+  void toggleAutoplay() {
+    isAutoplay = !isAutoplay;
+    notifyListeners();
+  }
+
+  void toggleIsDarkMode() {
+    isDarkMode = !isDarkMode;
+    notifyListeners();
+  }
+}
