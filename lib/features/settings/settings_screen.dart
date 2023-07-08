@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:tiktok_clone/common/widgets/video_config/dark_config.dart';
 import 'package:tiktok_clone/common/widgets/video_config/video_config.dart';
 import 'package:tiktok_clone/constants/breakpoints.dart';
 
@@ -48,6 +49,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   subtitle: const Text("Videos will be muted by default."),
                 ),
               ), */
+              ValueListenableBuilder(
+                valueListenable: systemDarkMode,
+                builder: (context, value, child) => SwitchListTile.adaptive(
+                  value: value,
+                  onChanged: (value) {
+                    systemDarkMode.value = !systemDarkMode.value;
+                  },
+                  title: const Text("Dark Mode"),
+                  subtitle: const Text("Dark mode will be applied by default."),
+                ),
+              ),
               ValueListenableBuilder(
                 //videoConfig구독, 값이 변할 때마다 리빌드해준다.
                 valueListenable: videoConfig,
