@@ -19,4 +19,13 @@ class VideoPlaybackConfigRepository {
   Future<void> setAutoplay(bool value) async {
     _preferences.setBool(_autoPlay, value);
   }
+
+  bool isMuted() {
+    //디스크에 데이터가 없으면 false로 간주하겠다는 뜻
+    return _preferences.getBool(_muted) ?? false;
+  }
+
+  bool isAutoplay() {
+    return _preferences.getBool(_autoPlay) ?? false;
+  }
 }
