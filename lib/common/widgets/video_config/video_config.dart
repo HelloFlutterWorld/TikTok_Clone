@@ -91,7 +91,6 @@ final videoConfig = ValueNotifier(false); */
 class VideoConfig extends ChangeNotifier {
   bool isMuted = false;
   bool isAutoplay = false;
-  bool isDarkMode = false;
 
   void toggleIsMuted() {
     isMuted = !isMuted;
@@ -100,11 +99,6 @@ class VideoConfig extends ChangeNotifier {
 
   void toggleAutoplay() {
     isAutoplay = !isAutoplay;
-    notifyListeners();
-  }
-
-  void toggleIsDarkMode() {
-    isDarkMode = !isDarkMode;
     notifyListeners();
   }
 }

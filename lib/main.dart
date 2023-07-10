@@ -40,15 +40,17 @@ class TikTokApp extends StatelessWidget {
   Widget build(BuildContext context) {
     //언어설정을 영어로 강제
     //S.load(const Locale("en"));
-    return ChangeNotifierProvider(
-      create: (context) => VideoConfig(),
-      child: ValueListenableBuilder(
-        valueListenable: systemDarkMode,
-        builder: (context, value, child) => MaterialApp.router(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => VideoConfig()),
+      ],
+      child: ChangeNotifierProvider(
+        create: (context) => DarkConfig(),
+        builder: (context, child) => MaterialApp.router(
           routerConfig: router,
           //휴태폰에게 어떤 theme를 사용할지 알려주는 기능을 한다.
           //.system은 앱이 실행되는 기기의 환경에 맞추어 준다.
-          themeMode: context.watch<VideoConfig>().isDarkMode
+          themeMode: context.watch<DarkConfig>().isDarkMode
               ? ThemeMode.dark
               : ThemeMode.light,
           debugShowCheckedModeBanner: false,

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tiktok_clone/common/widgets/video_config/dark_config.dart';
 import 'package:tiktok_clone/common/widgets/video_config/video_config.dart';
 import 'package:tiktok_clone/constants/breakpoints.dart';
 
@@ -63,9 +64,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ), */
               SwitchListTile.adaptive(
-                value: context.watch<VideoConfig>().isDarkMode,
+                value: context.watch<DarkConfig>().isDarkMode,
                 onChanged: (value) =>
-                    context.read<VideoConfig>().toggleIsDarkMode(),
+                    context.read<DarkConfig>().toggleIsDarkMode(),
                 title: const Text("Dark Mode"),
                 subtitle: const Text("Dark mode will be applied by default."),
               ),
