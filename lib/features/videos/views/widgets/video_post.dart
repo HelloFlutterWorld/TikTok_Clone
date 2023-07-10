@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/videos/view_models/palyback_config_vm.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -48,8 +50,6 @@ class _VideoPostState extends State<VideoPost>
   bool _isFullHashtag = false;
 
   bool _isPaused = false;
-
-  bool _isSound = kIsWeb ? false : true;
 
   //bool _autoMute = videoConfig.value;
 
@@ -99,6 +99,7 @@ class _VideoPostState extends State<VideoPost>
   @override
   void initState() {
     super.initState();
+    if (kIsWeb) context.read<PlaybackConfigViewModel>().setMuted(true);
     _initVideoPlayer();
     //이 시계는 매 애니메이션의 프레임마다 fucntion을 제공한다.
     //에니메이션에 callback을 제공해주는 게 바로 Ticker이다
@@ -126,12 +127,29 @@ class _VideoPostState extends State<VideoPost>
         _autoMute = videoConfig.value;
       });
     }); */
+
+    //영상의 스크롤의 여러번 내리면 죽은 영상의 변경사항도 계속 listen하게 된다.
+    //따라서 _onPlaybackConfigChanged에 if (!mounted) return; 삽입해줌
+    context
+        .read<PlaybackConfigViewModel>()
+        .addListener(_onPlaybackConfigChanged);
   }
 
   @override
   void dispose() {
     _videoPlayerController.dispose();
     super.dispose();
+  }
+
+  void _onPlaybackConfigChanged() {
+    //살아있는 영상인지 확인한다.
+    if (!mounted) return;
+    final muted = context.read<PlaybackConfigViewModel>().muted;
+    if (muted) {
+      _videoPlayerController.setVolume(0);
+    } else {
+      _videoPlayerController.setVolume(1);
+    }
   }
 
   void _onVisibilityChanged(VisibilityInfo info) {
@@ -152,7 +170,10 @@ class _VideoPostState extends State<VideoPost>
         //멈춘 상태에서 새로고침을 해도 바로 재생되것을 막기 위하여
         !_isPaused &&
         !_videoPlayerController.value.isPlaying) {
-      _videoPlayerController.play();
+      final autoplay = context.read<PlaybackConfigViewModel>().autoplay;
+      if (autoplay) {
+        _videoPlayerController.play();
+      }
     }
     //다른 탭을 보는 동안에는 플레이를 잠시 멈추도록
     if (_videoPlayerController.value.isPlaying && info.visibleFraction == 0) {
@@ -199,15 +220,6 @@ class _VideoPostState extends State<VideoPost>
       //constraints: const BoxConstraints(maxWidth: Breakpoints.md),
     );
     _onTogglePause();
-  }
-
-  void _onToggleMute() {
-    _isSound
-        ? _videoPlayerController.setVolume(0)
-        : _videoPlayerController.setVolume(1);
-    setState(() {
-      _isSound = !_isSound;
-    });
   }
 
   @override
@@ -285,8 +297,8 @@ class _VideoPostState extends State<VideoPost>
             left: 20,
             top: 40,
             child: IconButton(
-              icon: const FaIcon(
-                false
+              icon: FaIcon(
+                context.watch<PlaybackConfigViewModel>().muted
                     ? FontAwesomeIcons.volumeOff
                     : FontAwesomeIcons.volumeHigh,
                 color: Colors.white,
@@ -295,6 +307,10 @@ class _VideoPostState extends State<VideoPost>
                 //videoConfig.toggleAutoMute();
                 //videoConfig.value = !videoConfig.value;
                 //context.read<VideoConfig>().toggleIsMuted();
+                context
+                    .read<PlaybackConfigViewModel>()
+                    //context.read() 주의!
+                    .setMuted(!context.read<PlaybackConfigViewModel>().muted);
               },
             ),
           ),
@@ -357,16 +373,6 @@ class _VideoPostState extends State<VideoPost>
             right: 10,
             child: Column(
               children: [
-                GestureDetector(
-                    onTap: _onToggleMute,
-                    child: Icon(
-                      _isSound
-                          ? Icons.volume_up_rounded
-                          : Icons.volume_off_rounded,
-                      color: Colors.white,
-                      size: Sizes.size52,
-                    )),
-                Gaps.v24,
                 //이미지가 있는 원을 제공해 줌
                 const CircleAvatar(
                   //아바타의 크기
