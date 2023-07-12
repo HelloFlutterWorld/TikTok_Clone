@@ -115,7 +115,7 @@ class _VideoPostState extends State<VideoPost>
       value: 1.5,
       duration: _animationDuratrion,
     );
-    // 방법 1
+    /* // 방법 1
     //_animationController.addListener(() {
     //   setState(() {});
     // });
@@ -130,6 +130,11 @@ class _VideoPostState extends State<VideoPost>
 
     //영상의 스크롤의 여러번 내리면 죽은 영상의 변경사항도 계속 listen하게 된다.
     //따라서 _onPlaybackConfigChanged에 if (!mounted) return; 삽입해줌
+    //PlaybackConfigViewModel 객체의 상태가 변할 때마다 콜백함수 호출함
+
+    /* final playbackConfigViewModelRead = context.read<PlaybackConfigViewModel>();
+    playbackConfigViewModelRead.addListener(_onPlaybackConfigChanged); */ */
+
     context
         .read<PlaybackConfigViewModel>()
         .addListener(_onPlaybackConfigChanged);
@@ -138,6 +143,7 @@ class _VideoPostState extends State<VideoPost>
   @override
   void dispose() {
     _videoPlayerController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -146,9 +152,9 @@ class _VideoPostState extends State<VideoPost>
     if (!mounted) return;
     final muted = context.read<PlaybackConfigViewModel>().muted;
     if (muted) {
-      _videoPlayerController.setVolume(0);
+      _videoPlayerController.setVolume(0.0);
     } else {
-      _videoPlayerController.setVolume(1);
+      _videoPlayerController.setVolume(1.0);
     }
   }
 

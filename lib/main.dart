@@ -35,10 +35,12 @@ void main() async {
 
   //getInstance 비동기적 인스턴스(객체)를 생성한다.
   final preferences = await SharedPreferences.getInstance();
+  //preferences를 참조전달하여 저장소객체를 생성한다.
   final repository = VideoPlaybackConfigRepository(preferences);
 
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(
+        //저장소를 참조전달하여 VM 객체를 생성하고 위젯트리에 등록한다.
         create: ((context) => PlaybackConfigViewModel(repository))),
     ChangeNotifierProvider(create: (context) => DarkConfig()),
   ], child: const TikTokApp()));
