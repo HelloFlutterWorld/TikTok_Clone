@@ -100,6 +100,7 @@ class _VideoPostState extends State<VideoPost>
   void initState() {
     super.initState();
     if (kIsWeb) context.read<PlaybackConfigViewModel>().setMuted(true);
+
     _initVideoPlayer();
     //이 시계는 매 애니메이션의 프레임마다 fucntion을 제공한다.
     //에니메이션에 callback을 제공해주는 게 바로 Ticker이다
@@ -115,25 +116,24 @@ class _VideoPostState extends State<VideoPost>
       value: 1.5,
       duration: _animationDuratrion,
     );
-    /* // 방법 1
+    // 방법 1
     //_animationController.addListener(() {
     //   setState(() {});
     // });
 
-    //videoConfig.addListener() 메서드는
-    //VideoConfig 객체의 모든 프로퍼티 변화에 대해 반응한다.
     /* videoConfig.addListener(() {
       setState(() {
         _autoMute = videoConfig.value;
       });
-    }); */
-
-    //영상의 스크롤의 여러번 내리면 죽은 영상의 변경사항도 계속 listen하게 된다.
-    //따라서 _onPlaybackConfigChanged에 if (!mounted) return; 삽입해줌
-    //PlaybackConfigViewModel 객체의 상태가 변할 때마다 콜백함수 호출함
+    }); 
+    //videoConfig.addListener() 메서드는
+    //VideoConfig 객체의 모든 프로퍼티 변화에 대해 반응한다. */
 
     /* final playbackConfigViewModelRead = context.read<PlaybackConfigViewModel>();
-    playbackConfigViewModelRead.addListener(_onPlaybackConfigChanged); */ */
+    playbackConfigViewModelRead.addListener(_onPlaybackConfigChanged); 
+    //영상의 스크롤의 여러번 내리면 죽은 영상의 변경사항도 계속 listen하게 된다.
+    //따라서 _onPlaybackConfigChanged에 if (!mounted) return; 삽입해줌
+    //PlaybackConfigViewModel 객체의 상태가 변할 때마다 콜백함수 호출함 */
 
     context
         .read<PlaybackConfigViewModel>()

@@ -7,8 +7,6 @@ class PlaybackConfigViewModel extends ChangeNotifier {
 
   PlaybackConfigViewModel(this._repository);
 
-  // List<Map> indexMuted = [];
-
   late final PlaybackConfigMedel _model = PlaybackConfigMedel(
     // PlaybackConfigViewModel 객체가 위젯트리에 등록되는 순간
     // repository에 있는 데이터들을 가져와 model에 대입한다.
