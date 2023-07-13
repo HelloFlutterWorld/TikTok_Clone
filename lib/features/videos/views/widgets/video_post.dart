@@ -1,10 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
-import 'package:tiktok_clone/features/videos/view_models/palyback_config_vm.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -99,8 +97,8 @@ class _VideoPostState extends State<VideoPost>
   @override
   void initState() {
     super.initState();
-    if (kIsWeb) context.read<PlaybackConfigViewModel>().setMuted(true);
-
+    // if (kIsWeb) context.read<PlaybackConfigViewModel>().setMuted(true);
+    _onPlaybackConfigChanged();
     _initVideoPlayer();
     //이 시계는 매 애니메이션의 프레임마다 fucntion을 제공한다.
     //에니메이션에 callback을 제공해주는 게 바로 Ticker이다
@@ -134,10 +132,6 @@ class _VideoPostState extends State<VideoPost>
     //영상의 스크롤의 여러번 내리면 죽은 영상의 변경사항도 계속 listen하게 된다.
     //따라서 _onPlaybackConfigChanged에 if (!mounted) return; 삽입해줌
     //PlaybackConfigViewModel 객체의 상태가 변할 때마다 콜백함수 호출함 */
-
-    context
-        .read<PlaybackConfigViewModel>()
-        .addListener(_onPlaybackConfigChanged);
   }
 
   @override
@@ -150,8 +144,8 @@ class _VideoPostState extends State<VideoPost>
   void _onPlaybackConfigChanged() {
     //살아있는 영상인지 확인한다.
     if (!mounted) return;
-    final muted = context.read<PlaybackConfigViewModel>().muted;
-    if (muted) {
+    // final muted = context.read<PlaybackConfigViewModel>().muted;
+    if (false) {
       _videoPlayerController.setVolume(0.0);
     } else {
       _videoPlayerController.setVolume(1.0);
@@ -176,8 +170,8 @@ class _VideoPostState extends State<VideoPost>
         //멈춘 상태에서 새로고침을 해도 바로 재생되것을 막기 위하여
         !_isPaused &&
         !_videoPlayerController.value.isPlaying) {
-      final autoplay = context.read<PlaybackConfigViewModel>().autoplay;
-      if (autoplay) {
+      //final autoplay = context.read<PlaybackConfigViewModel>().autoplay;
+      if (false) {
         _videoPlayerController.play();
       }
     }
@@ -303,8 +297,8 @@ class _VideoPostState extends State<VideoPost>
             left: 20,
             top: 40,
             child: IconButton(
-              icon: FaIcon(
-                context.watch<PlaybackConfigViewModel>().muted
+              icon: const FaIcon(
+                false
                     ? FontAwesomeIcons.volumeOff
                     : FontAwesomeIcons.volumeHigh,
                 color: Colors.white,
@@ -313,10 +307,10 @@ class _VideoPostState extends State<VideoPost>
                 //videoConfig.toggleAutoMute();
                 //videoConfig.value = !videoConfig.value;
                 //context.read<VideoConfig>().toggleIsMuted();
-                context
-                    .read<PlaybackConfigViewModel>()
-                    //context.read() 주의!
-                    .setMuted(!context.read<PlaybackConfigViewModel>().muted);
+                // context
+                //     .read<PlaybackConfigViewModel>()
+                //     //context.read() 주의!
+                //     .setMuted(!context.read<PlaybackConfigViewModel>().muted);
               },
             ),
           ),
