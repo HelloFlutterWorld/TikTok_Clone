@@ -68,6 +68,7 @@ class PlaybackConfigViewModel extends Notifier<PlaybackConfigMedel> {
     );
   }
 
+  // build 메소드는 Notifier가 노출하고 픈 데이터를 제공하는 방법이다.
   // 이 build 메소드가 가장 먼저 실행되어,
   // 초기화가 다 끝난 PlaybackConfigMedel 객체를 반환받는다.
   @override
@@ -79,9 +80,17 @@ class PlaybackConfigViewModel extends Notifier<PlaybackConfigMedel> {
   }
 }
 
-//playbackConfigProvider를 통해 PlaybackConfigViewModel 객체를 생성하고 해당 객체의 상태를 PlaybackConfigModel 객체로 초기화하는 구조입니다. 이렇게 생성된 PlaybackConfigModel 객체는 PlaybackConfigViewModel의 상태를 나타내며, 상태 변경에 따라 업데이트됩니다.
+// playbackConfigProvider는
+// PlaybackConfigViewModel 객체를 생성하고 해당 객체의 상태는
+// <PlaybackConfigModel> 객체로 초기화며, 상태 변경에 따라 업데이트된다.
 // NotifierProvider<NotifierT extends Notifier<T>, T>
 final playbackConfigProvider =
     NotifierProvider<PlaybackConfigViewModel, PlaybackConfigMedel>(
+  // () => PlaybackConfigViewModel(_repository)를 만들 때 매개변수 _repository가 필요한데
+  // SharedPreferences는 await 된 다음에 받아올 수 있다.
+  // 이 일은 main에서 이뤄지기 때문에, 아래와 같이 예외처리를 해준다.
+  // 다만 이 Provider를 사용하기 전에, 그리고 이 에러가 실제로 throw되기 전에,
+  // main에서 override 해준다.
+  // UnimplementedError는 개발자가 아직 해당 부분을 구현하지 않았음을 나타내는 예외다.
   () => throw UnimplementedError(),
 );
