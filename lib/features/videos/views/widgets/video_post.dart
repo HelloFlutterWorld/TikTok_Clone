@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/videos/view_models/palyback_config_vm.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -10,7 +12,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 import 'video_button.dart';
 import 'vidoe_comments.dart';
 
-class VideoPost extends StatefulWidget {
+class VideoPost extends ConsumerStatefulWidget {
   final Function onVideoFinished;
 
   final int index;
@@ -21,10 +23,10 @@ class VideoPost extends StatefulWidget {
   });
 
   @override
-  State<VideoPost> createState() => _VideoPostState();
+  VideoPostState createState() => VideoPostState();
 }
 
-class _VideoPostState extends State<VideoPost>
+class VideoPostState extends ConsumerState<VideoPost>
     with SingleTickerProviderStateMixin {
   //애니메이션이 필요할 때 매 프레임마다
   //SingleTickerProviderStateMixin는 current tree가 활성화된 동안만
@@ -97,7 +99,7 @@ class _VideoPostState extends State<VideoPost>
   @override
   void initState() {
     super.initState();
-    // if (kIsWeb) context.read<PlaybackConfigViewModel>().setMuted(true);
+    if (kIsWeb) ref.read(playbackConfigProvider.notifier).setMuted(true);
     _onPlaybackConfigChanged();
     _initVideoPlayer();
     //이 시계는 매 애니메이션의 프레임마다 fucntion을 제공한다.
@@ -141,11 +143,12 @@ class _VideoPostState extends State<VideoPost>
     super.dispose();
   }
 
-  void _onPlaybackConfigChanged() {
+  _onPlaybackConfigChanged() {
     //살아있는 영상인지 확인한다.
     if (!mounted) return;
     // final muted = context.read<PlaybackConfigViewModel>().muted;
-    if (false) {
+    final muted = ref.read(playbackConfigProvider).muted;
+    if (muted) {
       _videoPlayerController.setVolume(0.0);
     } else {
       _videoPlayerController.setVolume(1.0);
@@ -171,7 +174,7 @@ class _VideoPostState extends State<VideoPost>
         !_isPaused &&
         !_videoPlayerController.value.isPlaying) {
       //final autoplay = context.read<PlaybackConfigViewModel>().autoplay;
-      if (false) {
+      if (ref.read(playbackConfigProvider).autoplay) {
         _videoPlayerController.play();
       }
     }
@@ -224,6 +227,12 @@ class _VideoPostState extends State<VideoPost>
 
   @override
   Widget build(BuildContext context) {
+    // initState에서 addListener를 삭제한 대신
+    // build 메소드 안에서 이 코드를 사용해야함
+    // chatGpt bookMark
+    ref.listen(playbackConfigProvider, (previous, next) {
+      _onPlaybackConfigChanged();
+    });
     /* 20.6 InheritedWidget  
     final videoConfig =
         context.dependOnInheritedWidgetOfExactType<VideoConfig>()!;
@@ -297,13 +306,19 @@ class _VideoPostState extends State<VideoPost>
             left: 20,
             top: 40,
             child: IconButton(
-              icon: const FaIcon(
-                false
+              icon: FaIcon(
+                ref.watch(playbackConfigProvider).muted
                     ? FontAwesomeIcons.volumeOff
                     : FontAwesomeIcons.volumeHigh,
                 color: Colors.white,
               ),
               onPressed: () {
+                // 수정 로직을 위젯 라이프사이클(initState, dispose, didUpdateWidget, didChangeDependencies 등)
+                // 내부가 아닌 다른 위치로 이동해야 함, 따라서 아래와 같이 수정,
+                // _onPlaybackConfigChanged에서 수정 로직을 가져가선 안됨.
+                ref
+                    .read(playbackConfigProvider.notifier)
+                    .setMuted(!ref.read(playbackConfigProvider).muted);
                 //videoConfig.toggleAutoMute();
                 //videoConfig.value = !videoConfig.value;
                 //context.read<VideoConfig>().toggleIsMuted();
