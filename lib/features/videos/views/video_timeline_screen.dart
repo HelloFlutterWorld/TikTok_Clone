@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tiktok_clone/features/videos/view_models/timeline_view_model.dart';
 import 'widgets/video_post.dart';
 
-class VideoTimelineScreen extends StatefulWidget {
+class VideoTimelineScreen extends ConsumerStatefulWidget {
   const VideoTimelineScreen({super.key});
 
   @override
-  State<VideoTimelineScreen> createState() => _VideoTimelineScreenState();
+  VideoTimelineScreenState createState() => VideoTimelineScreenState();
 }
 
-class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
+class VideoTimelineScreenState extends ConsumerState<VideoTimelineScreen> {
   int _itemCount = 4;
 
   final PageController _pageController = PageController();
@@ -54,28 +56,47 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: _onRefresh,
-      //화면을 당기기 시작할 때 처음 나타나는
-      //edgeoffset으로부터 아래로의 indicator의 위치를 정하는 값
-      displacement: 50,
-      //화면을 당길 때 indicator가 처음 나타나는 위치를 정함
-      edgeOffset: 20,
-      color: Theme.of(context).primaryColor,
-      child: PageView.builder(
-        //자동넘김
-        //pageSnapping: false,
-        //유저가 이동할 때 도착하는 페이지에 대한 정보를 제공하는 메쏘드
-        controller: _pageController,
-        //사용자가 직접 패이지를 스크롤 할 때
-        onPageChanged: _onPageChanged,
-        scrollDirection: Axis.vertical,
-        itemCount: _itemCount,
-        itemBuilder: (context, index) => VideoPost(
-          onVideoFinished: _onVideoFinished,
-          index: index,
-        ),
-      ),
-    );
+    // View Moder의 build메서드가 데이터를 다 받아올 때까지 기다려야 한다.
+    // when은 Provider의 각기 다른 state를 위한  callback들을 제공한다.
+    return ref.watch(timeLineProvider).when(
+          // Provider가 로딩 중일 때, 즉, API를 기다리고 있을 때,
+          // 현재는 5초 딜레이로 설정되어 있음
+          loading: () => const Center(
+            child: CircularProgressIndicator(),
+          ),
+          error: (error, stackTrace) => Center(
+            child: Text(
+              "Could not load videos: $error",
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+          //videos = List<VideoModel>
+          data: (videos) => RefreshIndicator(
+            onRefresh: _onRefresh,
+            //화면을 당기기 시작할 때 처음 나타나는
+            //edgeoffset으로부터 아래로의 indicator의 위치를 정하는 값
+            displacement: 50,
+            //화면을 당길 때 indicator가 처음 나타나는 위치를 정함
+            edgeOffset: 20,
+            color: Theme.of(context).primaryColor,
+            child: PageView.builder(
+              //자동넘김
+              //pageSnapping: false,
+              //유저가 이동할 때 도착하는 페이지에 대한 정보를 제공하는 메쏘드
+              controller: _pageController,
+              //사용자가 직접 패이지를 스크롤 할 때
+              onPageChanged: _onPageChanged,
+              scrollDirection: Axis.vertical,
+              // itemCounnt: itemConut => videos.length
+              itemCount: videos.length,
+              itemBuilder: (context, index) => VideoPost(
+                onVideoFinished: _onVideoFinished,
+                index: index,
+              ),
+            ),
+          ),
+        );
   }
 }

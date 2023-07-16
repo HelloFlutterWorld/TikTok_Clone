@@ -73,7 +73,6 @@ class VideoPostState extends ConsumerState<VideoPost>
     //controller를 초기화 해주어야 한다.
     //왜냐면 위처럼 초기화를 한다고 해도 바로 영상이 불러와지는 것은 아니기 때문이다.
     await _videoPlayerController.initialize();
-
     //VisibilityDetetor를 사용하면서 아래의 오토플레이를 지웠음
     //_videoPlayerController.play();
 
@@ -100,7 +99,7 @@ class VideoPostState extends ConsumerState<VideoPost>
   void initState() {
     super.initState();
     if (kIsWeb) ref.read(playbackConfigProvider.notifier).setMuted(true);
-    _onPlaybackConfigChanged();
+    // _onPlaybackConfigChanged();
     _initVideoPlayer();
     //이 시계는 매 애니메이션의 프레임마다 fucntion을 제공한다.
     //에니메이션에 callback을 제공해주는 게 바로 Ticker이다
@@ -148,7 +147,16 @@ class VideoPostState extends ConsumerState<VideoPost>
     if (!mounted) return;
     // final muted = context.read<PlaybackConfigViewModel>().muted;
     final muted = ref.read(playbackConfigProvider).muted;
+    ref.read(playbackConfigProvider.notifier).setMuted(!muted);
     if (muted) {
+      _videoPlayerController.setVolume(0.0);
+    } else {
+      _videoPlayerController.setVolume(1.0);
+    }
+  }
+
+  _initVolume() {
+    if (ref.read(playbackConfigProvider).muted) {
       _videoPlayerController.setVolume(0.0);
     } else {
       _videoPlayerController.setVolume(1.0);
@@ -227,12 +235,13 @@ class VideoPostState extends ConsumerState<VideoPost>
 
   @override
   Widget build(BuildContext context) {
-    // initState에서 addListener를 삭제한 대신
+    _initVolume();
+/*     // initState에서 addListener를 삭제한 대신
     // build 메소드 안에서 이 코드를 사용해야함
-    // chatGpt bookMark
+    //chatGpt bookMark
     ref.listen(playbackConfigProvider, (previous, next) {
       _onPlaybackConfigChanged();
-    });
+     }); */
     /* 20.6 InheritedWidget  
     final videoConfig =
         context.dependOnInheritedWidgetOfExactType<VideoConfig>()!;
@@ -313,12 +322,10 @@ class VideoPostState extends ConsumerState<VideoPost>
                 color: Colors.white,
               ),
               onPressed: () {
-                // 수정 로직을 위젯 라이프사이클(initState, dispose, didUpdateWidget, didChangeDependencies 등)
+                // 수정 로직을 위젯 라이프사이클(initState, dispose 등)
                 // 내부가 아닌 다른 위치로 이동해야 함, 따라서 아래와 같이 수정,
                 // _onPlaybackConfigChanged에서 수정 로직을 가져가선 안됨.
-                ref
-                    .read(playbackConfigProvider.notifier)
-                    .setMuted(!ref.read(playbackConfigProvider).muted);
+                _onPlaybackConfigChanged();
                 //videoConfig.toggleAutoMute();
                 //videoConfig.value = !videoConfig.value;
                 //context.read<VideoConfig>().toggleIsMuted();
