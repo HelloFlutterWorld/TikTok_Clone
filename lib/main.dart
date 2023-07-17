@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -7,6 +8,7 @@ import 'package:tiktok_clone/common/widgets/video_config/dark_config.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/videos/repos/video_playback_config_repo.dart';
 import 'package:tiktok_clone/features/videos/view_models/palyback_config_vm.dart';
+import 'package:tiktok_clone/firebase_options.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
 import 'package:tiktok_clone/router.dart';
 
@@ -19,6 +21,10 @@ void main() async {
   //이 위젯은 엔진과 프레임워크를 바인딩해주는 접착체와 같다
   //이 함수는 런앱을 실행하기 전에 바인딩을 초기화 할 때만 호출해야 한다.
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   //Future<void>이기 때문에 비동기키워드 await 써줌
   await SystemChrome.setPreferredOrientations(
