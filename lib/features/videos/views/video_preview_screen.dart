@@ -86,6 +86,7 @@ class VideoPreviewScreenState extends ConsumerState<VideoPreviewScreen> {
             ),
           IconButton(
             onPressed: ref.watch(timeLineProvider).isLoading
+                // 로딩중일 때는 클릭해도 무쓸모
                 ? () {}
                 : _onUploadPressed,
             icon: ref.watch(timeLineProvider).isLoading
