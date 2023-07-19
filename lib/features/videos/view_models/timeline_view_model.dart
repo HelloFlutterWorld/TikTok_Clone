@@ -20,7 +20,7 @@ class TimelineViewModel extends AsyncNotifier<List<VideoModel>> {
     // 왜냐면 화면을 다시 build 해주지 않음으로,
     // state가 새로 만들어 질 때, build메소드가 reBuild되어 사용자 화면이 업데이트된다.
     _list = [..._list, newVideo];
-    //state = _list 안됨 왜내면 AcyncNotifier안에 있기 때문
+    // state = _list 안됨 왜내면 AcyncNotifier안에 있기 때문
     // 현재 state는 data상태 when => when(data)
     state = AsyncValue.data(_list);
   }
