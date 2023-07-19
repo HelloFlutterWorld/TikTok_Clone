@@ -125,17 +125,15 @@ class _BirthdayScreenState extends State<BirthdayScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: SizedBox(
-          height: 300,
-          child: CupertinoDatePicker(
-            maximumDate: initialDate,
-            initialDateTime: initialDate,
-            //날짜만 표시하기
-            mode: CupertinoDatePickerMode.date,
-            //유저가 날짜나 시간을 바꿀 때마다 호출됨
-            onDateTimeChanged: _setTextFieldDate,
-          ),
+      bottomNavigationBar: SizedBox(
+        height: 300,
+        child: CupertinoDatePicker(
+          maximumDate: initialDate,
+          initialDateTime: initialDate,
+          //날짜만 표시하기
+          mode: CupertinoDatePickerMode.date,
+          //유저가 날짜나 시간을 바꿀 때마다 호출됨
+          onDateTimeChanged: _setTextFieldDate,
         ),
       ),
     );

@@ -21,6 +21,8 @@ class SettingsScreen extends ConsumerWidget {
  */
 
   @override
+  // ConsumerWidget을 상속받으면 추가매개변수로 WidgetRef ref를 받아온다.
+  // 이것은 Provider를 가져오거나, 읽을 수 있는 레퍼런스(참조변수)다.
   Widget build(BuildContext context, WidgetRef ref) {
     // 해당페이지에서 언어를 따로 설정하는 것 가능
     // return Localizations.override(

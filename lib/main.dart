@@ -16,13 +16,18 @@ import 'package:tiktok_clone/router.dart';
 
 void main() async {
   //플러터 프레임워크를 이용해서 앱이 시작하기 전에 state를 어떤 식으로든 바꾸고 싶다면
-  // 엔진과 위젯의 연결을 확실하게 초기화 시켜야 한다.
+  //엔진과 위젯의 연결을 확실하게 초기화 시켜야 한다.
   //This is the glue that binds the framework to the Flutter engine.
   //이 위젯은 엔진과 프레임워크를 바인딩해주는 접착체와 같다
   //이 함수는 런앱을 실행하기 전에 바인딩을 초기화 할 때만 호출해야 한다.
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Firebase 애플리케이션 인스턴스를 초기화하고 반환하는 비동기 함수다.
+  // 초기화하는 시점에 아래와 같이 FirebaseAuth instance를 만들면
+  // final authRepo = Provider((ref) => AuthenticationRepository());
+  // 바로 Firebase와 소통할 수 있다.
   await Firebase.initializeApp(
+    //  현재 플랫폼에 대한 기본 Firebase 옵션을 사용한다는 의미
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
@@ -54,17 +59,18 @@ void main() async {
   ));
 }
 
-class TikTokApp extends StatelessWidget {
+class TikTokApp extends ConsumerWidget {
   const TikTokApp({super.key});
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     //언어설정을 영어로 강제
     //S.load(const Locale("en"));
     return ValueListenableBuilder(
       valueListenable: systemDarkMode,
       builder: (context, value, child) => MaterialApp.router(
-        routerConfig: router,
+        // GoRouter를 담은 Provider를 watch 한다.
+        routerConfig: ref.watch(routerProvider),
         //휴태폰에게 어떤 theme를 사용할지 알려주는 기능을 한다.
         //.system은 앱이 실행되는 기기의 환경에 맞추어 준다.
         themeMode: systemDarkMode.value ? ThemeMode.dark : ThemeMode.light,
