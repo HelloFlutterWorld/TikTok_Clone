@@ -34,7 +34,7 @@ class TimelineViewModel extends AsyncNotifier<List<VideoModel>> {
     // API롤 부터 응답받는 시간이 5초 정도 걸린다고 가정
     await Future.delayed(const Duration(seconds: 5));
     // 22.4 AsyncNotifierProvider 11:56, next버튼 누룬 후 에러메시지 확인가능
-    //throw Exception("OMG cant fetch");
+    // throw Exception("OMG cant fetch");
     return _list;
   }
 }

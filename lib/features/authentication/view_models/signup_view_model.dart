@@ -12,6 +12,10 @@ class SignupViewModel extends AsyncNotifier<void> {
 
   @override
   FutureOr<void> build() {
+    // SignupViewModel도 인증 저장소에 대한 접근권한이 필요한데,
+    // 이미 만들어 놓은 Provider(authRepo)가 있으므로 갖다가 쓴다.
+    // 이렇게 함으로써 SignupViewModel은 AuthenticationRepository의 기능을 사용할 수 있게 된다.
+    // 반드시 초기화 해주어야 한다.
     _authRepo = ref.read(authRepo);
   }
 
@@ -30,7 +34,7 @@ class SignupViewModel extends AsyncNotifier<void> {
     // _authRepo.signUp는 Future<void>를 반환하므로
     // 아무 문제가 없다면 [state = const AsyncValue.data(null);]와 동일하다.
     state = await AsyncValue.guard(
-      () async => await _authRepo.signUp(
+      () async => await _authRepo.emailSignUp(
         form["email"],
         form["password"],
       ),

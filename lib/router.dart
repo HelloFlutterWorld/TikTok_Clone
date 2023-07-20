@@ -17,6 +17,14 @@ import 'features/inbox/chats_screen.dart';
 // 가장 기본적인 Provider, 값이 무엇이든, 값을 노출해준다.
 // GoRouter를 Provider안에 넣었다.
 final routerProvider = Provider((ref) {
+  // 이렇게만 해 주면 authState에 변화가 있을 때
+  // 이 dependency(authState)에 변화가 있으니 provider가 rebuild 될 거고
+  // 그럼 자동으로 redirect 된다.
+  // authState가 변경되면 routerProvider가 리빌드되는 이유는
+  // routerProvider가 authState에 의존하고 있기 때문이다.
+  // 이러한 의존성으로 인해 authState가 변경될 때마다 routerProvider는
+  // 해당 변화를 감지하고 자동으로 리빌드되어 새로운 값을 사용한다
+  // ref.watch(authState); 이렇게 할 수도 있음
   return GoRouter(
     // 앱을 리프레시 하면 먼저 "/home"화면으로 간다
     initialLocation: "/home",

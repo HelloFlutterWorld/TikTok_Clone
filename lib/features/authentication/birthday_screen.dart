@@ -50,6 +50,8 @@ class _BirthdayScreenState extends ConsumerState<BirthdayScreen> {
       (route) => false,
     ); */
     // context.goNamed(InterestsScreen.routeName);
+    // .notifier "나는 데이터는 필요없고, 클래스에 접근하고 싶다"는 뜻
+    // 여기서 signUp을 호출해야만, next button에 영향을 줌
     ref.read(signUpProvider.notifier).signUp();
   }
 
