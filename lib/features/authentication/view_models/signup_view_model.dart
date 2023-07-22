@@ -1,7 +1,11 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/features/authentication/repos/authentication_repo.dart';
+import 'package:tiktok_clone/features/onboarding/interests_screen.dart';
+import 'package:tiktok_clone/utils.dart';
 
 // AsyncNotifier<State> 제네릭이다.
 // 노출할 데이터를 만들지 않는다. 왜냐하면, 이 viewmode은 계정을 만들 때
@@ -19,7 +23,7 @@ class SignupViewModel extends AsyncNotifier<void> {
     _authRepo = ref.read(authRepo);
   }
 
-  Future<void> signUp() async {
+  Future<void> signUp(BuildContext context) async {
     // 사람들에게 로딩중인 것을 알려줘야 함으로 async 사용한다.
     state = const AsyncValue.loading();
     final form = ref.read(signUpForm);
@@ -39,6 +43,11 @@ class SignupViewModel extends AsyncNotifier<void> {
         form["password"],
       ),
     );
+    if (state.hasError) {
+      showFirebaseErrorSnack(context, state.error);
+    } else {
+      context.goNamed(InterestsScreen.routeName);
+    }
   }
 }
 

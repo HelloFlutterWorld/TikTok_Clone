@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/authentication/view_models/login_view_model.dart';
 import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
-import 'package:tiktok_clone/features/onboarding/interests_screen.dart';
 
 //TextFormField 는 컨트롤러, 리스터, setState가 필요없다.
 
-class LoginFormScreen extends StatefulWidget {
+class LoginFormScreen extends ConsumerStatefulWidget {
   const LoginFormScreen({super.key});
 
   @override
-  State<LoginFormScreen> createState() => _LoginFormScreenState();
+  ConsumerState<LoginFormScreen> createState() => _LoginFormScreenState();
 }
 
-class _LoginFormScreenState extends State<LoginFormScreen> {
+class _LoginFormScreenState extends ConsumerState<LoginFormScreen> {
   //global key는 고유 식별자같은 역할을 하고
   //이 것을 사용하면 form의 state에도 접근할 수 있으며
   //form의 메서드도 실행시킬 수 있다.
@@ -30,6 +30,11 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
         //Form을 세이브하면 모든 텍스트 입력에 대해 onSaved 콜백함수를 실행하게 된다.
       }
       _formKey.currentState!.save();
+      ref.read(loginProvider.notifier).login(
+            formData["email"]!,
+            formData["password"]!,
+            context,
+          );
       //push는 다른화면의 위에 올려놓는 것을 말한다.
       /* Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
@@ -41,7 +46,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
         (route) => false,
       ); */
     }
-    context.goNamed(InterestsScreen.routeName);
+    // context.goNamed(InterestsScreen.routeName);
     //_formKey.currentState?.validate()
     //1. 단순한 유효성 검사를 한 후
     //2. 이상 없으면 true 반환
@@ -126,8 +131,8 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
               Gaps.v28,
               GestureDetector(
                 onTap: _onSubmitTap,
-                child: const FormButton(
-                  disabled: false,
+                child: FormButton(
+                  disabled: ref.watch(loginProvider).isLoading,
                   text: "Log in",
                 ),
               )

@@ -32,6 +32,13 @@ class AuthenticationRepository {
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }
+
+  Future<void> signIn(String email, String password) async {
+    await _firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+  }
 }
 
 // 단순히 데이터만 노출하는 기본 프로바이더.
