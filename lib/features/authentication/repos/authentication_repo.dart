@@ -39,6 +39,10 @@ class AuthenticationRepository {
       password: password,
     );
   }
+
+  Future<void> githubSignIn() async {
+    await _firebaseAuth.signInWithProvider(GithubAuthProvider());
+  }
 }
 
 // 단순히 데이터만 노출하는 기본 프로바이더.
