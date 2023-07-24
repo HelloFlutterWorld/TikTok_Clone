@@ -19,8 +19,9 @@ class AuthenticationRepository {
 
   // Future로 초기화만 하고 그 값이 따로 반환되어 사용되어지지 않을 때
   // Future<void>를 사용한다.
-  Future<void> emailSignUp(String email, String password) async {
-    await _firebaseAuth.createUserWithEmailAndPassword(
+  Future<UserCredential> emailSignUp(String email, String password) async {
+    // 성공적으로 계정이 생성되면 해당 사용자의 인증 정보를 담고 있는 UserCredential 객체를 반환
+    return await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
   }
 

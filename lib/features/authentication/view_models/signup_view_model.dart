@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tiktok_clone/features/%20users/view_models/users_view_model.dart';
 import 'package:tiktok_clone/features/authentication/repos/authentication_repo.dart';
 import 'package:tiktok_clone/features/onboarding/interests_screen.dart';
 import 'package:tiktok_clone/utils.dart';
@@ -27,7 +28,7 @@ class SignupViewModel extends AsyncNotifier<void> {
     // 사람들에게 로딩중인 것을 알려줘야 함으로 async 사용한다.
     state = const AsyncValue.loading();
     final form = ref.read(signUpForm);
-
+    final users = ref.read(usersProvider.notifier);
     // await _authRepo.signUp(form["email"], form["password"]);
     // 아무것도 expose하고 있지 않음으로 null값 세팅한다.
     // state = const AsyncValue.data(null);
@@ -38,10 +39,14 @@ class SignupViewModel extends AsyncNotifier<void> {
     // _authRepo.signUp는 Future<void>를 반환하므로
     // 아무 문제가 없다면 [state = const AsyncValue.data(null);]와 동일하다.
     state = await AsyncValue.guard(
-      () async => await _authRepo.emailSignUp(
-        form["email"],
-        form["password"],
-      ),
+      () async {
+        // 계정을 생성하기 위해 authentification repo를 호출한다.
+        final userCredential = await _authRepo.emailSignUp(
+          form["email"],
+          form["password"],
+        );
+        await users.createAccount(userCredential);
+      },
     );
     if (state.hasError) {
       showFirebaseErrorSnack(context, state.error);
