@@ -4,14 +4,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/features/%20users/models/user_profile_model.dart';
 import 'package:tiktok_clone/features/%20users/repos/user_repository.dart';
+import 'package:tiktok_clone/features/authentication/repos/authentication_repo.dart';
 
 class UsersViewModel extends AsyncNotifier<UserProfileModel> {
-  late final UserRepository _repository;
+  late final UserRepository _usersRepository;
+  late final AuthenticationRepository _authenticationRepository;
 
   @override
-  FutureOr<UserProfileModel> build() {
+  FutureOr<UserProfileModel> build() async {
     // 이렇게 하면 createProfile이 있는 레포지토리를 호출할 수 있게 된다.
-    _repository = ref.read(userRepo);
+    _usersRepository = ref.read(userRepo);
+    _authenticationRepository = ref.read(authRepo);
+
+    if (_authenticationRepository.isLoggedIn) {
+      final profile = await _usersRepository
+          .findProfile(_authenticationRepository.user!.uid);
+      if (profile != null) {
+        return UserProfileModel.fromJson(profile);
+      }
+    }
+
     // 우선 유저가 계정이 없고, 새로 만들어야 하는 경우만 가정해서 만듦
     // 즉 데이터베이스에 프로파일이 없는 상태다.
     return UserProfileModel.empty();
@@ -44,7 +56,7 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
       name: credential.user!.displayName ?? name,
       birthday: birthday,
     );
-    await _repository.createProfile(profile);
+    await _usersRepository.createProfile(profile);
     state = AsyncValue.data(profile);
   }
 }

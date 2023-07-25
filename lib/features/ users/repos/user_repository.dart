@@ -15,6 +15,12 @@ class UserRepository {
   }
 
   // get profile
+  // uid에 대한 프로필 데이터를 찾지 못한 경우를 대비하여 nullable
+  Future<Map<String, dynamic>?> findProfile(String uid) async {
+    final doc = await _db.collection("users").doc(uid).get();
+    return doc.data();
+  }
+
   // update profile
 }
 
