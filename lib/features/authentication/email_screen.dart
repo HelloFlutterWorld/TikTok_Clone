@@ -65,7 +65,8 @@ class _EmailScreenState extends ConsumerState<EmailScreen> {
     // 상태를 변경하려면 ref.read(signUpForm.notifier)를 사용하여 해당 Provider가 생성한 상태 변경 객체에 접근한다.
     // .notifier는 보통 클래스의 데이타에 접근할 때 사용되지만
     // 여기서는 상태 변경 객체에 접근하는 문법으로 사용된다.
-    ref.read(signUpForm.notifier).state = {"email": _email};
+    final state = ref.read(signUpForm.notifier).state;
+    ref.read(signUpForm.notifier).state = {...state, "email": _email};
     Navigator.push(
       context,
       MaterialPageRoute(

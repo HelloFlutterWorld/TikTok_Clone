@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/email_screen.dart';
+import 'package:tiktok_clone/features/authentication/view_models/signup_view_model.dart';
 import 'package:tiktok_clone/features/authentication/widgets/form_button.dart';
 import 'package:tiktok_clone/utils.dart';
 
-class UsernameScreen extends StatefulWidget {
+class UsernameScreen extends ConsumerStatefulWidget {
   const UsernameScreen({super.key});
 
   @override
-  State<UsernameScreen> createState() => _UsernameScreenState();
+  ConsumerState<UsernameScreen> createState() => _UsernameScreenState();
 }
 
-class _UsernameScreenState extends State<UsernameScreen> {
+class _UsernameScreenState extends ConsumerState<UsernameScreen> {
   //controller는 코드, 메소드 등으로 textfield와 같은 위젯을 컨트롤 할 수 있도록 해줌
   //생성된 컨트롤러를 텍스트필드에 넘겨준다.
   final TextEditingController _usernameController = TextEditingController();
@@ -40,6 +42,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
   //state 안에 있다면, 어디서든 context를 사용할 수 있으므로, context를 전달받을 필요없다.
   void _onNextTap() {
     if (_username.isEmpty) return;
+    ref.read(signUpForm.notifier).state = {"name": _username};
     /*context.pushNamed(EmailScreen.routeName,
         //push는 page stack에 location을 push한다.
         //이것은 이전 화면 위에 다른 화면을 올린다는 뜻이다.
