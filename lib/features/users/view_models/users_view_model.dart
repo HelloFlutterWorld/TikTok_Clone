@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tiktok_clone/features/%20users/models/user_profile_model.dart';
-import 'package:tiktok_clone/features/%20users/repos/user_repository.dart';
+import 'package:tiktok_clone/features/users/models/user_profile_model.dart';
+import 'package:tiktok_clone/features/users/repos/user_repository.dart';
 import 'package:tiktok_clone/features/authentication/repos/authentication_repo.dart';
 
 class UsersViewModel extends AsyncNotifier<UserProfileModel> {
@@ -12,8 +12,6 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
 
   @override
   FutureOr<UserProfileModel> build() async {
-    state = const AsyncLoading();
-    await Future.delayed(const Duration(seconds: 10));
     // 이렇게 하면 createProfile이 있는 레포지토리를 호출할 수 있게 된다.
     _usersRepository = ref.read(userRepo);
     _authenticationRepository = ref.read(authRepo);
@@ -51,6 +49,7 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
     // UserProfileModel 객체를 AsyncValue<UserProfileModel> 타입으로 감싸서 반환한다.
     // 만들어진 모델클래스가 state에 노출될 것이다. 스크린은 이걸 사용할 수 있다.
     final profile = UserProfileModel(
+      hasAvater: false,
       bio: "undefined",
       link: "undefined",
       email: credential.user!.email ?? email,
@@ -61,7 +60,16 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
     await _usersRepository.createProfile(profile);
     state = AsyncValue.data(profile);
   }
+
+  Future<void> onAvatarUpload() async {
+    if (state.value == null) return;
+    state = AsyncValue.data(state.value!.copyWith(hasAvater: true));
+    // build메소드에서 UserProfileModel을 리턴받아오는 걸 모르기 때문에
+    // 여가서는 nullable이다.
+    await _usersRepository.updateUser(state.value!.uid, {"hasAvatar": true});
+  }
 }
+// }
 
 //UsersViewModel 클래스를 감싸는 AsyncNotifierProvider의 객체다
 final usersProvider = AsyncNotifierProvider<UsersViewModel, UserProfileModel>(

@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/breakpoints.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
-import 'package:tiktok_clone/features/%20users/view_models/users_view_model.dart';
-import 'package:tiktok_clone/features/%20users/widgets/avatar.dart';
-import 'package:tiktok_clone/features/%20users/widgets/persistent_tab_bar.dart';
+import 'package:tiktok_clone/features/users/view_models/users_view_model.dart';
+import 'package:tiktok_clone/features/users/widgets/avatar.dart';
+import 'package:tiktok_clone/features/users/widgets/persistent_tab_bar.dart';
 import 'package:tiktok_clone/features/settings/settings_screen.dart';
 
 import '../../constants/sizes.dart';
@@ -77,7 +77,13 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                       SliverToBoxAdapter(
                         child: Column(
                           children: [
-                            Avatar(name: data.name),
+                            // 여기서의 data는 usersProvider의 result 값이다.
+                            // usersProvider는 UserProfileModel을 expose하고 있다.
+                            Avatar(
+                              name: data.name,
+                              hasAvatar: data.hasAvater,
+                              uid: data.uid,
+                            ),
                             Gaps.v20,
                             Gaps.v20,
                             Row(

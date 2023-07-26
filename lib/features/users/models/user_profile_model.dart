@@ -11,6 +11,7 @@ class UserProfileModel {
   final String bio;
   final String link;
   final String birthday;
+  final bool hasAvater;
 
   UserProfileModel({
     required this.uid,
@@ -19,10 +20,12 @@ class UserProfileModel {
     required this.bio,
     required this.link,
     required this.birthday,
+    required this.hasAvater,
   });
 
   UserProfileModel.empty()
-      : uid = "",
+      : hasAvater = false,
+        uid = "",
         email = "",
         name = "",
         bio = "",
@@ -30,7 +33,8 @@ class UserProfileModel {
         birthday = "";
 
   UserProfileModel.fromJson(Map<String, dynamic> json)
-      : uid = json["uid"],
+      : hasAvater = json["hasAvatar"],
+        uid = json["uid"],
         email = json["email"],
         name = json["name"],
         bio = json["bio"],
@@ -46,5 +50,26 @@ class UserProfileModel {
       "link": link,
       "birthday": birthday,
     };
+  }
+
+  UserProfileModel copyWith({
+    String? uid,
+    String? email,
+    String? name,
+    String? bio,
+    String? link,
+    String? birthday,
+    bool? hasAvater,
+  }) {
+    return UserProfileModel(
+      // uid는 파라미터로 받은 것, this.uid는 원래 갖고 있던 것
+      uid: uid ?? this.uid,
+      email: email ?? this.email,
+      name: name ?? this.name,
+      bio: bio ?? this.bio,
+      link: link ?? this.link,
+      birthday: birthday ?? this.birthday,
+      hasAvater: hasAvater ?? this.hasAvater,
+    );
   }
 }
