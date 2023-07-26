@@ -70,6 +70,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '486061189377',
     projectId: 'tiktok-clone-qwer',
     storageBucket: 'tiktok-clone-qwer.appspot.com',
+    androidClientId: '486061189377-gvm0fnhao7gbiffmko9bhdqnijjhb8al.apps.googleusercontent.com',
     iosClientId: '486061189377-n5ckj1v00432598q1m4u70tkn6uove1n.apps.googleusercontent.com',
     iosBundleId: 'com.example.tiktokClone',
   );

@@ -12,6 +12,8 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
 
   @override
   FutureOr<UserProfileModel> build() async {
+    state = const AsyncLoading();
+    await Future.delayed(const Duration(seconds: 10));
     // 이렇게 하면 createProfile이 있는 레포지토리를 호출할 수 있게 된다.
     _usersRepository = ref.read(userRepo);
     _authenticationRepository = ref.read(authRepo);
