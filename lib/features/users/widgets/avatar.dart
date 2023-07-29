@@ -32,6 +32,7 @@ class Avatar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 오직 avatarViewModel의 로딩이다. 따라서 전체화면이 로딩되지 않는다.
     final isLoading = ref.watch(avatarProvider).isLoading;
     return GestureDetector(
       onTap: isLoading ? null : () => _onAvatarTap(ref),
@@ -48,8 +49,12 @@ class Avatar extends ConsumerWidget {
           : CircleAvatar(
               radius: 50,
               foregroundImage: hasAvatar
+                  // 이미지 캐싱은 이미지를 한 번 다운로드한 후에 로컬 장치(예: 스마트폰, 컴퓨터)에 저장하여
+                  // 나중에 동일한 이미지가 필요할 때 다시 다운로드하지 않고 빠르게 불러올 수 있게 하는 기술
+                  // 따라서 동일한 파일명이지만 이미지의 내용이 다른 경우 이를 방지하기 위해
+                  // &haha=${DateTime.now().toString()}"를 추가해준다.
                   ? NetworkImage(
-                      "https://firebasestorage.googleapis.com/v0/b/tiktok-clone-qwer.appspot.com/o/avatars%2F$uid?alt=media&token=86fa327a-de06-4d37-be8b-9886c66b7c74")
+                      "https://firebasestorage.googleapis.com/v0/b/tiktok-clone-qwer.appspot.com/o/avatars%2F$uid?alt=media&haha=${DateTime.now().toString()}")
                   : null,
               child: Text(name),
             ),

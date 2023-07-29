@@ -41,10 +41,13 @@ class SignupViewModel extends AsyncNotifier<void> {
     state = await AsyncValue.guard(
       () async {
         // 계정을 생성하기 위해 authentification repo를 호출한다.
+        // guard내에 있음으로 에러가 없다면 이미 유저는 생성되어 있다는 얘기다.
+        // 그러면 계정을 생성하고 userCredential을 리턴한다.
         final userCredential = await _authRepo.emailSignUp(
           form["email"],
           form["password"],
         );
+        // 그리고 리턴받은 userCredential을 프로파일을 초기화하기 위해 createProfile에게 넘겨준다.
         await users.createProfile(
           credential: userCredential,
           name: form["name"],

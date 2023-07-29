@@ -79,6 +79,8 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                           children: [
                             // 여기서의 data는 usersProvider의 result 값이다.
                             // usersProvider는 UserProfileModel을 expose하고 있다.
+                            // 이렇게 따로 분리해서 다른 파일에 구성하지 않으면 아바타 교체시
+                            // 전체화면이 로딩된다.
                             Avatar(
                               name: data.name,
                               hasAvatar: data.hasAvater,
