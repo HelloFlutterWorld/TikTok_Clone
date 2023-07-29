@@ -76,6 +76,23 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
     // 데이터버이스에 "hasAvatar": true를 업데이트 해줌, 데이터베이스는 개별필드만 업데이트 가능
     await _usersRepository.updateUser(state.value!.uid, {"hasAvatar": true});
   }
+
+  Future<void> updateProfile({String? name, String? bio, String? link}) async {
+    if (state.value == null) return;
+
+    if (name != null) {
+      state = AsyncValue.data(state.value!.copyWith(name: name));
+      await _usersRepository.updateUser(state.value!.uid, {"name": name});
+    }
+    if (bio != null) {
+      state = AsyncValue.data(state.value!.copyWith(bio: bio));
+      await _usersRepository.updateUser(state.value!.uid, {"bio": bio});
+    }
+    if (link != null) {
+      state = AsyncValue.data(state.value!.copyWith(link: link));
+      await _usersRepository.updateUser(state.value!.uid, {"link": link});
+    }
+  }
 }
 // }
 
