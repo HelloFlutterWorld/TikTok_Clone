@@ -18,7 +18,6 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
   Map<String, String> formData = {};
   void _onSubmitTap() {
     ref.read(usersProvider.notifier).updateProfile(
-          name: formData["name"],
           bio: formData["bio"],
           link: formData["link"],
         );
@@ -45,26 +44,6 @@ class _ProfileSettingsScreenState extends ConsumerState<ProfileSettingsScreen> {
             child: Column(
               children: [
                 Gaps.v28,
-                TextFormField(
-                  maxLines: 2,
-                  minLines: 1,
-                  decoration: InputDecoration(
-                    hintText: "Name",
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey.shade400,
-                      ),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: Colors.grey.shade400,
-                      ),
-                    ),
-                  ),
-                  onChanged: (newValue) {
-                    formData['name'] = newValue;
-                  },
-                ),
                 Gaps.v16,
                 TextFormField(
                   maxLines: 2,

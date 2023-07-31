@@ -15,11 +15,11 @@ class TimelineViewModel extends AsyncNotifier<List<VideoModel>> {
     // 업로드가 지연되고 있다고 가정한다.
     // 로딩상태에서 필요한 작업들은 한다.
     await Future.delayed(const Duration(seconds: 2));
-    final newVideo = VideoModel(title: "${DateTime.now()}");
+
     // state를 직접 변경할 수 없으므로 _list.add(newVideo)는 사용못함
     // 왜냐면 화면을 다시 build 해주지 않음으로,
     // state가 새로 만들어 질 때, build메소드가 reBuild되어 사용자 화면이 업데이트된다.
-    _list = [..._list, newVideo];
+    _list = [..._list];
     // state = _list 안됨 왜내면 AcyncNotifier안에 있기 때문
     // 현재 state는 data상태 when => when(data)
     state = AsyncValue.data(_list);
