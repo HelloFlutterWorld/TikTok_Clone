@@ -17,7 +17,11 @@ class UploadVideoViewModel extends AsyncNotifier<void> {
     _repository = ref.read(videoRepo);
   }
 
-  Future<void> uploadVideo(File video, BuildContext context) async {
+  Future<void> uploadVideo(
+    File video,
+    BuildContext context,
+    Map<String, dynamic> data,
+  ) async {
     final user = ref.read(authRepo).user;
     final userProfile = ref.read(usersProvider).value;
     if (userProfile != null) {
@@ -31,8 +35,8 @@ class UploadVideoViewModel extends AsyncNotifier<void> {
             // video의 data를 database에 초기화해준다.
             await _repository.saveVideo(
               VideoModel(
-                title: "From Flutter",
-                description: "Hello Flutter World!",
+                title: data["title"],
+                description: data["description"],
                 fileUrl: await task.ref.getDownloadURL(),
                 thumbnailUrl: "",
                 creatorUid: user.uid,

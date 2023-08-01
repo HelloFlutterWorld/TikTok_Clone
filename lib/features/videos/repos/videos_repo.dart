@@ -21,6 +21,7 @@ class VideoRepository {
 
   // cread a video document
   Future<void> saveVideo(VideoModel data) async {
+    // video의 id는 랜덤으로 형성된다.
     await _db.collection("videos").add(data.toJson());
   }
 }
