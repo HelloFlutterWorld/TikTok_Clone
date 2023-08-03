@@ -8,11 +8,26 @@ import 'package:tiktok_clone/common/widgets/video_config/dark_config.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/videos/repos/video_playback_config_repo.dart';
 import 'package:tiktok_clone/features/videos/view_models/palyback_config_vm.dart';
-import 'package:tiktok_clone/firebase_options.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
 import 'package:tiktok_clone/router.dart';
 
+import 'firebase_options.dart';
+
 //gen_l10n 임포트
+
+void initializeFirebaseApp() async {
+  try {
+    // 이미 Firebase 앱이 초기화되었는지 확인
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp(
+        // 현재 플랫폼에 대한 기본 Firebase 옵션을 사용한다는 의미
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    }
+  } catch (e) {
+    print("Firebase 초기화 오류: $e");
+  }
+}
 
 void main() async {
   //플러터 프레임워크를 이용해서 앱이 시작하기 전에 state를 어떤 식으로든 바꾸고 싶다면
@@ -21,15 +36,20 @@ void main() async {
   //이 위젯은 엔진과 프레임워크를 바인딩해주는 접착체와 같다
   //이 함수는 런앱을 실행하기 전에 바인딩을 초기화 할 때만 호출해야 한다.
   WidgetsFlutterBinding.ensureInitialized();
+  initializeFirebaseApp();
 
   // Firebase 애플리케이션 인스턴스를 초기화하고 반환하는 비동기 함수다.
   // 초기화하는 시점에 아래와 같이 FirebaseAuth instance를 만들면
   // final authRepo = Provider((ref) => AuthenticationRepository());
   // 바로 Firebase와 소통할 수 있다.
+  // await Firebase.initializeApp(
+  //   //  현재 플랫폼에 대한 기본 Firebase 옵션을 사용한다는 의미
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
+
   await Firebase.initializeApp(
-    //  현재 플랫폼에 대한 기본 Firebase 옵션을 사용한다는 의미
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+      // options: DefaultFirebaseOptions.currentPlatform,
+      );
 
   //Future<void>이기 때문에 비동기키워드 await 써줌
   await SystemChrome.setPreferredOrientations(

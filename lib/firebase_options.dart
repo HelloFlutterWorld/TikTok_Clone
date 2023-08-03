@@ -25,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -52,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '486061189377',
     projectId: 'tiktok-clone-qwer',
     authDomain: 'tiktok-clone-qwer.firebaseapp.com',
+    databaseURL: 'https://tiktok-clone-qwer-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'tiktok-clone-qwer.appspot.com',
     measurementId: 'G-ZSH81HBE35',
   );
@@ -61,6 +59,7 @@ class DefaultFirebaseOptions {
     appId: '1:486061189377:android:0d1143e129802e89de5300',
     messagingSenderId: '486061189377',
     projectId: 'tiktok-clone-qwer',
+    databaseURL: 'https://tiktok-clone-qwer-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'tiktok-clone-qwer.appspot.com',
   );
 
@@ -69,6 +68,19 @@ class DefaultFirebaseOptions {
     appId: '1:486061189377:ios:a2d51d2245d68bfbde5300',
     messagingSenderId: '486061189377',
     projectId: 'tiktok-clone-qwer',
+    databaseURL: 'https://tiktok-clone-qwer-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'tiktok-clone-qwer.appspot.com',
+    androidClientId: '486061189377-gvm0fnhao7gbiffmko9bhdqnijjhb8al.apps.googleusercontent.com',
+    iosClientId: '486061189377-n5ckj1v00432598q1m4u70tkn6uove1n.apps.googleusercontent.com',
+    iosBundleId: 'com.example.tiktokClone',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDDAkHN50K2jnsArTQLG_3J0U9MktR1_rk',
+    appId: '1:486061189377:ios:a2d51d2245d68bfbde5300',
+    messagingSenderId: '486061189377',
+    projectId: 'tiktok-clone-qwer',
+    databaseURL: 'https://tiktok-clone-qwer-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'tiktok-clone-qwer.appspot.com',
     androidClientId: '486061189377-gvm0fnhao7gbiffmko9bhdqnijjhb8al.apps.googleusercontent.com',
     iosClientId: '486061189377-n5ckj1v00432598q1m4u70tkn6uove1n.apps.googleusercontent.com',
