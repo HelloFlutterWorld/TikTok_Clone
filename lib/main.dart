@@ -36,6 +36,7 @@ void main() async {
   //이 위젯은 엔진과 프레임워크를 바인딩해주는 접착체와 같다
   //이 함수는 런앱을 실행하기 전에 바인딩을 초기화 할 때만 호출해야 한다.
   WidgetsFlutterBinding.ensureInitialized();
+
   initializeFirebaseApp();
 
   // Firebase 애플리케이션 인스턴스를 초기화하고 반환하는 비동기 함수다.

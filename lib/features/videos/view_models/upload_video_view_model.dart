@@ -29,7 +29,10 @@ class UploadVideoViewModel extends AsyncNotifier<void> {
       state = await AsyncValue.guard(
         () async {
           // video를 storage에 업로드하고
-          final task = await _repository.uploadVideoFile(video, user!.uid);
+          final task = await _repository.uploadVideoFile(
+            video,
+            user!.uid,
+          );
           // UploadTask가 완료되면 metadata를 볼 수 있다. 어떤 파일이 생성되었는지 알 수 있다.
           if (task.metadata != null) {
             // video의 data를 database에 초기화해준다.
