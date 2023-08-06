@@ -24,6 +24,17 @@ class VideoRepository {
     // video의 id는 랜덤으로 형성된다.
     await _db.collection("videos").add(data.toJson());
   }
+
+  // QuerySnapshot은 기본적으로 Map자료를 가지고 있다.
+  Future<QuerySnapshot<Map<String, dynamic>>> fetchVidoes() {
+    //  return _db.collection("videos").where("likes", isGreaterThan: 10);
+    return _db
+        .collection("videos")
+        .orderBy("createdAt",
+            // 내림차순을 의미
+            descending: true)
+        .get();
+  }
 }
 
 final videoRepo = Provider((ref) => VideoRepository());

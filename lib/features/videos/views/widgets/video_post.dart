@@ -4,22 +4,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/users/view_models/users_view_model.dart';
+import 'package:tiktok_clone/features/videos/models/video_model.dart';
 import 'package:tiktok_clone/features/videos/view_models/palyback_config_vm.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+import 'package:http/http.dart' as http;
 
 import 'video_button.dart';
 import 'vidoe_comments.dart';
 
 class VideoPost extends ConsumerStatefulWidget {
   final Function onVideoFinished;
+  final VideoModel videoData;
 
   final int index;
   const VideoPost({
     super.key,
     required this.onVideoFinished,
     required this.index,
+    required this.videoData,
   });
 
   @override
@@ -233,8 +238,21 @@ class VideoPostState extends ConsumerState<VideoPost>
     _onTogglePause();
   }
 
+  Future<bool> isValidImageUrl(String imageUrl) async {
+    // url에 이미지가 없을 때를 대비하여 유효성을 검사한다.
+    try {
+      final response = await http.head(Uri.parse(imageUrl));
+      return response.statusCode == 200; // 200은 유효한 상태 코드를 나타냅니다.
+    } catch (e) {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // 여기서는 avater를 fetch하지 않고 캐싱하도록 날짜를 지워준다.
+    final imageUrl =
+        "https://firebasestorage.googleapis.com/v0/b/tiktok-clone-qwer.appspot.com/o/avatars%2F${widget.videoData.creatorUid}?alt=media";
     _initVolume();
 /*     // initState에서 addListener를 삭제한 대신
     // build 메소드 안에서 이 코드를 사용해야함
@@ -258,8 +276,10 @@ class VideoPostState extends ConsumerState<VideoPost>
           Positioned.fill(
             child: _videoPlayerController.value.isInitialized
                 ? VideoPlayer(_videoPlayerController)
-                : Container(
-                    color: Colors.black,
+                : Image.network(
+                    widget.videoData.thumbnailUrl,
+                    // 화면크기에 맞춤
+                    fit: BoxFit.cover,
                   ),
           ),
           Positioned.fill(
@@ -297,9 +317,18 @@ class VideoPostState extends ConsumerState<VideoPost>
                     );
                   },
                   child: AnimatedOpacity(
-                    //lowBound = 0
-                    //upperBound = 1
-                    opacity: _isPaused ? 1 : 0,
+                    // lowBound = 0
+                    // upperBound = 1
+                    // isPaused가 true이고 autoplay가 true이면, opacity는 1이 됩니다.
+                    // _isPaused가 false이고 autoplay가 false이면, opacity는 1이 됩니다.
+                    // 그 외의 경우, opacity는 0이 됩니다.
+                    opacity: (_isPaused &&
+                            ref.watch(playbackConfigProvider).autoplay)
+                        ? 1
+                        : (!_isPaused &&
+                                !ref.watch(playbackConfigProvider).autoplay)
+                            ? 1
+                            : 0,
                     duration: _animationDuratrion,
                     child: const FaIcon(
                       FontAwesomeIcons.play,
@@ -342,18 +371,18 @@ class VideoPostState extends ConsumerState<VideoPost>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "@Yoon",
-                  style: TextStyle(
+                Text(
+                  "@${widget.videoData.creator}",
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: Sizes.size20,
                   ),
                 ),
                 Gaps.v10,
-                const Text(
-                  "These are ducks in the river in my hometown!!!",
-                  style: TextStyle(
+                Text(
+                  widget.videoData.description,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: Sizes.size16,
                   ),
@@ -396,27 +425,37 @@ class VideoPostState extends ConsumerState<VideoPost>
             child: Column(
               children: [
                 //이미지가 있는 원을 제공해 줌
-                const CircleAvatar(
-                  //아바타의 크기
-                  radius: 25,
-                  //이미지가 로드되지 않을 경우를 대비해서
-                  backgroundColor: Colors.black,
-                  foregroundColor: Colors.white,
-                  foregroundImage: NetworkImage(
-                      "https://avatars.githubusercontent.com/u/123614459?v=4"),
-                  child: Text("Yoon"),
+                FutureBuilder<bool>(
+                  future: isValidImageUrl(imageUrl),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError || snapshot.data == false) {
+                      return CircleAvatar(
+                        radius: 25,
+                        child: Text(widget.videoData.creator),
+                      );
+                    } else {
+                      return CircleAvatar(
+                        radius: 25,
+                        foregroundImage:
+                            ref.watch(usersProvider).value!.hasAvater
+                                ? NetworkImage(imageUrl)
+                                : null,
+                        child: Text(widget.videoData.creator),
+                      );
+                    }
+                  },
                 ),
                 Gaps.v24,
                 VideoButton(
                   icon: FontAwesomeIcons.solidHeart,
-                  text: S.of(context).likeCount(987989987),
+                  text: S.of(context).likeCount(widget.videoData.likes),
                 ),
                 Gaps.v24,
                 GestureDetector(
                   onTap: () => _onCommentsTap(context),
                   child: VideoButton(
                     icon: FontAwesomeIcons.solidComment,
-                    text: S.of(context).commentCount(6568856565),
+                    text: S.of(context).commentCount(widget.videoData.comments),
                   ),
                 ),
                 Gaps.v24,

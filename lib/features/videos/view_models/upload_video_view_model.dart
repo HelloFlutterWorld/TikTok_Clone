@@ -49,7 +49,9 @@ class UploadVideoViewModel extends AsyncNotifier<void> {
                 createdAt: DateTime.now().millisecondsSinceEpoch,
               ),
             );
+            // 카메라화면으로 pop해주고
             context.pop();
+            // 그 다음 사용자가 upload 버튼을 눌렀던 화면으로 다시 pop해준다.
             context.pop();
           }
         },
