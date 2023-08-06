@@ -61,3 +61,6 @@ export const onVideoCreated = functions.firestore
         vidoeId: snapshot.id,
       });
   });
+
+// /videos/123
+// /users/nico/vidoes/123
