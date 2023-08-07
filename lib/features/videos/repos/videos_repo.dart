@@ -26,14 +26,27 @@ class VideoRepository {
   }
 
   // QuerySnapshot은 기본적으로 Map자료를 가지고 있다.
-  Future<QuerySnapshot<Map<String, dynamic>>> fetchVidoes() {
+  // "페이징"은 데이터를 작은 페이지로 나누어 로드하는 기술 자체를 의미
+  // "페이지네이션"은 페이징된 데이터를 사용자 인터페이스에서 표현하는 방식
+  Future<QuerySnapshot<Map<String, dynamic>>> fetchVidoes(
+      {int? lastItemCreatedAt}) {
     //  return _db.collection("videos").where("likes", isGreaterThan: 10);
-    return _db
+    final query = _db
         .collection("videos")
         .orderBy("createdAt",
             // 내림차순을 의미
             descending: true)
-        .get();
+        // 영상 두 개가 한 페이지이다.
+        .limit(2);
+    if (lastItemCreatedAt == null) {
+      return query.get();
+    } else {
+      // list로 넘겨주는 이유는 [lastItemCreatedAt, "likes", "creator"] 들
+      // 다양한 옵션을 넣어서 정렬해줄 수 있기 때문이다.
+      // 여기에서 넘겨주는 리스트는 oderBy로 정렬된 모든 것들의 필드이다.
+      // lastItemCreatedAt부터 시작하여 정렬된다.
+      return query.startAfter([lastItemCreatedAt]).get();
+    }
   }
 }
 

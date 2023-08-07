@@ -11,13 +11,14 @@ class VideoTimelineScreen extends ConsumerStatefulWidget {
 }
 
 class VideoTimelineScreenState extends ConsumerState<VideoTimelineScreen> {
-  int _itemCount = 4;
+  int _itemCount = 0;
 
   final PageController _pageController = PageController();
   final Duration _scrollDuration = const Duration(milliseconds: 250);
   final Curve _scrollCurve = Curves.linear;
 
   void _onPageChanged(int page) {
+    // page는 0부터 받아온다.
     //사용자가 직접 패이지를 스크롤 할 때
     //원하는 페이지로 애니메이션을 보낸다.
     _pageController.animateToPage(
@@ -28,8 +29,8 @@ class VideoTimelineScreenState extends ConsumerState<VideoTimelineScreen> {
       curve: _scrollCurve,
     );
     if (page == _itemCount - 1) {
-      _itemCount = _itemCount + 4;
-      setState(() {});
+      // 페이지가 다 차면 다음 페이지를 요청해둔다.
+      ref.watch(timeLineProvider.notifier).fetchNextPage();
     }
   }
 
@@ -73,34 +74,37 @@ class VideoTimelineScreenState extends ConsumerState<VideoTimelineScreen> {
             ),
           ),
           //videos = List<VideoModel>
-          data: (videos) => RefreshIndicator(
-            onRefresh: _onRefresh,
-            //화면을 당기기 시작할 때 처음 나타나는
-            //edgeoffset으로부터 아래로의 indicator의 위치를 정하는 값
-            displacement: 50,
-            //화면을 당길 때 indicator가 처음 나타나는 위치를 정함
-            edgeOffset: 20,
-            color: Theme.of(context).primaryColor,
-            child: PageView.builder(
-              //자동넘김
-              //pageSnapping: false,
-              //유저가 이동할 때 도착하는 페이지에 대한 정보를 제공하는 메쏘드
-              controller: _pageController,
-              //사용자가 직접 패이지를 스크롤 할 때
-              onPageChanged: _onPageChanged,
-              scrollDirection: Axis.vertical,
-              // itemCounnt: itemConut => videos.length
-              itemCount: videos.length,
-              itemBuilder: (context, index) {
-                final videoData = videos[index];
-                return VideoPost(
-                  onVideoFinished: _onVideoFinished,
-                  index: index,
-                  videoData: videoData,
-                );
-              },
-            ),
-          ),
+          data: (videos) {
+            _itemCount = videos.length;
+            return RefreshIndicator(
+              onRefresh: _onRefresh,
+              //화면을 당기기 시작할 때 처음 나타나는
+              //edgeoffset으로부터 아래로의 indicator의 위치를 정하는 값
+              displacement: 50,
+              //화면을 당길 때 indicator가 처음 나타나는 위치를 정함
+              edgeOffset: 20,
+              color: Theme.of(context).primaryColor,
+              child: PageView.builder(
+                //자동넘김
+                //pageSnapping: false,
+                //유저가 이동할 때 도착하는 페이지에 대한 정보를 제공하는 메쏘드
+                controller: _pageController,
+                //사용자가 직접 패이지를 스크롤 할 때
+                onPageChanged: _onPageChanged,
+                scrollDirection: Axis.vertical,
+                // itemCounnt: itemConut => videos.length
+                itemCount: videos.length,
+                itemBuilder: (context, index) {
+                  final videoData = videos[index];
+                  return VideoPost(
+                    onVideoFinished: _onVideoFinished,
+                    index: index,
+                    videoData: videoData,
+                  );
+                },
+              ),
+            );
+          },
         );
   }
 }

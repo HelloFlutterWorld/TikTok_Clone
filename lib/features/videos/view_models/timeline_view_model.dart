@@ -27,25 +27,30 @@ class TimelineViewModel extends AsyncNotifier<List<VideoModel>> {
     state = AsyncValue.data(_list);
   } */
 
-  @override
-  // Future 또는 Model을 반환, Model만 반환하는 Notifier와 차이 있음
-  FutureOr<List<VideoModel>> build() async {
-    _repository = ref.read(videoRepo);
+  Future<List<VideoModel>> _fetchVideos({int? lastItemCreatedAt}) async {
     // result는 일종의 도큐먼트들의 리스트라고 할 수 있다.
     // QuerySnapshot<Map<String, dynamic>>의 자료형을 갖는다.
     // 모든 도큐먼트들을 리스트값으로 갖느다.
-    final result = await _repository.fetchVidoes();
+    final result =
+        await _repository.fetchVidoes(lastItemCreatedAt: lastItemCreatedAt);
     // map()는 새로운 리스트를 생성한다.
     // 도큐먼트들로 구성된 리스트(result)를 순환하며, 입력된 값을 반환한다.
     // 순환의 대상이 되는 값을 첫 번째 파라미터(doc)로 갖게 된다.
     // 어떤 값을 입력하든 newList에 추가된다.
     // Iterable<String>는 순환가능한 리스트로서 일종의 배열과 같은 것이다.
-    final newList = result.docs.map(
+    final videos = result.docs.map(
       (doc) => VideoModel.fromJson(
         doc.data(),
       ),
     );
-    print(newList);
+    return videos.toList();
+  }
+
+  @override
+  // Future 또는 Model을 반환, Model만 반환하는 Notifier와 차이 있음
+  FutureOr<List<VideoModel>> build() async {
+    _repository = ref.read(videoRepo);
+
     // build 메서드는 view가 받을 초기 데이터를 반환해준다.
     // 이 build 메소드에서 원하는 API를 호출하고,
     // 데이터를 반환하면, 그 데이터는 Provider에 의해 노출된다.
@@ -57,8 +62,16 @@ class TimelineViewModel extends AsyncNotifier<List<VideoModel>> {
 
     // newList를 _list에 담는 이유는 이미 가져온 비디오들의 복사본들 유지하기 위해서이다.
     // 왜냐면 나중에 페이지네이션을 할 때 리스트에 아이템들을 더 추가해야 하기 때문이다.
-    _list = newList.toList();
+    _list = await _fetchVideos(lastItemCreatedAt: null);
+    // _list는 첫 번째 페이지가 된다.
     return _list;
+  }
+
+  Future fetchNextPage() async {
+    final nextPage =
+        await _fetchVideos(lastItemCreatedAt: _list.last.createdAt);
+    _list = [..._list, ...nextPage];
+    state = AsyncData([..._list]);
   }
 }
 

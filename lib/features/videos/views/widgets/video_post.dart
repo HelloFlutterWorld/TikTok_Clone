@@ -120,6 +120,8 @@ class VideoPostState extends ConsumerState<VideoPost>
       value: 1.5,
       duration: _animationDuratrion,
     );
+    _isPaused = !ref.read(playbackConfigProvider).autoplay;
+    _isPaused ? _animationController.reverse() : null;
     // 방법 1
     //_animationController.addListener(() {
     //   setState(() {});
@@ -319,16 +321,12 @@ class VideoPostState extends ConsumerState<VideoPost>
                   child: AnimatedOpacity(
                     // lowBound = 0
                     // upperBound = 1
-                    // isPaused가 true이고 autoplay가 true이면, opacity는 1이 됩니다.
-                    // _isPaused가 false이고 autoplay가 false이면, opacity는 1이 됩니다.
-                    // 그 외의 경우, opacity는 0이 됩니다.
-                    opacity: (_isPaused &&
-                            ref.watch(playbackConfigProvider).autoplay)
-                        ? 1
-                        : (!_isPaused &&
-                                !ref.watch(playbackConfigProvider).autoplay)
-                            ? 1
-                            : 0,
+                    // isPaused가 true이고 autoplay가 true이면, opacity는 1
+                    // _isPaused가 false이고 autoplay가 false이면, opacity는 1.
+                    // 그 외의 모든 경우, opacity는 0.
+                    // isPaseud가 true고 autoplay가 false인 경우 첫번째 조건에서는
+                    // false가 되지만 두번째 조건에서 true가 된다.
+                    opacity: _isPaused ? 1 : 0,
                     duration: _animationDuratrion,
                     child: const FaIcon(
                       FontAwesomeIcons.play,
