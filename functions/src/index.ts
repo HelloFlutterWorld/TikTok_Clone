@@ -54,13 +54,13 @@ export const onVideoCreated = functions.firestore
       .collection("users")
       .doc(video.creatorUid)
       .collection("videos")
-      // {vidoeId}의 값을 가져온다.
+      // {videoId}의 값을 가져온다.
       .doc(snapshot.id)
       .set({
         thumbnailUrl: file.publicUrl(),
-        vidoeId: snapshot.id,
+        videoId: snapshot.id,
       });
   });
 
 // /videos/123
-// /users/nico/vidoes/123
+// /users/nico/videos/123
