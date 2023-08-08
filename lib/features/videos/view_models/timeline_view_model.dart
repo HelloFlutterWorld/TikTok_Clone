@@ -30,17 +30,22 @@ class TimelineViewModel extends AsyncNotifier<List<VideoModel>> {
   Future<List<VideoModel>> _fetchVideos({int? lastItemCreatedAt}) async {
     // result는 일종의 도큐먼트들의 리스트라고 할 수 있다.
     // QuerySnapshot<Map<String, dynamic>>의 자료형을 갖는다.
-    // 모든 도큐먼트들을 리스트값으로 갖느다.
+    // 모든 도큐먼트들을 리스트값으로 갖는다.
     final result =
-        await _repository.fetchVidoes(lastItemCreatedAt: lastItemCreatedAt);
-    // map()는 새로운 리스트를 생성한다.
-    // 도큐먼트들로 구성된 리스트(result)를 순환하며, 입력된 값을 반환한다.
-    // 순환의 대상이 되는 값을 첫 번째 파라미터(doc)로 갖게 된다.
-    // 어떤 값을 입력하든 newList에 추가된다.
+        await _repository.fetchVideos(lastItemCreatedAt: lastItemCreatedAt);
+    // map()는 새로운 순환가능한 배열형 리스트를 생성하는데,
+    // 도큐먼트들로 구성된 리스트(result)를 순환하며, 입력된 값을 리스트의 원소로
+    // 하나씩 반환한다.
+    // 순환의 대상이 되는 값을 첫 번째 파라미터(doc)로 제공한다.
+    // 어떤 값을 입력하든 videos에 추가된다.
     // Iterable<String>는 순환가능한 리스트로서 일종의 배열과 같은 것이다.
+    // doc는 data()뿐만 아니라. id도 가져올 수 있다.
     final videos = result.docs.map(
       (doc) => VideoModel.fromJson(
-        doc.data(),
+        // Map<String, dynamic> json,
+        json: doc.data(),
+        // String videoId
+        videoId: doc.id,
       ),
     );
     return videos.toList();
@@ -67,11 +72,17 @@ class TimelineViewModel extends AsyncNotifier<List<VideoModel>> {
     return _list;
   }
 
-  Future fetchNextPage() async {
+  Future<void> fetchNextPage() async {
     final nextPage =
         await _fetchVideos(lastItemCreatedAt: _list.last.createdAt);
     _list = [..._list, ...nextPage];
-    state = AsyncData([..._list]);
+    state = AsyncValue.data(_list);
+  }
+
+  Future<void> refresh() async {
+    final videos = await _fetchVideos(lastItemCreatedAt: null);
+    _list = videos;
+    state = AsyncValue.data(videos);
   }
 }
 

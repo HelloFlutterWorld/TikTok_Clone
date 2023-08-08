@@ -47,12 +47,10 @@ class VideoTimelineScreenState extends ConsumerState<VideoTimelineScreen> {
     super.dispose();
   }
 
-  Future<void> _onRefresh() {
-    return Future.delayed(
-      const Duration(
-        seconds: 5,
-      ),
-    );
+  Future<void> _onRefresh() async {
+    // 아래의 코드로 timeLineProvider의 state가 업데이트되고
+    // build 메소드는 화면을 다시 렌더링(새로고침하게)된다.
+    return ref.watch(timeLineProvider.notifier).refresh();
   }
 
   @override

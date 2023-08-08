@@ -70,10 +70,10 @@ class S {
     );
   }
 
-  /// `Create a profile, follow other accounts, make your own {videoCount, plural, =0{no videos} =1{vidoe} other{videos}}, and more.`
+  /// `Create a profile, follow other accounts, make your own {videoCount, plural, =0{no videos} =1{video} other{videos}}, and more.`
   String signUpSubtitle(num videoCount) {
     return Intl.message(
-      'Create a profile, follow other accounts, make your own ${Intl.plural(videoCount, zero: 'no videos', one: 'vidoe', other: 'videos')}, and more.',
+      'Create a profile, follow other accounts, make your own ${Intl.plural(videoCount, zero: 'no videos', one: 'video', other: 'videos')}, and more.',
       name: 'signUpSubtitle',
       desc: '',
       args: [videoCount],
@@ -128,7 +128,7 @@ class S {
     final String potatoString = potatoNumberFormat.format(potato);
 
     return Intl.message(
-      '$potatoString',
+      potatoString,
       name: 'likeCount',
       desc: 'Anything you want',
       args: [potatoString],
@@ -143,7 +143,7 @@ class S {
     final String potatoString = potatoNumberFormat.format(potato);
 
     return Intl.message(
-      '$potatoString',
+      potatoString,
       name: 'commentCount',
       desc: 'Anything you want',
       args: [potatoString],

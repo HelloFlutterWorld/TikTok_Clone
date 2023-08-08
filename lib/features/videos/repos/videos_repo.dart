@@ -15,7 +15,7 @@ class VideoRepository {
         .ref()
         // Unix epoch로부터 몇 밀리초가 지났는지를 나타낸다. 1970년 이후부터 지금까지의 숫자
         .child(
-            "vidoes/$uid/${DateTime.now().millisecondsSinceEpoch.toString()}");
+            "videos/$uid/${DateTime.now().millisecondsSinceEpoch.toString()}");
     return fileRef.putFile(video);
   }
 
@@ -28,7 +28,7 @@ class VideoRepository {
   // QuerySnapshot은 기본적으로 Map자료를 가지고 있다.
   // "페이징"은 데이터를 작은 페이지로 나누어 로드하는 기술 자체를 의미
   // "페이지네이션"은 페이징된 데이터를 사용자 인터페이스에서 표현하는 방식
-  Future<QuerySnapshot<Map<String, dynamic>>> fetchVidoes(
+  Future<QuerySnapshot<Map<String, dynamic>>> fetchVideos(
       {int? lastItemCreatedAt}) {
     //  return _db.collection("videos").where("likes", isGreaterThan: 10);
     final query = _db
@@ -39,6 +39,9 @@ class VideoRepository {
         // 영상 두 개가 한 페이지이다.
         .limit(2);
     if (lastItemCreatedAt == null) {
+      // return query.get(); 구문은 Firestore 데이터베이스에서 해당 쿼리를 실행하고,
+      // 결과로써 해당 쿼리에 일치하는 도큐먼트들의 스냅샷을 반환한다.
+      // 스냅샷에는 각 도큐먼트의 데이터 뿐만 아니라 각 도큐먼트의 고유한 ID도 포함된다.
       return query.get();
     } else {
       // list로 넘겨주는 이유는 [lastItemCreatedAt, "likes", "creator"] 들
@@ -47,6 +50,13 @@ class VideoRepository {
       // lastItemCreatedAt부터 시작하여 정렬된다.
       return query.startAfter([lastItemCreatedAt]).get();
     }
+  }
+
+  Future<void> likeVideo(String videoId, String userId) async {
+    await _db.collection("likes").add({
+      "videoId": videoId,
+      "userId": userId,
+    });
   }
 }
 

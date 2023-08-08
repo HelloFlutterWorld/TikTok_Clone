@@ -7,13 +7,14 @@ import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/users/view_models/users_view_model.dart';
 import 'package:tiktok_clone/features/videos/models/video_model.dart';
 import 'package:tiktok_clone/features/videos/view_models/palyback_config_vm.dart';
+import 'package:tiktok_clone/features/videos/view_models/video_post_view_models.dart';
+import 'package:tiktok_clone/features/videos/views/widgets/video_comments.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:http/http.dart' as http;
 
 import 'video_button.dart';
-import 'vidoe_comments.dart';
 
 class VideoPost extends ConsumerStatefulWidget {
   final Function onVideoFinished;
@@ -72,6 +73,13 @@ class VideoPostState extends ConsumerState<VideoPost>
         widget.onVideoFinished();
       }
     }
+  }
+
+  void _onLikeTap() {
+    // likeVideo(videoId)로 초기화 하는 대신에
+    // provider를 videoId로 초기화하는 방법을 채택함
+    // 이런 방법도 있다는 것을 학습하기 위해 또한 파이어베이스의 한계를 고려하여
+    ref.read(videoPostProvider(widget.videoData.id).notifier).likeVideo();
   }
 
   void _initVideoPlayer() async {
@@ -227,7 +235,7 @@ class VideoPostState extends ConsumerState<VideoPost>
     }
     await showModalBottomSheet(
       context: context,
-      //vidoeComments의 scaffold의 색이 보이도록 해줌
+      //videoComments의 scaffold의 색이 보이도록 해줌
       //따라서 스카폴드의 부모위젯인 Contanier의 모서리를 둥글게 적용하고
       //hardEdge기능을 사용하여 Scaffold의 모서리를 둥글게 만들 수 있음
       //리스트뷰를 사용하고 크기를 키울거면 true로!
@@ -444,9 +452,12 @@ class VideoPostState extends ConsumerState<VideoPost>
                   },
                 ),
                 Gaps.v24,
-                VideoButton(
-                  icon: FontAwesomeIcons.solidHeart,
-                  text: S.of(context).likeCount(widget.videoData.likes),
+                GestureDetector(
+                  onTap: _onLikeTap,
+                  child: VideoButton(
+                    icon: FontAwesomeIcons.solidHeart,
+                    text: S.of(context).likeCount(widget.videoData.likes),
+                  ),
                 ),
                 Gaps.v24,
                 GestureDetector(

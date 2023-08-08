@@ -47,6 +47,7 @@ class UploadVideoViewModel extends AsyncNotifier<void> {
                 likes: 0,
                 comments: 0,
                 createdAt: DateTime.now().millisecondsSinceEpoch,
+                id: "",
               ),
             );
             // 카메라화면으로 pop해주고
