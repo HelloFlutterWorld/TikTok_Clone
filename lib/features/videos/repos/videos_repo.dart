@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -64,6 +65,16 @@ class VideoRepository {
     } else {
       await query.delete();
     }
+  }
+
+  Future<bool> isLikedVideo(String videoId, String userId) async {
+    final query = _db
+        .collection("users")
+        .doc(userId)
+        .collection("likedVideos")
+        .doc(videoId);
+    final likeVideo = await query.get();
+    return likeVideo.exists;
   }
 }
 

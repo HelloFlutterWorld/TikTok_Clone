@@ -19,7 +19,6 @@ import 'video_button.dart';
 class VideoPost extends ConsumerStatefulWidget {
   final Function onVideoFinished;
   final VideoModel videoData;
-
   final int index;
   const VideoPost({
     super.key,
@@ -57,6 +56,10 @@ class VideoPostState extends ConsumerState<VideoPost>
 
   bool _isPaused = false;
 
+  bool _isLiked = false;
+
+  int likes = 0;
+
   //bool _autoMute = videoConfig.value;
 
   final Duration _animationDuratrion = const Duration(milliseconds: 200);
@@ -80,9 +83,13 @@ class VideoPostState extends ConsumerState<VideoPost>
     // provider를 videoId로 초기화하는 방법을 채택함
     // 이런 방법도 있다는 것을 학습하기 위해 또한 파이어베이스의 한계를 고려하여
     ref.read(videoPostProvider(widget.videoData.id).notifier).likeVideo();
+    setState(() {
+      _isLiked ? likes-- : likes++;
+      _isLiked = !_isLiked;
+    });
   }
 
-  void _initVideoPlayer() async {
+  Future<void> _initVideoPlayer() async {
     //controller를 초기화 해주어야 한다.
     //왜냐면 위처럼 초기화를 한다고 해도 바로 영상이 불러와지는 것은 아니기 때문이다.
     await _videoPlayerController.initialize();
@@ -105,6 +112,9 @@ class VideoPostState extends ConsumerState<VideoPost>
 
     //build메소드로 하여금 controller가 초기화 되었고
     //모든것이 잘 작동한다는 것을 알도록 아래와 같이 setState
+    _isLiked = await ref
+        .read(videoPostProvider(widget.videoData.id).notifier)
+        .isLikedVideo();
     setState(() {});
   }
 
@@ -148,6 +158,8 @@ class VideoPostState extends ConsumerState<VideoPost>
     //영상의 스크롤의 여러번 내리면 죽은 영상의 변경사항도 계속 listen하게 된다.
     //따라서 _onPlaybackConfigChanged에 if (!mounted) return; 삽입해줌
     //PlaybackConfigViewModel 객체의 상태가 변할 때마다 콜백함수 호출함 */
+
+    likes = widget.videoData.likes;
   }
 
   @override
@@ -264,7 +276,8 @@ class VideoPostState extends ConsumerState<VideoPost>
     final imageUrl =
         "https://firebasestorage.googleapis.com/v0/b/tiktok-clone-qwer.appspot.com/o/avatars%2F${widget.videoData.creatorUid}?alt=media";
     _initVolume();
-/*     // initState에서 addListener를 삭제한 대신
+
+    /*     // initState에서 addListener를 삭제한 대신
     // build 메소드 안에서 이 코드를 사용해야함
     //chatGpt bookMark
     ref.listen(playbackConfigProvider, (previous, next) {
@@ -456,7 +469,8 @@ class VideoPostState extends ConsumerState<VideoPost>
                   onTap: _onLikeTap,
                   child: VideoButton(
                     icon: FontAwesomeIcons.solidHeart,
-                    text: S.of(context).likeCount(widget.videoData.likes),
+                    text: S.of(context).likeCount(likes),
+                    isLiked: _isLiked,
                   ),
                 ),
                 Gaps.v24,
