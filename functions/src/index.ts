@@ -64,3 +64,31 @@ export const onVideoCreated = functions.firestore
 
 // /videos/123
 // /users/nico/videos/123
+
+export const onLkedCreated = functions.firestore
+  .document("likes/{likeId}")
+  // {likeId}가 생성될 때 발동되는 함수
+  .onCreate(async (snapshot, contest) => {
+    const db = admin.firestore();
+    const [videoId, _] = snapshot.id.split("000");
+    await db
+      .collection("videos")
+      .doc(videoId)
+      .update({
+        likes: admin.firestore.FieldValue.increment(1),
+      });
+  });
+
+export const onLikedRemoved = functions.firestore
+  .document("likes/{likeId}")
+  // {likeId}가 제거될 때 발동되는 함수
+  .onDelete(async (snapshot, context) => {
+    const db = admin.firestore();
+    const [videoId, _] = snapshot.id.split("000");
+    await db
+      .collection("videos")
+      .doc(videoId)
+      .update({
+        likes: admin.firestore.FieldValue.increment(-1),
+      });
+  });

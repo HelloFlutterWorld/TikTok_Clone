@@ -56,10 +56,13 @@ class VideoRepository {
     final query = _db.collection("likes").doc("${videoId}000$userId");
     final like = await query.get();
 
+    // 도큐먼트가 존재하지 않으면 true 반환
     if (!like.exists) {
       await query.set({
         "createdAt": DateTime.now().millisecondsSinceEpoch,
       });
+    } else {
+      await query.delete();
     }
   }
 }
