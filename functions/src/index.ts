@@ -65,17 +65,33 @@ export const onVideoCreated = functions.firestore
 // /videos/123
 // /users/nico/videos/123
 
-export const onLkedCreated = functions.firestore
+export const onLikedCreated = functions.firestore
   .document("likes/{likeId}")
   // {likeId}가 생성될 때 발동되는 함수
   .onCreate(async (snapshot, contest) => {
     const db = admin.firestore();
-    const [videoId, _] = snapshot.id.split("000");
+    const [videoId, userId] = snapshot.id.split("000");
+
     await db
       .collection("videos")
       .doc(videoId)
       .update({
         likes: admin.firestore.FieldValue.increment(1),
+      });
+
+    const videoSnapshot = await db.collection("videos").doc(videoId).get();
+    const thumbnailUrl = videoSnapshot.data()!.thumbnailUrl;
+    const createdAt = videoSnapshot.data()!.createdAt;
+
+    await db
+      .collection("users")
+      .doc(userId)
+      .collection("likedVideos")
+      .doc(videoId)
+      .set({
+        thumbnailUrl: thumbnailUrl,
+        videoId: videoId,
+        createdAt: createdAt,
       });
   });
 
@@ -84,11 +100,17 @@ export const onLikedRemoved = functions.firestore
   // {likeId}가 제거될 때 발동되는 함수
   .onDelete(async (snapshot, context) => {
     const db = admin.firestore();
-    const [videoId, _] = snapshot.id.split("000");
+    const [videoId, userId] = snapshot.id.split("000");
     await db
       .collection("videos")
       .doc(videoId)
       .update({
         likes: admin.firestore.FieldValue.increment(-1),
       });
+    await db
+      .collection("users")
+      .doc(userId)
+      .collection("likedVideos")
+      .doc(videoId)
+      .delete();
   });
