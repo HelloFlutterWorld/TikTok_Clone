@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/inbox/view_models/messages_view_model.dart';
 
 class ChatDetailScreenArg {
   final String chatId;
@@ -9,7 +11,7 @@ class ChatDetailScreenArg {
   ChatDetailScreenArg({required this.chatId});
 }
 
-class ChatDetailScreen extends StatefulWidget {
+class ChatDetailScreen extends ConsumerStatefulWidget {
   static const String routeName = "chatDetail";
   static const String routeURL = ":chatId";
 
@@ -21,10 +23,10 @@ class ChatDetailScreen extends StatefulWidget {
   });
 
   @override
-  State<ChatDetailScreen> createState() => _ChatDetailScreenState();
+  ConsumerState<ChatDetailScreen> createState() => _ChatDetailScreenState();
 }
 
-class _ChatDetailScreenState extends State<ChatDetailScreen> {
+class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
   final TextEditingController _textEditingController = TextEditingController();
 
   bool _isWriting = false;
@@ -51,9 +53,14 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   }
 
   void _onSendMessage() {
+    final text = _textEditingController.text;
+    if (text == "") {
+      return;
+    }
+    ref.read(messagesProvider.notifier).sendMessage(text);
+    _textEditingController.text = "";
     setState(() {
       _isWriting = false;
-      _textEditingController.clear();
     });
   }
 
@@ -65,6 +72,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(messagesProvider).isLoading;
     return GestureDetector(
       onTap: _onScaffoldTap,
       child: Scaffold(
@@ -249,9 +257,11 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                     ),
                     Gaps.h20,
                     GestureDetector(
-                      onTap: _onSendMessage,
+                      onTap: isLoading ? null : _onSendMessage,
                       child: FaIcon(
-                        FontAwesomeIcons.paperPlane,
+                        isLoading
+                            ? FontAwesomeIcons.hourglass
+                            : FontAwesomeIcons.paperPlane,
                         color: _isWriting ? Colors.black : Colors.grey,
                       ),
                     )
