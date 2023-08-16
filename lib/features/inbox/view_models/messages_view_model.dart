@@ -8,13 +8,18 @@ import 'package:tiktok_clone/features/inbox/repos/messages_repo.dart';
 
 class MessagesViewModel extends AsyncNotifier<void> {
   late final MessagesRepo _repo;
+  late final AuthenticationRepository _authRepo;
 
   @override
   FutureOr<void> build() {
     _repo = ref.read(messagesRepo);
+    _authRepo = ref.read(authRepo);
   }
 
-  Future<void> sendMessage(String text) async {
+  Future<void> sendMessage({
+    required String text,
+    required String chatRoomId,
+  }) async {
     final user = ref.read(authRepo).user;
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
@@ -23,8 +28,16 @@ class MessagesViewModel extends AsyncNotifier<void> {
         userId: user!.uid,
         createdAt: DateTime.now().millisecondsSinceEpoch,
       );
-      await _repo.sendMessage(message);
+      await _repo.sendMessage(
+        message: message,
+        chatRoomId: chatRoomId,
+        userId: _authRepo.user!.uid,
+      );
     });
+  }
+
+  Future<void> deleteMessage(String chatRoomId, String messageId) async {
+    _repo.deleteMessage(chatRoomId, messageId);
   }
 }
 
@@ -33,16 +46,16 @@ final messagesProvider = AsyncNotifierProvider<MessagesViewModel, void>(
 );
 
 // autoDispose해야 채팅방을 나갔을 때는 listen을 하지 않게 된다.
-final chatProvider = StreamProvider.autoDispose<List<MessageModel>>(
-  (ref) {
+final chatProvider =
+    StreamProvider.autoDispose.family<List<MessageModel>, String>(
+  (ref, chatRoomId) {
     final db = FirebaseFirestore.instance;
-
     return db
         // 처음 채팅이 시작될 때 이 채팅방의 texts콜렉션안의 모든
         // 도큐먼트들을 받을 것이고,
         // 새로 추가되는 것들도 listen하게 된다.
         .collection("chat_rooms")
-        .doc("K9mxsmoofrXZckTVmF1c")
+        .doc(chatRoomId)
         .collection("texts")
         .orderBy("createdAt")
         // 한번만 데이터들 받아오는 get()과 달리

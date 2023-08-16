@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok_clone/features/users/models/user_profile_model.dart';
@@ -99,3 +100,21 @@ final usersProvider = AsyncNotifierProvider<UsersViewModel, UserProfileModel>(
 
 // AsyncValue는 비동기 데이터의 상태를 다루는 데에 중점을 두며,
 // Notifier는 상태 관리와 UI 업데이트를 위한 클래스라는 차이점이 있다.
+
+final userListProvider = StreamProvider.autoDispose<List<UserProfileModel>>(
+  (ref) {
+    final db = FirebaseFirestore.instance;
+    return db.collection("users").orderBy("name").snapshots().map(
+          // event는 아직 다큐먼트화되기 전의 데이타
+          // .docs를 통해 다큐먼트리스트가 된다.
+          (event) => event.docs
+              // .map는 순환하면서 원소들을 doc라는 이름으로 제공한다.
+              .map(
+                (doc) => UserProfileModel.fromJson(
+                  doc.data(),
+                ),
+              )
+              .toList(),
+        );
+  },
+);

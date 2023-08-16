@@ -66,7 +66,10 @@ class Avatar extends ConsumerWidget {
                   // 에러 상태 또는 유효하지 않은 URL인 경우 처리합니다.
                   return CircleAvatar(
                     radius: 50,
-                    child: Text(name), // 적절한 플레이스홀더 위젯이나 에러 메시지로 변경해주세요.
+                    child: Text(
+                      name,
+                      textAlign: TextAlign.center,
+                    ), // 적절한 플레이스홀더 위젯이나 에러 메시지로 변경해주세요.
                   );
                 } else {
                   // 유효한 URL인 경우 이미지를 표시합니다.
@@ -77,7 +80,10 @@ class Avatar extends ConsumerWidget {
                     // 따라서 동일한 파일명이지만 이미지의 내용이 다른 경우 이를 방지하기 위해
                     // &haha=${DateTime.now().toString()}"를 추가해준다.
                     foregroundImage: hasAvatar ? NetworkImage(imageUrl) : null,
-                    child: Text(name),
+                    child: Text(
+                      name,
+                      textAlign: TextAlign.center,
+                    ),
                   );
                 }
               },

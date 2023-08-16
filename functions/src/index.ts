@@ -114,3 +114,26 @@ export const onLikedRemoved = functions.firestore
       .doc(videoId)
       .delete();
   });
+
+export const onChatRoomRemoved = functions.firestore
+  .document("chat_rooms/{chatRoomId}")
+  .onDelete(async (snapshot, context) => {
+    const db = admin.firestore();
+    const [personA, personB] = snapshot.id.split("000");
+
+    const chatRoomId = snapshot.id;
+
+    await db
+      .collection("users")
+      .doc(personA)
+      .collection("myChatRooms")
+      .doc(chatRoomId)
+      .delete();
+
+    await db
+      .collection("users")
+      .doc(personB)
+      .collection("myChatRooms")
+      .doc(chatRoomId)
+      .delete();
+  });

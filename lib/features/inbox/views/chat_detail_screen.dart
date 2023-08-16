@@ -1,27 +1,42 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok_clone/constants/gaps.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
 import 'package:tiktok_clone/features/authentication/repos/authentication_repo.dart';
+import 'package:tiktok_clone/features/inbox/models/chat_room_model.dart';
 import 'package:tiktok_clone/features/inbox/view_models/messages_view_model.dart';
+import 'package:tiktok_clone/features/users/models/user_profile_model.dart';
+import 'package:tiktok_clone/utils.dart';
 
 class ChatDetailScreenArg {
-  final String chatId;
+  final bool isFromChatList;
+  final UserProfileModel profile;
+  final ChatRoomModel chatRoom;
 
-  ChatDetailScreenArg({required this.chatId});
+  ChatDetailScreenArg({
+    required this.profile,
+    required this.isFromChatList,
+    required this.chatRoom,
+  });
 }
 
 class ChatDetailScreen extends ConsumerStatefulWidget {
   static const String routeName = "chatDetail";
-  static const String routeURL = ":chatId";
+  static const String routeURL = ":chatRoomId";
 
-  final String chatId;
+  final String chatRoomId;
+  final UserProfileModel profile;
+  final ChatRoomModel chatRoom;
+  final bool isFromChatList;
 
-  const ChatDetailScreen({
-    super.key,
-    required this.chatId,
-  });
+  const ChatDetailScreen(
+      {super.key,
+      required this.chatRoomId,
+      required this.profile,
+      required this.chatRoom,
+      required this.isFromChatList});
 
   @override
   ConsumerState<ChatDetailScreen> createState() => _ChatDetailScreenState();
@@ -58,7 +73,9 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
     if (text == "") {
       return;
     }
-    ref.read(messagesProvider.notifier).sendMessage(text);
+    ref
+        .read(messagesProvider.notifier)
+        .sendMessage(text: text, chatRoomId: widget.chatRoomId);
     _textEditingController.text = "";
     setState(() {
       _isWriting = false;
@@ -87,11 +104,19 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
                 Stack(
                   alignment: Alignment.center,
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: Sizes.size24,
-                      foregroundImage: NetworkImage(
-                          "https://avatars.githubusercontent.com/u/123614459?v=4"),
-                      child: Text("Yoon"),
+                      foregroundImage: widget.profile.hasAvater
+                          ? NetworkImage(widget.isFromChatList
+                              ? "https://firebasestorage.googleapis.com/v0/b/tiktok-clone-qwer.appspot.com/o/avatars%2F${widget.chatRoom.listenerId}?alt=media"
+                              : "https://firebasestorage.googleapis.com/v0/b/tiktok-clone-qwer.appspot.com/o/avatars%2F${widget.profile.uid}?alt=media")
+                          : null,
+                      child: Text(
+                        widget.isFromChatList
+                            ? "${widget.chatRoom.listenerName}"
+                            : widget.profile.name,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     Positioned(
                       bottom: -3,
@@ -116,7 +141,9 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
               ],
             ),
             title: Text(
-              "Yoon (${widget.chatId})",
+              widget.isFromChatList
+                  ? "${widget.chatRoom.listenerName}"
+                  : widget.profile.name,
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
               ),
@@ -144,8 +171,11 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
         ),
         body: Stack(
           children: [
-            ref.watch(chatProvider).when(
+            ref.watch(chatProvider(widget.chatRoomId)).when(
+                  // data가 있을 때 아래의 문장들을 수행한다.
                   data: (data) {
+                    final messageProvider =
+                        ref.watch(messagesProvider.notifier);
                     return ListView.separated(
                       reverse: true,
                       padding: EdgeInsets.only(
@@ -165,35 +195,101 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
                               ? MainAxisAlignment.end
                               : MainAxisAlignment.start,
                           children: [
-                            Container(
-                              padding: const EdgeInsets.all(
-                                Sizes.size14,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isMine
-                                    ? Colors.blue
-                                    : Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: const Radius.circular(
-                                    Sizes.size20,
+                            GestureDetector(
+                              onLongPress: () {
+                                final is2Minutes =
+                                    isWithin2Minutes(message.createdAt);
+                                final isDeleted =
+                                    data[index].text == "[deleted]";
+                                showCupertinoModalPopup(
+                                  context: context,
+                                  builder: (context) => CupertinoAlertDialog(
+                                    title: isDeleted
+                                        ? const Text("이미 삭제된 메시지입니다.")
+                                        : Text(is2Minutes
+                                            ? "메시지를 삭제할까요?"
+                                            : "2분이 경과하면 메시지를 삭제할 수 없습니다."),
+                                    // content: const Text("Plx dont go"),
+                                    actions: [
+                                      CupertinoDialogAction(
+                                        //현재 새로운 Route를 push한 상태이므로 pop해준다.
+                                        onPressed: () {
+                                          if (is2Minutes) {
+                                            messageProvider.deleteMessage(
+                                                widget.chatRoomId,
+                                                message.messageId!);
+                                            Navigator.of(context).pop();
+                                          } else {
+                                            Navigator.of(context).pop();
+                                          }
+                                        },
+                                        isDestructiveAction:
+                                            is2Minutes && !isDeleted
+                                                ? false
+                                                : true,
+                                        child: const Text("예"),
+                                      ),
+                                      if (is2Minutes && !isDeleted)
+                                        CupertinoDialogAction(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          //No Yes 색깔 바뀜 뭔지 모르겠음
+                                          isDestructiveAction: true,
+                                          child: const Text("아니오"),
+                                        ),
+                                    ],
                                   ),
-                                  topRight: const Radius.circular(
-                                    Sizes.size20,
+                                );
+                              },
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  if (isMine) ...[
+                                    Text(convertTimeStamp(message.createdAt)),
+                                    Gaps.h7,
+                                  ],
+                                  Container(
+                                    padding: const EdgeInsets.all(
+                                      Sizes.size14,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: isMine
+                                          ? Colors.blue
+                                          : Theme.of(context).primaryColor,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: const Radius.circular(
+                                          Sizes.size20,
+                                        ),
+                                        topRight: const Radius.circular(
+                                          Sizes.size20,
+                                        ),
+                                        bottomLeft: Radius.circular(
+                                          isMine ? Sizes.size20 : Sizes.size5,
+                                        ),
+                                        bottomRight: Radius.circular(
+                                          !isMine ? Sizes.size20 : Sizes.size5,
+                                        ),
+                                      ),
+                                    ),
+                                    child: ConstrainedBox(
+                                      constraints: const BoxConstraints(
+                                        maxWidth: 240,
+                                      ),
+                                      child: Text(
+                                        message.text,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: Sizes.size16,
+                                          overflow: TextOverflow.clip,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                  bottomLeft: Radius.circular(
-                                    isMine ? Sizes.size20 : Sizes.size5,
-                                  ),
-                                  bottomRight: Radius.circular(
-                                    !isMine ? Sizes.size20 : Sizes.size5,
-                                  ),
-                                ),
-                              ),
-                              child: Text(
-                                message.text,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: Sizes.size16,
-                                ),
+                                  if (!isMine) ...[
+                                    Gaps.h7,
+                                    Text(convertTimeStamp(message.createdAt)),
+                                  ],
+                                ],
                               ),
                             ),
                           ],
@@ -233,9 +329,9 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
                         child: TextField(
                           controller: _textEditingController,
                           onTap: _onStartWriting,
-                          expands: true,
-                          minLines: null,
-                          maxLines: null,
+                          // expands: true,
+                          // minLines: null,
+                          // maxLines: null,
                           textInputAction: TextInputAction.newline,
                           cursorColor: Theme.of(context).primaryColor,
                           decoration: InputDecoration(
