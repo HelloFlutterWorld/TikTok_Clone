@@ -33,7 +33,7 @@ class UserProfileModel {
         birthday = "";
 
   UserProfileModel.fromJson(Map<String, dynamic> json)
-      : hasAvater = json["hasAvatar"],
+      : hasAvater = json["hasAvatar"] ?? false,
         uid = json["uid"],
         email = json["email"],
         name = json["name"],

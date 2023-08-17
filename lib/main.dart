@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tiktok_clone/common/widgets/video_config/dark_config.dart';
 import 'package:tiktok_clone/constants/sizes.dart';
+import 'package:tiktok_clone/features/notifications/notificatons_provider.dart';
 import 'package:tiktok_clone/features/videos/repos/video_playback_config_repo.dart';
 import 'package:tiktok_clone/features/videos/view_models/palyback_config_vm.dart';
 import 'package:tiktok_clone/generated/l10n.dart';
@@ -90,6 +91,7 @@ class TikTokApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     //언어설정을 영어로 강제
     //S.load(const Locale("en"));
+    ref.watch(notificationsProvider);
     return ValueListenableBuilder(
       valueListenable: systemDarkMode,
       builder: (context, value, child) => MaterialApp.router(
