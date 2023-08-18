@@ -47,6 +47,7 @@ final messagesProvider = AsyncNotifierProvider<MessagesViewModel, void>(
 
 // autoDispose해야 채팅방을 나갔을 때는 listen을 하지 않게 된다.
 final chatProvider =
+// 관리하는 모델
     StreamProvider.autoDispose.family<List<MessageModel>, String>(
   (ref, chatRoomId) {
     final db = FirebaseFirestore.instance;

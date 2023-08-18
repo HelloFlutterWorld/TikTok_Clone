@@ -11,6 +11,7 @@ import 'package:tiktok_clone/features/videos/views/video_recording_screen.dart';
 import 'features/inbox/views/activity_screen.dart';
 import 'features/inbox/views/chat_detail_screen.dart';
 import 'features/inbox/views/chats_screen.dart';
+import 'features/notifications/notificatons_provider.dart';
 
 // ref object에 접근할 수 있으며,
 // 이것은 다른 provider를 읽을 수 있게 해준다.
@@ -49,11 +50,31 @@ final routerProvider = Provider((ref) {
       return null;
     },
     routes: [
-      GoRoute(
-        name: SignUpScreen.routeName,
-        path: SignUpScreen.routeURL,
-        builder: (context, state) => const SignUpScreen(),
-        /* name: SignUpScreen.routeName,
+      ShellRoute(
+        builder: (context, state, child) {
+          // notificationsProvider에서 사용되는  context.go가
+          // main함수의 routerConfig 보다 먼저 나오고 있음으로 shellRoute로
+          // 감싸줘야 한다. 이것으로 모든 route를 감싸서 notifierProvider를
+          // 초기화 해줄 수 있다.
+          // 강의 29.4 ShellRoute 2:40
+          // context를 넘겨 받는 notificationsProvider가 실행되어
+          // 앱이 받게될 알림들을 감사한다.
+          ref.read(notificationsProvider(context));
+          // child에는 아래의 Goroute들이 각각 소유하고 있는 내용들이 담겨있다.
+          // 예를 들어 SignupScreen으로 라우팅되면
+          // child에는
+          // GoRoute(
+          // name: SignUpScreen.routeName,
+          // path: SignUpScreen.routeURL,
+          // builder: (context, state) => const SignUpScreen(),)가 담기게 된다.
+          return child;
+        },
+        routes: [
+          GoRoute(
+            name: SignUpScreen.routeName,
+            path: SignUpScreen.routeURL,
+            builder: (context, state) => const SignUpScreen(),
+            /* name: SignUpScreen.routeName,
       routes: [
         GoRoute(
           path: UsernameScreen.routeURL,
@@ -141,75 +162,79 @@ final routerProvider = Provider((ref) {
         //UserProfileScreen에 파라미터로 전달
         return UserProfileScreen(username: username!, tab: tab!);
       }, */
-      ),
-      GoRoute(
-        name: LoginScreen.routeName,
-        path: LoginScreen.routeURL,
-        builder: (context, state) => const LoginScreen(),
-      ),
-      GoRoute(
-        name: InterestsScreen.routeName,
-        path: InterestsScreen.routeURL,
-        builder: (context, state) => const InterestsScreen(),
-      ),
-      GoRoute(
-        path: "/:tab(home|discover|inbox|profile)",
-        name: MainNavigationScreen.routeName,
-        builder: (context, state) {
-          final tab = state.params['tab']!;
-          return MainNavigationScreen(
-            //tab: statelparams['tab']!,도 가능
-            tab: tab,
-          );
-        },
-      ),
-      GoRoute(
-        path: ActivityScreen.routeURL,
-        name: ActivityScreen.routeName,
-        builder: (context, state) => const ActivityScreen(),
-      ),
-      GoRoute(
-        path: ChatsScreen.routeURL,
-        name: ChatsScreen.routeName,
-        builder: (context, state) => const ChatsScreen(),
-        routes: [
+          ),
           GoRoute(
-            name: ChatDetailScreen.routeName,
-            path: ChatDetailScreen.routeURL,
+            name: LoginScreen.routeName,
+            path: LoginScreen.routeURL,
+            builder: (context, state) => const LoginScreen(),
+          ),
+          GoRoute(
+            name: InterestsScreen.routeName,
+            path: InterestsScreen.routeURL,
+            builder: (context, state) => const InterestsScreen(),
+          ),
+          GoRoute(
+            path: "/:tab(home|discover|inbox|profile)",
+            name: MainNavigationScreen.routeName,
             builder: (context, state) {
-              //"final chatId"는 GoRoute의 객체가 갖고 있는 인스턴스다.
-              //context.pushNamed(ChatDetailScreen.routeName, params: {"chatId": "$index"});
-              final chatRoomId = state.params['chatRoomId']!;
-              // ignore: unused_local_variable
-              final args = state.extra as ChatDetailScreenArg;
-              return ChatDetailScreen(
-                chatRoomId: chatRoomId,
-                profile: args.profile,
-                chatRoom: args.chatRoom,
-                isFromChatList: args.isFromChatList,
+              final tab = state.params['tab']!;
+              return MainNavigationScreen(
+                //tab: statelparams['tab']!,도 가능
+                tab: tab,
               );
             },
           ),
-        ],
-      ),
-      GoRoute(
-        name: VideoRecordingScreen.routeName,
-        path: VideoRecordingScreen.routeURL,
-        pageBuilder: (context, state) => CustomTransitionPage(
-          transitionDuration: const Duration(
-            milliseconds: 200,
+          GoRoute(
+            path: ActivityScreen.routeURL,
+            name: ActivityScreen.routeName,
+            builder: (context, state) => const ActivityScreen(),
           ),
-          child: const VideoRecordingScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            final position = Tween(begin: const Offset(0, 1), end: Offset.zero)
-                .animate(animation);
-            return SlideTransition(
-              position: position,
-              child: child,
-            );
-          },
-        ),
-      ),
+          GoRoute(
+            path: ChatsScreen.routeURL,
+            name: ChatsScreen.routeName,
+            builder: (context, state) => const ChatsScreen(),
+            routes: [
+              GoRoute(
+                name: ChatDetailScreen.routeName,
+                path: ChatDetailScreen.routeURL,
+                builder: (context, state) {
+                  //"final chatId"는 GoRoute의 객체가 갖고 있는 인스턴스다.
+                  //context.pushNamed(ChatDetailScreen.routeName, params: {"chatId": "$index"});
+                  final chatRoomId = state.params['chatRoomId']!;
+                  // ignore: unused_local_variable
+                  final args = state.extra as ChatDetailScreenArg;
+                  return ChatDetailScreen(
+                    chatRoomId: chatRoomId,
+                    profile: args.profile,
+                    chatRoom: args.chatRoom,
+                    isFromChatList: args.isFromChatList,
+                  );
+                },
+              ),
+            ],
+          ),
+          GoRoute(
+            name: VideoRecordingScreen.routeName,
+            path: VideoRecordingScreen.routeURL,
+            pageBuilder: (context, state) => CustomTransitionPage(
+              transitionDuration: const Duration(
+                milliseconds: 200,
+              ),
+              child: const VideoRecordingScreen(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                final position =
+                    Tween(begin: const Offset(0, 1), end: Offset.zero)
+                        .animate(animation);
+                return SlideTransition(
+                  position: position,
+                  child: child,
+                );
+              },
+            ),
+          ),
+        ],
+      )
     ],
   );
 });

@@ -26,6 +26,7 @@ class VideoPostViewModel extends FamilyAsyncNotifier<void, String> {
 }
 
 final videoPostProvider =
+    // 관리하는 모델은 void, 전달 받는 변수는 String
     AsyncNotifierProvider.family<VideoPostViewModel, void, String>(
   () => VideoPostViewModel(),
 );

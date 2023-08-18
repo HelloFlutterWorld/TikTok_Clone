@@ -2,10 +2,14 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok_clone/features/authentication/repos/authentication_repo.dart';
+import 'package:tiktok_clone/features/inbox/views/chats_screen.dart';
+import 'package:tiktok_clone/features/videos/views/video_recording_screen.dart';
 
-class NotificationsProvider extends AsyncNotifier {
+class NotificationsProvider extends FamilyAsyncNotifier<void, BuildContext> {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
@@ -29,7 +33,7 @@ class NotificationsProvider extends AsyncNotifier {
   terminated: 기기가 잠겨 있거나 애플리케이션이 실행되고 있지 않은 경우.
 */
 
-  Future<void> initListeners() async {
+  Future<void> initListeners(BuildContext context) async {
     final permission = await _messaging.requestPermission();
     if (permission.authorizationStatus == AuthorizationStatus.denied) {
       // denied 상태면 바로 종료
@@ -45,26 +49,24 @@ class NotificationsProvider extends AsyncNotifier {
     // Background
     FirebaseMessaging.onMessageOpenedApp.listen(
       (notification) {
-        print(
-          notification.data["screen"],
-        );
+        // print(notification.data['screen'])
+        context.pushNamed(ChatsScreen.routeName);
       },
     );
     // Terminated
     final notification = await _messaging.getInitialMessage();
     if (notification != null) {
-      print(
-        notification.data["screen"],
-      );
+      // print(notification.data['screen'])
+      context.pushNamed(VideoRecordingScreen.routeName);
     }
   }
 
   @override
-  FutureOr build() async {
+  FutureOr build(BuildContext context) async {
     final token = await _messaging.getToken();
     if (token == null) return;
     await updateToket(token);
-    await initListeners();
+    await initListeners(context);
     // toke listener
     _messaging.onTokenRefresh.listen(
       (newToken) async {
@@ -74,6 +76,7 @@ class NotificationsProvider extends AsyncNotifier {
   }
 }
 
-final notificationsProvider = AsyncNotifierProvider(
+// 관리하는 모델은 없고, 전달 받는 매개변수도 없다.
+final notificationsProvider = AsyncNotifierProvider.family(
   () => NotificationsProvider(),
 );
