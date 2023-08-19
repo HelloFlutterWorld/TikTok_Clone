@@ -79,6 +79,30 @@ export const onLikedCreated = functions.firestore
         likes: admin.firestore.FieldValue.increment(1),
       });
 
+    const video = await (
+      await db.collection("videos").doc(videoId).get()
+    ).data();
+    if (video) {
+      const creatorUid = video.creatorUid;
+      const user = await (
+        await db.collection("users").doc(creatorUid).get()
+      ).data();
+      if (user) {
+        const token = user.token;
+        // sendToDevice 더이상 사용불가
+        await admin.messaging().send({
+          token: token,
+          data: {
+            screen: "123",
+          },
+          notification: {
+            title: "누군가 귀하의 비디오를 좋아했습니다.",
+            body: "좋아요 + 1 ! 축하합니다! 💖",
+          },
+        });
+      }
+    }
+
     const videoSnapshot = await db.collection("videos").doc(videoId).get();
     const thumbnailUrl = videoSnapshot.data()!.thumbnailUrl;
     const createdAt = videoSnapshot.data()!.createdAt;
