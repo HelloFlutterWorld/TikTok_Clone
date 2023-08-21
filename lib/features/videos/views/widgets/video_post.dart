@@ -82,6 +82,7 @@ class VideoPostState extends ConsumerState<VideoPost>
     // likeVideo(videoId)로 초기화 하는 대신에
     // provider를 videoId로 초기화하는 방법을 채택함
     // 이런 방법도 있다는 것을 학습하기 위해 또한 파이어베이스의 한계를 고려하여
+
     ref.read(videoPostProvider(widget.videoData.id).notifier).likeVideo();
     setState(() {
       _isLiked ? likes-- : likes++;

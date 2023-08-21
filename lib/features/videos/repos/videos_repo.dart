@@ -61,6 +61,8 @@ class VideoRepository {
     if (!like.exists) {
       await query.set({
         "createdAt": DateTime.now().millisecondsSinceEpoch,
+        "videoId": videoId,
+        "userId": userId,
       });
     } else {
       await query.delete();
