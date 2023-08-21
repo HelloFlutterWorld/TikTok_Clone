@@ -91,11 +91,10 @@ class SignUpScreen extends ConsumerWidget {
               child: Column(
                 children: [
                   Gaps.v80,
-                  const Text(
-                    //S.of(context).signUpTitle("TikTok"),
-                    "Sign up for TikTok",
+                  Text(
+                    S.of(context).signUpTitle("TikTok"),
                     //copytWith()스타일을 그대로 사용하면서 다른 요소들을 추가할 수 있다.
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: Sizes.size24,
                       fontWeight: FontWeight.w700,
                     ),
@@ -116,10 +115,9 @@ class SignUpScreen extends ConsumerWidget {
                   if (orientation == Orientation.portrait) ...[
                     GestureDetector(
                       onTap: () => _onEmailTap(context),
-                      child: const AuthButton(
-                        icon: FaIcon(FontAwesomeIcons.user),
-                        text: //S.of(context).emailPassworButton,
-                            "Use email & password",
+                      child: AuthButton(
+                        icon: const FaIcon(FontAwesomeIcons.user),
+                        text: S.of(context).emailPassworButton,
                       ),
                     ),
                     Gaps.v16,
@@ -178,8 +176,7 @@ class SignUpScreen extends ConsumerWidget {
                   GestureDetector(
                     onTap: () => _onLoginTap(context),
                     child: Text(
-                      //S.of(context).logIn("male"),
-                      "Log in",
+                      S.of(context).logIn("male"),
                       style: TextStyle(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.w600,
