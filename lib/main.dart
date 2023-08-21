@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -12,24 +11,29 @@ import 'package:tiktok_clone/features/videos/view_models/palyback_config_vm.dart
 import 'package:tiktok_clone/generated/l10n.dart';
 import 'package:tiktok_clone/router.dart';
 
-import 'firebase_options.dart';
-
 //gen_l10n 임포트
 
+// void initializeFirebaseApp() async {
+//   try {
+//     // 이미 Firebase 앱이 초기화되었는지 확인
+//     if (Firebase.apps.isEmpty) {
+//       await Firebase.initializeApp(
+//           // 현재 플랫폼에 대한 기본 Firebase 옵션을 사용한다는 의미
+//           options: DefaultFirebaseOptions.currentPlatform,
+//           );
+//     }
+//   } catch (e) {
+//     if (kDebugMode) {
+//       print("Firebase 초기화 오류: $e");
+//     }
+//   }
+// }
+
 void initializeFirebaseApp() async {
-  try {
-    // 이미 Firebase 앱이 초기화되었는지 확인
-    if (Firebase.apps.isEmpty) {
-      await Firebase.initializeApp(
-        // 현재 플랫폼에 대한 기본 Firebase 옵션을 사용한다는 의미
-        options: DefaultFirebaseOptions.currentPlatform,
+  await Firebase.initializeApp(
+      // 현재 플랫폼에 대한 기본 Firebase 옵션을 사용한다는 의미
+      // options: DefaultFirebaseOptions.currentPlatform,
       );
-    }
-  } catch (e) {
-    if (kDebugMode) {
-      print("Firebase 초기화 오류: $e");
-    }
-  }
 }
 
 void main() async {
